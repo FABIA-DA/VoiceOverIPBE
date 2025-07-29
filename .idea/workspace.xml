@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/VoiceOverIPBE.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Asterisk/asterisk-config/logger.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Asterisk/asterisk-config/modules.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Asterisk/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Asterisk/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Asterisk/asterisk-config/extensions.conf" beforeDir="false" afterPath="$PROJECT_DIR$/Asterisk/asterisk-config/extensions.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Asterisk/asterisk-config/pjsip.conf" beforeDir="false" afterPath="$PROJECT_DIR$/Asterisk/asterisk-config/pjsip.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
-    </list>
+    <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,7 +88,7 @@
       <option name="presentableId" value="Default" />
       <updated>1753792383678</updated>
       <workItem from="1753792385581" duration="106000" />
-      <workItem from="1753792534561" duration="5575000" />
+      <workItem from="1753792534561" duration="5622000" />
     </task>
     <servers />
   </component>
