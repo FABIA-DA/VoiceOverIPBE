@@ -1,0 +1,8 @@
+services:
+  asterisk:
+    build:
+      context: ./Asterisk
+      dockerfile: Dockerfile
+    ports:
+      - "5060:5060/udp"
+      - "8088:8088"
