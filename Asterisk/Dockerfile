@@ -11,4 +11,4 @@ RUN apk add --no-cache \
 COPY ./asterisk-config/*.conf /etc/asterisk/
 
 # Optional: copy custom sounds (or mount them at runtime instead)
-COPY ./sounds/ /var/lib/asterisk/sounds/custom/
+# COPY ./sounds/ /var/lib/asterisk/sounds/custom/
