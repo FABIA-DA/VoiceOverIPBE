@@ -8,6 +8,9 @@ import ch.loway.oss.ari4java.tools.AriConnectionEvent;
 import ch.loway.oss.ari4java.tools.AriWSCallback;
 import ch.loway.oss.ari4java.tools.RestException;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 public class Main {
     public static void main(String[] args) throws ARIException, InterruptedException {
         String ariUrl = "http://localhost:8088";
@@ -24,6 +27,13 @@ public class Main {
             @Override
             public void onSuccess(Message result) {
                 System.out.println("Success: " + result.toString());
+                AudioUploader.sendFile(
+                        "http://localhost:8000/transcribe",
+                        Path.of("ARIApp/audio/Ragebait.m4a").toString())
+                                .subscribe(
+                                        res -> System.out.println("Transcribed text:" + res),
+                                        err -> System.err.println("Error during file upload: " + err.getMessage()
+                                ));
             }
 
             @Override
