@@ -9,6 +9,7 @@ import ch.loway.oss.ari4java.tools.AriConnectionEvent;
 import ch.loway.oss.ari4java.tools.AriWSCallback;
 import ch.loway.oss.ari4java.tools.RestException;
 
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -34,12 +35,17 @@ public class Main {
                     System.out.println("Caller connected on channel: " + channelId);
 
                     try {
+                        AudioConverter.convertWav("ARIApp/unconvertedAudio/ragebait.wav", "ARIApp/audio/ragebait.wav");
                         ari.channels()
-                                .play(channelId, "sound:hello-world")
+                                .play(channelId, "sound:custom/ragebait")
                                 .execute();
-                        System.out.println("Playing 'hello-world' to caller...");
+                        System.out.println("Playing audio to caller...");
                     } catch (RestException e) {
                         System.err.println("Error playing audio: " + e.getMessage());
+                    } catch (UnsupportedAudioFileException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
                 }
 
