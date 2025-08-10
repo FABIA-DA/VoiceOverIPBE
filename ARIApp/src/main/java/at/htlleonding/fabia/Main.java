@@ -3,6 +3,7 @@ package at.htlleonding.fabia;
 import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.AriVersion;
 import ch.loway.oss.ari4java.generated.models.Message;
+import ch.loway.oss.ari4java.generated.models.StasisStart;
 import ch.loway.oss.ari4java.tools.ARIException;
 import ch.loway.oss.ari4java.tools.AriConnectionEvent;
 import ch.loway.oss.ari4java.tools.AriWSCallback;
@@ -26,14 +27,30 @@ public class Main {
                 .execute(new AriWSCallback<Message>() {
             @Override
             public void onSuccess(Message result) {
-                System.out.println("Success: " + result.toString());
+                if (result instanceof StasisStart) {
+                    StasisStart startEvent = (StasisStart) result;
+                    String channelId = startEvent.getChannel().getId();
+
+                    System.out.println("Caller connected on channel: " + channelId);
+
+                    try {
+                        ari.channels()
+                                .play(channelId, "sound:hello-world")
+                                .execute();
+                        System.out.println("Playing 'hello-world' to caller...");
+                    } catch (RestException e) {
+                        System.err.println("Error playing audio: " + e.getMessage());
+                    }
+                }
+
+                /*
                 AudioUploader.sendFile(
                         "http://localhost:8000/transcribe",
                         Path.of("ARIApp/audio/Ragebait.m4a").toString())
                                 .subscribe(
                                         res -> System.out.println("Transcribed text:" + res),
                                         err -> System.err.println("Error during file upload: " + err.getMessage()
-                                ));
+                                ));*/
             }
 
             @Override
