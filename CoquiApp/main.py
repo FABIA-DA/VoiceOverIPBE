@@ -1,6 +1,7 @@
 ﻿import os
 import torch
 import csv
+from pydub import AudioSegment
 from TTS.api import TTS
 
 os.makedirs("out", exist_ok=True)
@@ -21,4 +22,9 @@ with open("Phrases.csv", newline='', encoding="utf-8") as csvfile:
     audio_path  = f"./out/{row[0]}.wav"
     tts.tts_to_file(text=row[2], file_path=audio_path)
     print(f"Created file {audio_path}")
+    print("Changing sample rate...")
+    sound = AudioSegment.from_file(audio_path)
+    sound = sound.set_frame_rate(8000)
+    sound.export(audio_path, format="wav")
+    print("Done")
 print("Done...")
