@@ -1,10 +1,10 @@
-FROM gradle:jdk24-alpine AS build
+FROM gradle:8.14-jdk24-alpine AS build
 
 WORKDIR /app
 
 COPY --chown=gradle . .
 
-RUN ./gradlew :jar --no-build-cache --no-daemon
+RUN gradle shadowJar --no-daemon
 
 FROM eclipse-temurin:24-jre-alpine
 

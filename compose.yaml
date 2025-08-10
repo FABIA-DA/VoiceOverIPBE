@@ -7,3 +7,24 @@ services:
       - "5060:5060/udp"
       - "8088:8088"
       - "10000-10100:10000-10100/udp"
+    depends_on:
+      coqui-app:
+        condition: service_completed_successfully
+    volumes:
+      - shared-sounds:/sounds
+  coqui-app:
+    build:
+      context: ./CoquiApp
+      dockerfile: Dockerfile
+    volumes:
+      - shared-sounds:/app/out
+  ari-app:
+    build:
+      context: ./ARIApp
+      dockerfile: Dockerfile
+    depends_on:
+      asterisk:
+        condition: service_started
+
+volumes:
+  shared-sounds:
