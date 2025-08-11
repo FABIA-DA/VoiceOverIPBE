@@ -4,10 +4,13 @@ import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.AriVersion;
 import ch.loway.oss.ari4java.generated.models.ChannelDtmfReceived;
 import ch.loway.oss.ari4java.generated.models.Message;
+import ch.loway.oss.ari4java.generated.models.StasisStart;
 import ch.loway.oss.ari4java.tools.ARIException;
 import ch.loway.oss.ari4java.tools.AriConnectionEvent;
 import ch.loway.oss.ari4java.tools.AriWSCallback;
 import ch.loway.oss.ari4java.tools.RestException;
+
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws ARIException, InterruptedException {
@@ -26,18 +29,20 @@ public class Main {
             public void onSuccess(Message event) {
                 System.out.println("Success: " + event.toString());
 
-                if(event.getType().equals("ChannelDtmfReceived")){
-                    String digit = ((ChannelDtmfReceived) event).getDigit();
-                    System.out.println("Digit pressed: " + digit);
+                if (event instanceof StasisStart start) {
+                    String channelId = start.getChannel().getId();
+
+                    try {
+                        ari.channels().answer(channelId).execute();
+                        ari.channels().play(channelId, "sound:greeting").execute();
+                    } catch (RestException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                String channelId = event.getAsterisk_id();
-                try {
-                    ari.channels()
-                            .play(channelId, "sound:greeting")
-                            .execute();
-                } catch(RestException e) {
-                    System.err.println("Error playing audio: " + e.getMessage());
+                if(event instanceof ChannelDtmfReceived) {
+                    String button = ((ChannelDtmfReceived) event).getDigit();
+                    System.out.println("Button pressed: " + button);
                 }
 //                AudioUploader.sendFile(
 //                        "http://localhost:8000/transcribe",

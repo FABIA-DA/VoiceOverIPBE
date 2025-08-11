@@ -11,13 +11,13 @@ services:
       coqui-app:
         condition: service_completed_successfully
     volumes:
-      - shared-sounds:/sounds
+      - shared-sounds:/var/lib/asterisk/sounds:rw
   coqui-app:
     build:
       context: ./CoquiApp
       dockerfile: Dockerfile
     volumes:
-      - shared-sounds:/app/out
+      - shared-sounds:/app/out:w
   ari-app:
     build:
       context: ./ARIApp
