@@ -35,17 +35,12 @@ public class Main {
                     System.out.println("Caller connected on channel: " + channelId);
 
                     try {
-                        AudioConverter.convertWav("ARIApp/unconvertedAudio/ragebait.wav", "ARIApp/audio/ragebait.wav");
                         ari.channels()
                                 .play(channelId, "sound:custom/ragebait")
                                 .execute();
                         System.out.println("Playing audio to caller...");
                     } catch (RestException e) {
                         System.err.println("Error playing audio: " + e.getMessage());
-                    } catch (UnsupportedAudioFileException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
                     }
                 }
 

@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="able to play audio to the caller">
-      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AudioConverter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/audio/Ragebait.m4a" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/audio/Ragebait.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/audio/Ragebait.wav" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/unconvertedAudio/ragebait.wav" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,8 +123,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.25410.129" />
-        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-IU-251.25410.129" />
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
       </set>
     </attachedChunks>
   </component>
@@ -148,6 +142,7 @@
       <workItem from="1754830745394" duration="569000" />
       <workItem from="1754831415975" duration="2286000" />
       <workItem from="1754834052718" duration="1099000" />
+      <workItem from="1754903102621" duration="41000" />
     </task>
     <task id="LOCAL-00001" summary="able to play audio to the caller">
       <option name="closed" value="true" />
