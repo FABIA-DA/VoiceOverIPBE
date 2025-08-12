@@ -26,4 +26,6 @@ COPY --chmod=777 . .
 # Download the model into the image
 RUN python -c "from TTS.utils.manage import ModelManager; ModelManager().download_model('tts_models/de/css10/vits-neon')"
 
-ENTRYPOINT ["/bin/bash", "-c", "micromamba run -p /env python main.py"]
+USER root
+ENTRYPOINT ["/bin/bash", "-c", "chown -R $MAMBA_USER:$MAMBA_USER /app/out && su $MAMBA_USER -c 'micromamba run -p /env python main.py'"]
+# ENTRYPOINT ["/bin/bash", "-c", "micromamba run -p /env python main.py"]
