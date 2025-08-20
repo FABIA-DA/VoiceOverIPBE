@@ -12,7 +12,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # Init TTS
 tts = TTS("tts_models/de/css10/vits-neon").to(device)
 
-with open("Phrases.csv", newline='', encoding="utf-8") as csvfile:
+with open("test.csv", newline='', encoding="utf-8") as csvfile:
   first = True
   reader = csv.reader(csvfile, delimiter=";")
   for row in reader:
