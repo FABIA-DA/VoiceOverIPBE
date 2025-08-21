@@ -35,6 +35,14 @@ public class Main {
                     try {
                         ari.channels().answer(channelId).execute();
                         ari.channels().play(channelId, "sound:greeting").execute();
+
+                        String recordingName = "caller_recording_" + System.currentTimeMillis();
+                        System.out.println("Recording channel: " + channelId + " with name: " + recordingName);
+                        ari.channels().record(channelId, recordingName, "wav")
+                                .setMaxDurationSeconds(10)
+                                .setMaxSilenceSeconds(3)
+                                .setBeep(true)
+                                .execute();
                     } catch (RestException e) {
                         e.printStackTrace();
                     }

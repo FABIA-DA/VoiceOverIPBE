@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AudioUploader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -90,8 +86,9 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "ari-app",
+    "git-widget-placeholder": "feat/stt",
     "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/vin55/Documents/htl/4BHIF/DA/asterisk/oga/test/VoiceOverIPBE",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -130,6 +127,7 @@
       <workItem from="1753792534561" duration="5622000" />
       <workItem from="1754224804560" duration="4065000" />
       <workItem from="1754232202945" duration="4507000" />
+      <workItem from="1755791062538" duration="764000" />
     </task>
     <servers />
   </component>
