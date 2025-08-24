@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -130,6 +132,11 @@
       <workItem from="1755791062538" duration="764000" />
       <workItem from="1755791859057" duration="25000" />
       <workItem from="1756038200587" duration="4669000" />
+      <workItem from="1756044344378" duration="1309000" />
+      <workItem from="1756045935050" duration="323000" />
+      <workItem from="1756046545551" duration="120000" />
+      <workItem from="1756046821676" duration="194000" />
+      <workItem from="1756047251597" duration="355000" />
     </task>
     <servers />
   </component>

@@ -4,6 +4,7 @@ import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.AriVersion;
 import ch.loway.oss.ari4java.generated.models.ChannelDtmfReceived;
 import ch.loway.oss.ari4java.generated.models.Message;
+import ch.loway.oss.ari4java.generated.models.RecordingFinished;
 import ch.loway.oss.ari4java.generated.models.StasisStart;
 import ch.loway.oss.ari4java.tools.ARIException;
 import ch.loway.oss.ari4java.tools.AriConnectionEvent;
@@ -46,6 +47,24 @@ public class Main {
                     } catch (RestException e) {
                         e.printStackTrace();
                     }
+                }
+
+                if (event instanceof RecordingFinished recordingFinished) {
+                    String recordingName = recordingFinished.getRecording().getName();
+                    String filePath = "/app/recordings/" + recordingName + ".wav";
+
+                    System.out.println("Recording finished: " + recordingName);
+                    System.out.println("Sending file: " + filePath);
+
+                    AudioUploader.sendFile(
+                                    "http://localhost:8000/transcribe",
+                                    filePath)
+                            .subscribe(
+                                    res -> {
+                                        System.out.println("Transcribed text: " + res);
+                                    },
+                                    err -> System.err.println("Error during file upload: " + err.getMessage())
+                            );
                 }
 
                 if(event instanceof ChannelDtmfReceived) {

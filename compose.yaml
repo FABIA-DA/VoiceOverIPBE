@@ -26,6 +26,8 @@ services:
     depends_on:
       asterisk:
         condition: service_started
+    volumes:
+      - recordings:/app/recordings:rw
 
 volumes:
   shared-sounds:
