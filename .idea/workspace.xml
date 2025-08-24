@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,26 +77,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Gradle.ARIApp [:at.htlleonding.fabia.Main.main()].executor": "Run",
-    "Gradle.Build ARIApp.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "feat/stt",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/vin55/Documents/htl/4BHIF/DA/asterisk/oga/test/VoiceOverIPBE",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ARIApp [:at.htlleonding.fabia.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build ARIApp.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/stt&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/vin55/Documents/htl/4BHIF/DA/asterisk/oga/test/VoiceOverIPBE&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-24" />
@@ -128,6 +128,8 @@
       <workItem from="1754224804560" duration="4065000" />
       <workItem from="1754232202945" duration="4507000" />
       <workItem from="1755791062538" duration="764000" />
+      <workItem from="1755791859057" duration="25000" />
+      <workItem from="1756038200587" duration="4669000" />
     </task>
     <servers />
   </component>

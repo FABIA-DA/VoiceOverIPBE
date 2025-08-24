@@ -12,6 +12,7 @@ services:
         condition: service_completed_successfully
     volumes:
       - shared-sounds:/var/lib/asterisk/sounds:rw
+      - recordings:/var/spool/asterisk/recording:rw
   coqui-app:
     build:
       context: ./CoquiApp
@@ -28,3 +29,4 @@ services:
 
 volumes:
   shared-sounds:
+  recordings:
