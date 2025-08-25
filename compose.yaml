@@ -28,6 +28,12 @@ services:
         condition: service_started
     volumes:
       - recordings:/app/recordings:rw
+  #whisperbe:
+  #  build:
+  #    context: ./WhisperBE
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - "8000:8000"
 
 volumes:
   shared-sounds:

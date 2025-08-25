@@ -57,7 +57,7 @@ public class Main {
                     System.out.println("Sending file: " + filePath);
 
                     AudioUploader.sendFile(
-                                    "http://localhost:8000/transcribe",
+                                    "http://whisperbe:8000/transcribe",
                                     filePath)
                             .subscribe(
                                     res -> {
