@@ -5,8 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/CoquiRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/WhisperResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AudioUploader.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AudioUploader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoquiApp/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiApp/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoquiBE/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiBE/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoquiBE/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiBE/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WhisperBE/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/WhisperBE/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,22 +41,6 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="ARIApp" type="f1a62948:ProjectNode" />
               </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="ARIApp" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="ARIApp" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="ARIApp" type="f1a62948:ProjectNode" />
-                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
-              </path>
             </expand>
             <select />
           </tree_state>
@@ -63,7 +56,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/CoquiBE" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -83,11 +76,12 @@
     "Application.Main.executor": "Run",
     "Gradle.ARIApp [:at.htlleonding.fabia.Main.main()].executor": "Run",
     "Gradle.Build ARIApp.executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "feat/stt",
+    "git-widget-placeholder": "tts-server",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/vin55/Documents/htl/4BHIF/DA/asterisk/oga/test/VoiceOverIPBE",
     "node.js.detected.package.eslint": "true",
@@ -95,7 +89,10 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.editor",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -113,8 +110,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
-        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26927.53" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.26927.53" />
       </set>
     </attachedChunks>
   </component>
@@ -139,6 +136,11 @@
       <workItem from="1756047251597" duration="355000" />
       <workItem from="1756124344036" duration="2611000" />
       <workItem from="1756127960846" duration="4292000" />
+      <workItem from="1756161048182" duration="202000" />
+      <workItem from="1756161259534" duration="3780000" />
+      <workItem from="1756193565467" duration="8391000" />
+      <workItem from="1756241331897" duration="12328000" />
+      <workItem from="1756282227106" duration="5717000" />
     </task>
     <servers />
   </component>

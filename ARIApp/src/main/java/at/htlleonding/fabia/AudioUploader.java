@@ -1,5 +1,6 @@
 package at.htlleonding.fabia;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -22,45 +23,62 @@ public class AudioUploader {
 
     public static Mono<String> sendFile(String url, String filePath) {
         return Mono.fromCallable(() -> {
-            File file = new File(filePath);
-            if (!file.exists() || !file.isFile()) {
-                throw new IllegalArgumentException("File does not exist or is not a file: " + filePath);
-            }
-
-            System.out.println("Starting upload of file: " + filePath + " to " + url);
-
-            try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-                HttpPost uploadFile = new HttpPost(url);
-                MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-                builder.addBinaryBody("file", file, ContentType.DEFAULT_BINARY, file.getName());
-                HttpEntity multipart = builder.build();
-                uploadFile.setEntity(multipart);
-
-                System.out.println("Executing HTTP request...");
-                try (CloseableHttpResponse response = httpClient.execute(uploadFile)) {
-                    int statusCode = response.getStatusLine().getStatusCode();
-                    System.out.println("Received status code: " + statusCode);
-                    HttpEntity responseEntity = response.getEntity();
-                    String responseString = responseEntity != null ? EntityUtils.toString(responseEntity) : null;
-                    System.out.println("Response body: " + responseString);
-
-                    if (statusCode >= 200 && statusCode < 300) {
-                        JsonNode root = mapper.readTree(responseString);
-                        if (root.has("text")) {
-                            return root.get("text").asText();
-                        } else {
-                            throw new IOException("Response JSON does not contain 'text' field");
-                        }
-                    } else {
-                        throw new IOException("Failed with HTTP error code: " + statusCode + " Response: " + responseString);
+                    File file = new File(filePath);
+                    if (!file.exists() || !file.isFile()) {
+                        throw new IllegalArgumentException("File does not exist or is not a file: " + filePath);
                     }
-                }
-            }
-        }).onErrorResume(e -> {
-            System.err.println("Error during file upload:");
-            e.printStackTrace();
-            return Mono.empty();
-        });
+                    System.out.println("Starting upload of file: " + filePath + " to " + url);
+                    return file;
+                })
+                .flatMap(file -> Mono.using(
+                        HttpClients::createDefault,
+                        httpClient -> {
+                            HttpPost uploadFile = new HttpPost(url);
+                            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+                            builder.addBinaryBody("file", file, ContentType.DEFAULT_BINARY, file.getName());
+                            HttpEntity multipart = builder.build();
+                            uploadFile.setEntity(multipart);
+
+                            return Mono.fromCallable(() -> httpClient.execute(uploadFile))
+                                    .flatMap(response -> {
+                                        int statusCode = response.getStatusLine().getStatusCode();
+                                        HttpEntity responseEntity = response.getEntity();
+                                        String responseString = null;
+                                        try {
+                                            responseString = responseEntity != null ? EntityUtils.toString(responseEntity) : null;
+                                        } catch (IOException e) {
+                                            return Mono.<String>error(e);
+                                        }
+                                        System.out.println("Received status code: " + statusCode);
+                                        System.out.println("Response body: >" + responseString + "<");
+
+                                        if (statusCode >= 200 && statusCode < 300) {
+                                            // Typed parsing into WhisperResponse
+                                            WhisperResponse whisperResponse = null;
+                                            try {
+                                                whisperResponse = new ObjectMapper().readValue(responseString, WhisperResponse.class);
+                                            } catch (JsonProcessingException e) {
+                                                return Mono.<String>error(e);
+                                            }
+                                            return Mono.just(whisperResponse.getText());
+                                        } else {
+                                            return Mono.<String>error(new IOException("HTTP error " + statusCode + " Response: " + responseString));
+                                        }
+                                    });
+                        },
+                        httpClient -> {               // cleanup
+                            try {
+                                httpClient.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                ))
+                .onErrorResume(e -> {
+                    System.err.println("Error during file upload:");
+                    e.printStackTrace();
+                    return Mono.empty();
+                });
     }
 }
 

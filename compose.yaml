@@ -11,14 +11,14 @@ services:
       coqui-app:
         condition: service_completed_successfully
     volumes:
-      - shared-sounds:/var/lib/asterisk/sounds:rw
-      - recordings:/var/spool/asterisk/recording:rw
+      - shared-sounds:/var/lib/asterisk/sounds
+      - recordings:/var/spool/asterisk/recording
   coqui-app:
     build:
       context: ./CoquiApp
       dockerfile: Dockerfile
     volumes:
-      - shared-sounds:/app/out:w
+      - shared-sounds:/app/out
   ari-app:
     build:
       context: ./ARIApp
@@ -26,14 +26,36 @@ services:
     depends_on:
       asterisk:
         condition: service_started
+      whisper-be:
+        condition: service_healthy
+      coqui-be:
+        condition: service_healthy
     volumes:
-      - recordings:/app/recordings:rw
-  #whisperbe:
+      - recordings:/app/recordings
+  #whisper-be:
   #  build:
   #    context: ./WhisperBE
   #    dockerfile: Dockerfile
   #  ports:
   #    - "8000:8000"
+  #  healthcheck:
+  #    test: [ "CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/healthcheck\")' || exit 1" ]
+  #    interval: 5s
+  #    timeout: 3s
+  #    retries: 5
+  #coqui-be:
+  #  build:
+  #    context: ./CoquiBE
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - "8001:8000"
+  #  volumes:
+  #    - shared-sounds:/app/out
+  #  healthcheck:
+  #    test: [ "CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/healthcheck\")' || exit 1" ]
+  #    interval: 5s
+  #    timeout: 3s
+  #    retries: 5
 
 volumes:
   shared-sounds:
