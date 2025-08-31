@@ -37,10 +37,11 @@ public class Main {
                 .eventWebsocket(stasisApp)
                 .setSubscribeAll(true)
                 .execute(new AriWSCallback<Message>() {
+                    private String channelId = "";
+
                     @Override
                     public void onSuccess(Message event) {
                         System.out.println("Success: " + event.toString());
-                        String channelId;
 
                         if (event instanceof StasisStart start) {
                             channelId = start.getChannel().getId();
@@ -59,8 +60,6 @@ public class Main {
                             } catch (RestException e) {
                                 e.printStackTrace();
                             }
-                        } else {
-                            channelId = "";
                         }
 
                         if (event instanceof RecordingFinished recordingFinished) {
@@ -87,13 +86,11 @@ public class Main {
                                                     System.out.println("Generated audio");
 
                                                     try {
-                                                        ari.channels().play(channelId, mediaPath);
+                                                        ari.channels().play(channelId, mediaPath).execute();
                                                     } catch (RestException e) {
                                                         throw new RuntimeException(e);
                                                     }
-                                                } catch (IOException e) {
-                                                    throw new RuntimeException(e);
-                                                } catch (InterruptedException e) {
+                                                } catch (IOException | InterruptedException e) {
                                                     throw new RuntimeException(e);
                                                 }
                                             },

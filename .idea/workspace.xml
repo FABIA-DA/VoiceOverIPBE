@@ -5,17 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/CoquiRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/WhisperResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AudioUploader.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AudioUploader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asterisk/asterisk-config/pjsip.conf" beforeDir="false" afterPath="$PROJECT_DIR$/Asterisk/asterisk-config/pjsip.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CoquiApp/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiApp/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoquiApp/environment.yml" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiApp/environment.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoquiApp/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiApp/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CoquiBE/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiBE/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoquiBE/environment.yml" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiBE/environment.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CoquiBE/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiBE/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WhisperBE/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/WhisperBE/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,7 +54,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/CoquiBE" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -71,31 +69,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Gradle.ARIApp [:at.htlleonding.fabia.Main.main()].executor": "Run",
-    "Gradle.Build ARIApp.executor": "Run",
-    "Gradle.Download Sources.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "tts-server",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/vin55/Documents/htl/4BHIF/DA/asterisk/oga/test/VoiceOverIPBE",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ARIApp [:at.htlleonding.fabia.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build ARIApp.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/tts&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/vin55/Documents/htl/4BHIF/DA/asterisk/oga/test/VoiceOverIPBE&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-24" />
@@ -141,6 +139,10 @@
       <workItem from="1756193565467" duration="8391000" />
       <workItem from="1756241331897" duration="12328000" />
       <workItem from="1756282227106" duration="5717000" />
+      <workItem from="1756487930779" duration="11114000" />
+      <workItem from="1756558216354" duration="951000" />
+      <workItem from="1756593022418" duration="2896000" />
+      <workItem from="1756668375283" duration="127000" />
     </task>
     <servers />
   </component>

@@ -1,8 +1,12 @@
 ﻿import os
 import torch
 import csv
+from pydub.utils import which
 from pydub import AudioSegment
 from TTS.api import TTS
+
+# Force Pydub to use Conda-installed FFmpeg
+AudioSegment.converter = which("ffmpeg")
 
 os.makedirs("out", exist_ok=True)
 
@@ -24,7 +28,7 @@ with open("test.csv", newline='', encoding="utf-8") as csvfile:
     print(f"Created file {audio_path}")
     print("Changing sample rate...")
     sound = AudioSegment.from_file(audio_path)
-    sound = sound.set_frame_rate(8000)
-    sound.export(audio_path, format="wav")
+    sound = sound.set_channels(1).set_frame_rate(8000)
+    sound.export(audio_path, format="wav", parameters=["-c:a", "pcm_s16le"])
     print("Done")
 print("Done...")
