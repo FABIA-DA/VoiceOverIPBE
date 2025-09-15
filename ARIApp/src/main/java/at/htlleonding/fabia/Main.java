@@ -87,6 +87,15 @@ public class Main {
 
                                                     try {
                                                         ari.channels().play(channelId, mediaPath).execute();
+
+                                                        String newRecordingName = "caller_recording_" + System.currentTimeMillis();
+                                                        System.out.println("Starting new recording: " + newRecordingName);
+                                                        ari.channels().record(channelId, newRecordingName, "wav")
+                                                                .setMaxDurationSeconds(10)
+                                                                .setMaxSilenceSeconds(3)
+                                                                .setBeep(true)
+                                                                .execute();
+
                                                     } catch (RestException e) {
                                                         throw new RuntimeException(e);
                                                     }

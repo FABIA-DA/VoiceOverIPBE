@@ -36,34 +36,34 @@ services:
     volumes:
       - recordings:/app/recordings
 
-#  whisper-be:
-#    build:
-#      context: ./WhisperBE
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8000:8000"
-#    volumes:
-#      - whisper-models:/root/.cache/whisper
-#    healthcheck:
-#      test: [ "CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/healthcheck\")' || exit 1" ]
-#      interval: 5s
-#      timeout: 3s
-#      retries: 5
-#
-#  coqui-be:
-#    build:
-#      context: ./CoquiBE
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8001:8000"
-#    volumes:
-#      - shared-sounds:/app/out
-#      - tts-models:/root/.local/share/tts
-#    healthcheck:
-#      test: [ "CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/healthcheck\")' || exit 1" ]
-#      interval: 5s
-#      timeout: 3s
-#      retries: 5
+  # whisper-be:
+  #  build:
+  #    context: ./WhisperBE
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - "8000:8000"
+  #  volumes:
+  #    - whisper-models:/root/.cache/whisper
+  #  healthcheck:
+  #    test: [ "CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/healthcheck\")' || exit 1" ]
+  #    interval: 5s
+  #    timeout: 3s
+  #    retries: 5
+
+  coqui-be:
+    build:
+      context: ./CoquiBE
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    volumes:
+      - shared-sounds:/app/out
+      - tts-models:/root/.local/share/tts
+    healthcheck:
+      test: [ "CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/healthcheck\")' || exit 1" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
 volumes:
   shared-sounds:
