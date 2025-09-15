@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.projectlombok:lombok:1.18.40")
     implementation("io.github.ari4java:ari4java:+")
     implementation("ch.qos.logback:logback-classic:1.5.13")
     implementation("io.projectreactor.netty:reactor-netty:1.1.15")

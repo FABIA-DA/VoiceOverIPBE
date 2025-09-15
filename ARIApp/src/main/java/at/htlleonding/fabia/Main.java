@@ -11,14 +11,12 @@ import ch.loway.oss.ari4java.tools.AriConnectionEvent;
 import ch.loway.oss.ari4java.tools.AriWSCallback;
 import ch.loway.oss.ari4java.tools.RestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 
 public class Main {
     private final static HttpClient httpClient = HttpClient.newBuilder()
@@ -30,6 +28,7 @@ public class Main {
         String ariUser = "ariuser";
         String ariPass = "aripass";
         String stasisApp = "my-ari-app";
+        FormHttpClient client = new FormHttpClient("http://localhost:5200");
 
         ARI ari = ARI.build(ariUrl, stasisApp, ariUser, ariPass, AriVersion.IM_FEELING_LUCKY);
 
