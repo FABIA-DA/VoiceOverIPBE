@@ -2,10 +2,7 @@ package at.htlleonding.fabia;
 
 import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.AriVersion;
-import ch.loway.oss.ari4java.generated.models.ChannelDtmfReceived;
-import ch.loway.oss.ari4java.generated.models.Message;
-import ch.loway.oss.ari4java.generated.models.RecordingFinished;
-import ch.loway.oss.ari4java.generated.models.StasisStart;
+import ch.loway.oss.ari4java.generated.models.*;
 import ch.loway.oss.ari4java.tools.ARIException;
 import ch.loway.oss.ari4java.tools.AriConnectionEvent;
 import ch.loway.oss.ari4java.tools.AriWSCallback;
@@ -36,22 +33,24 @@ public class Main {
                 .eventWebsocket(stasisApp)
                 .setSubscribeAll(true)
                 .execute(new AriWSCallback<Message>() {
-                    private String channelId = "";
-
                     @Override
                     public void onSuccess(Message event) {
                         System.out.println("Success: " + event.toString());
 
                         if (event instanceof StasisStart start) {
-                            channelId = start.getChannel().getId();
+                            Channel channel = start.getChannel();
+                            System.out.println("Name: " + start.getChannel().getName());
+
+                            CallManager manager = CallManager.getInstance();
+                            manager.addSession(new CallSession(channel.getId(), channel.getName(), CallState.EnteringGroup));
 
                             try {
-                                ari.channels().answer(channelId).execute();
-                                ari.channels().play(channelId, "sound:greeting").execute();
+                                ari.channels().answer(channel.getId()).execute();
+                                ari.channels().play(channel.getId(), "sound:greeting").execute();
 
-                                String recordingName = "caller_recording_" + System.currentTimeMillis();
-                                System.out.println("Recording channel: " + channelId + " with name: " + recordingName);
-                                ari.channels().record(channelId, recordingName, "wav")
+                                String recordingName = channel.getId() + "_" + System.currentTimeMillis() + "_rec";
+                                System.out.println("Recording channel: " + channel.getId() + " with name: " + recordingName);
+                                ari.channels().record(channel.getId(), recordingName, "wav")
                                         .setMaxDurationSeconds(10)
                                         .setMaxSilenceSeconds(3)
                                         .setBeep(true)
@@ -62,52 +61,42 @@ public class Main {
                         }
 
                         if (event instanceof RecordingFinished recordingFinished) {
+                            CallManager manager = CallManager.getInstance();
+
                             String recordingName = recordingFinished.getRecording().getName();
+                            String[] name_parts =  recordingName.split("_");
+
+                            if(name_parts.length == 0) {
+                                throw new RuntimeException("The name of the recording is invalid");
+                            }
+
+                            String channelId = name_parts[0];
+                            CallSession session = manager.getSession(channelId);
+
                             String filePath = "/app/recordings/" + recordingName + ".wav";
-                            String audioName = "transcribe_test";
-                            String mediaPath = "sound:transcribe_test";
 
                             System.out.println("Recording finished: " + recordingName);
                             System.out.println("Sending file: " + filePath);
 
-                            AudioUploader.sendFile(
-                                            "http://whisper-be:8000/transcribe",
-                                            filePath)
-                                    .subscribe(
-                                            res -> {
-                                                ObjectMapper mapper = new ObjectMapper();
+                            switch(session.getState()) {
+                                case EnteringGroup -> {
+                                    //Say Groups
+                                    transcribeAndPlay(ari, session, recordingName, filePath);
+                                }
 
-                                                System.out.println("Transcribed text: " + res);
-                                                try {
-                                                    String jsonBody = mapper.writeValueAsString(new CoquiRequest(res, audioName));
-                                                    System.out.println("Json Body of Coqui request: " + jsonBody);
-                                                    Main.generateSpeech(jsonBody, "http://coqui-be:8000/convert");
-                                                    System.out.println("Generated audio");
+                                case EnteringForm -> {
+                                    //Say Forms
+                                    transcribeAndPlay(ari, session, recordingName, filePath);
+                                }
 
-                                                    try {
-                                                        ari.channels().play(channelId, mediaPath).execute();
-
-                                                        String newRecordingName = "caller_recording_" + System.currentTimeMillis();
-                                                        System.out.println("Starting new recording: " + newRecordingName);
-                                                        ari.channels().record(channelId, newRecordingName, "wav")
-                                                                .setMaxDurationSeconds(10)
-                                                                .setMaxSilenceSeconds(3)
-                                                                .setBeep(true)
-                                                                .execute();
-
-                                                    } catch (RestException e) {
-                                                        throw new RuntimeException(e);
-                                                    }
-                                                } catch (IOException | InterruptedException e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                            },
-                                            err -> System.err.println("Error during file upload: " + err.getMessage())
-                                    );
+                                default -> {
+                                    System.out.println("Invalid session state");
+                                }
+                            }
                         }
 
-                        if (event instanceof ChannelDtmfReceived) {
-                            String button = ((ChannelDtmfReceived) event).getDigit();
+                        if (event instanceof ChannelDtmfReceived channelDtmfReceived) {
+                            String button = channelDtmfReceived.getDigit();
                             System.out.println("Button pressed: " + button);
                         }
                     }
@@ -125,6 +114,46 @@ public class Main {
 
         // Keep running
         Thread.currentThread().join();
+    }
+
+    public static void transcribeAndPlay(ARI ari, CallSession session, String recordingName,  String filePath) {
+        String audioName = recordingName + "_transcribe";
+        String mediaPath = "sound:" + recordingName + "_transcribe";
+
+        AudioUploader.sendFile(
+                        "http://whisper-be:8000/transcribe",
+                        filePath)
+                .subscribe(
+                        res -> {
+                            ObjectMapper mapper = new ObjectMapper();
+
+                            System.out.println("Transcribed text: " + res);
+                            try {
+                                String jsonBody = mapper.writeValueAsString(new CoquiRequest(res, audioName));
+                                System.out.println("Json Body of Coqui request: " + jsonBody);
+                                Main.generateSpeech(jsonBody, "http://coqui-be:8000/convert");
+                                System.out.println("Generated audio");
+
+                                try {
+                                    ari.channels().play(session.getChannelId(), mediaPath).execute();
+
+                                    String newRecordingName = "caller_recording_" + System.currentTimeMillis();
+                                    System.out.println("Starting new recording: " + newRecordingName);
+                                    ari.channels().record(session.getChannelId(), newRecordingName, "wav")
+                                            .setMaxDurationSeconds(10)
+                                            .setMaxSilenceSeconds(3)
+                                            .setBeep(true)
+                                            .execute();
+
+                                } catch (RestException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            } catch (IOException | InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        },
+                        err -> System.err.println("Error during file upload: " + err.getMessage())
+                );
     }
 
     public static void generateSpeech(String jsonBody, String url) throws IOException, InterruptedException {

@@ -1,4 +1,4 @@
-﻿package at.htlleonding.fabia;
+package at.htlleonding.fabia;
 
 import at.htlleonding.fabia.dto.*;
 import com.fasterxml.jackson.core.type.TypeReference;

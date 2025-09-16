@@ -1,4 +1,4 @@
-﻿package at.htlleonding.fabia.dto;
+package at.htlleonding.fabia.dto;
 
 import lombok.Getter;
 import lombok.Setter;
