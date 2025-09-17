@@ -1,6 +1,6 @@
 package at.htlleonding.fabia;
 
-import at.htlleonding.fabia.dto.*;
+import at.htlleonding.fabia.client.dtos.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

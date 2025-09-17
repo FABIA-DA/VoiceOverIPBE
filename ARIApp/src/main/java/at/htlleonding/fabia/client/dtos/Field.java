@@ -1,11 +1,11 @@
-package at.htlleonding.fabia.dto;
+package at.htlleonding.fabia.client.dtos;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Field {
+public final class Field {
     private Long id;
     private Long fieldTypeId;
     private String name;

@@ -1,4 +1,4 @@
-package at.htlleonding.fabia.dto;
+package at.htlleonding.fabia.client.dtos;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class FieldGroup {
+public final class FieldGroup {
     private Long id;
     private String name;
     private List<Long> singleChoiceFieldIds;
