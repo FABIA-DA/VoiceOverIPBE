@@ -1,4 +1,4 @@
-package at.htlleonding.fabia.client.dtos;
+package at.htlleonding.fabia.client.formbe.dtos;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,12 +10,12 @@ import java.util.List;
 public final class Option {
     private Long id;
     private String name;
-    private List<Long> fieldIds;
+    private List<Field> fields;
 
     public Option() {}
 
-    public Option(String name, List<Long> fieldIds) {
+    public Option(String name, List<Field> fields) {
         this.name = name;
-        this.fieldIds = fieldIds;
+        this.fields = fields;
     }
 }

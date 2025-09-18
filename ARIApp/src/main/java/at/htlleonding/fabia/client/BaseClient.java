@@ -11,11 +11,12 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class BaseClient {
-    private final static String BASE_URL = "http://localhost:8080";
     protected final static HttpClient HTTP_CLIENT = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_1_1)
             .build();
     protected final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    protected abstract String getBaseUrl();
 
     protected abstract String getController();
 
@@ -24,7 +25,7 @@ public abstract class BaseClient {
     }
 
     protected String buildUrl(String action, Map<String, String> queryParams) {
-        StringBuilder urlBuilder = new StringBuilder(BASE_URL);
+        StringBuilder urlBuilder = new StringBuilder(getBaseUrl());
         urlBuilder.append("/").append(getController());
 
         if (action != null) {

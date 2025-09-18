@@ -1,4 +1,4 @@
-package at.htlleonding.fabia.client.dtos;
+package at.htlleonding.fabia.client.formbe.dtos;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,13 +11,14 @@ public final class Form {
     private Long id;
     private String name;
     private Long groupId;
-    private List<Long> fieldGroupIds;
+    private String groupName;
+    private List<FieldGroup> fieldGroups;
 
     public Form() {}
 
-    public Form(String name, Long groupId, List<Long> fieldGroupIds) {
+    public Form(String name, Long groupId, List<FieldGroup> fieldGroups) {
         this.name = name;
         this.groupId = groupId;
-        this.fieldGroupIds = fieldGroupIds;
+        this.fieldGroups = fieldGroups;
     }
 }

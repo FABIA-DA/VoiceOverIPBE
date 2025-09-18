@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CallSession {
+public final class CallSession {
     private String channelId;
     private String channelName;
     private CallState state;

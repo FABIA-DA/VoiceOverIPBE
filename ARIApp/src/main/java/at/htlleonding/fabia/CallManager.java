@@ -3,7 +3,7 @@ package at.htlleonding.fabia;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CallManager {
+public final class CallManager {
     private static CallManager callManager = null;
     private final Map<String, CallSession> sessions = new ConcurrentHashMap<String, CallSession>();
 

@@ -1,4 +1,4 @@
-package at.htlleonding.fabia.client.dtos;
+package at.htlleonding.fabia.client.formbe.dtos;
 
 import lombok.Getter;
 import lombok.Setter;
