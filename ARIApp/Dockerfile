@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY --chown=gradle . .
 
-RUN gradle shadowJar --no-daemon
+RUN gradle clean shadowJar --no-daemon
 
 FROM eclipse-temurin:24-jre-alpine
 

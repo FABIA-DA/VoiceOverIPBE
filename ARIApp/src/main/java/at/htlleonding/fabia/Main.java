@@ -10,13 +10,7 @@ import ch.loway.oss.ari4java.tools.AriConnectionEvent;
 import ch.loway.oss.ari4java.tools.AriWSCallback;
 import ch.loway.oss.ari4java.tools.RestException;
 
-import java.net.http.HttpClient;
-
 public class Main {
-    private final static HttpClient httpClient = HttpClient.newBuilder()
-            .version(HttpClient.Version.HTTP_1_1)
-            .build();
-
     public static void main(String[] args) throws ARIException, InterruptedException {
         String ariUrl = "http://asterisk:8088";
         String ariUser = "ariuser";
@@ -74,21 +68,15 @@ public class Main {
                             System.out.println("Recording finished: " + recordingName);
                             System.out.println("Sending file: " + filePath);
 
-                            switch(session.getState()) {
-                                case EnteringGroup -> {
-                                    //Say Groups
-                                    transcribeAndPlay(ari, session, recordingName, filePath);
-                                }
-
-                                case EnteringForm -> {
-                                    //Say Forms
-                                    transcribeAndPlay(ari, session, recordingName, filePath);
-                                }
-
-                                default -> {
-                                    System.out.println("Invalid session state");
-                                }
+                            try {
+                                transcribeAndPlay(ari, session, recordingName, filePath);
+                            } catch (RestException e) {
+                                throw new RuntimeException(e);
                             }
+                        }
+
+                        if(event instanceof ChannelHangupRequest channelHangupRequest) {
+                            System.out.println("ChannelHangupRequest: " + channelHangupRequest.toString());
                         }
 
                         if (event instanceof ChannelDtmfReceived channelDtmfReceived) {
@@ -112,9 +100,11 @@ public class Main {
         Thread.currentThread().join();
     }
 
-    public static void transcribeAndPlay(ARI ari, CallSession session, String recordingName,  String filePath) {
+    public static void transcribeAndPlay(ARI ari, CallSession session, String recordingName,  String filePath) throws RestException {
         String audioName = recordingName + "_transcribe";
         String mediaPath = "sound:" + recordingName + "_transcribe";
+
+        ari.channels().startSilence(session.getChannelId()).execute();
 
         TranscriptionClient.getClient().transcribe(filePath).thenAccept(transcription -> {
             System.out.println("Transcribed text: " + transcription);
@@ -122,6 +112,7 @@ public class Main {
                 System.out.println("Generated audio");
 
                 try {
+                    ari.channels().stopSilence(session.getChannelId()).execute();
                     ari.channels().play(session.getChannelId(), mediaPath).execute();
 
                     String newRecordingName = "caller_recording_" + System.currentTimeMillis();

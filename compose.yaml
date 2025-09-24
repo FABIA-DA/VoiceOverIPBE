@@ -32,6 +32,8 @@ services:
         condition: service_healthy
       coqui-be:
         condition: service_healthy
+      backend:
+        condition: service_started
     volumes:
       - recordings:/app/recordings
 
@@ -62,8 +64,70 @@ services:
 #      interval: 5s
 #      timeout: 3s
 #      retries: 5
+#
+#  migrations:
+#    container_name: formbe-migrations
+#    build:
+#      context: ./FormBE
+#      dockerfile: Dockerfile.Migrations
+#    restart: "no"
+#    volumes:
+#      # migrations also need the correct connection string
+#      - ./backend-config.json:/app/appsettings.json:ro
+#    depends_on:
+#      database:
+#        condition: service_healthy
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "5m"
+#        max-file: "1"
+#
+#  database:
+#    container_name: form-database
+#    image: postgres:17
+#    restart: unless-stopped
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_DB: postgres
+#    volumes:
+#      - form-db_data:/var/lib/postgresql/data
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "10m"
+#        max-file: "4"
+#    healthcheck:
+#      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+#      interval: 2s
+#      timeout: 4s
+#      retries: 10
+#
+#  backend:
+#    container_name: form-backend
+#    build:
+#      context: ./FormBE
+#      dockerfile: Dockerfile
+#    restart: unless-stopped
+#    environment:
+#      - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+#    volumes:
+#      - ./backend-config.json:/app/appsettings.json:ro
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "10m"
+#        max-file: "5"
+#    depends_on:
+#      database:
+#        condition: service_healthy
+#      migrations:
+#        condition: service_completed_successfully
 
 volumes:
+  form-db_data:
+    external: true
   shared-sounds:
   recordings:
   whisper-models:

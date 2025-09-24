@@ -22,7 +22,7 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.40")
     compileOnly("org.projectlombok:lombok:1.18.40")
     annotationProcessor("org.projectlombok:lombok:1.18.40")
-    implementation("io.github.ari4java:ari4java:+")
+    implementation("io.github.ari4java:ari4java:0.17.0")
     implementation("ch.qos.logback:logback-classic:1.5.13")
     implementation("io.projectreactor.netty:reactor-netty:1.1.15")
     implementation("org.apache.httpcomponents:httpclient:4.5.14")
