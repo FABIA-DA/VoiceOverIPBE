@@ -10,6 +10,8 @@ import ch.loway.oss.ari4java.tools.AriConnectionEvent;
 import ch.loway.oss.ari4java.tools.AriWSCallback;
 import ch.loway.oss.ari4java.tools.RestException;
 
+import java.io.IOException;
+
 public class Main {
     public static void main(String[] args) throws ARIException, InterruptedException {
         String ariUrl = "http://asterisk:8088";
@@ -54,9 +56,9 @@ public class Main {
                             CallManager manager = CallManager.getInstance();
 
                             String recordingName = recordingFinished.getRecording().getName();
-                            String[] name_parts =  recordingName.split("_");
+                            String[] name_parts = recordingName.split("_");
 
-                            if(name_parts.length == 0) {
+                            if (name_parts.length == 0) {
                                 throw new RuntimeException("The name of the recording is invalid");
                             }
 
@@ -70,12 +72,12 @@ public class Main {
 
                             try {
                                 transcribeAndPlay(ari, session, recordingName, filePath);
-                            } catch (RestException e) {
+                            } catch (RestException | IOException e) {
                                 throw new RuntimeException(e);
                             }
                         }
 
-                        if(event instanceof ChannelHangupRequest channelHangupRequest) {
+                        if (event instanceof ChannelHangupRequest channelHangupRequest) {
                             System.out.println("ChannelHangupRequest: " + channelHangupRequest.toString());
                         }
 
@@ -100,33 +102,24 @@ public class Main {
         Thread.currentThread().join();
     }
 
-    public static void transcribeAndPlay(ARI ari, CallSession session, String recordingName,  String filePath) throws RestException {
+    public static void transcribeAndPlay(ARI ari, CallSession session, String recordingName, String filePath) throws RestException, IOException {
         String audioName = recordingName + "_transcribe";
-        String mediaPath = "sound:" + recordingName + "_transcribe";
+        String mediaPath = "sound:" + audioName;
 
-        ari.channels().startSilence(session.getChannelId()).execute();
+        ari.channels().startMoh(session.getChannelId()).execute();
 
-        TranscriptionClient.getClient().transcribe(filePath).thenAccept(transcription -> {
+        try{
+            String transcription = TranscriptionClient.getClient().transcribe(filePath);
             System.out.println("Transcribed text: " + transcription);
-            SpeechGenerationClient.getClient().generateSpeech(transcription, audioName).thenAccept(_ -> {
-                System.out.println("Generated audio");
 
-                try {
-                    ari.channels().stopSilence(session.getChannelId()).execute();
-                    ari.channels().play(session.getChannelId(), mediaPath).execute();
+            SpeechGenerationClient.getClient().generateSpeech(transcription, audioName);
+            System.out.println("Generated audio");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
 
-                    String newRecordingName = "caller_recording_" + System.currentTimeMillis();
-                    System.out.println("Starting new recording: " + newRecordingName);
-                    ari.channels().record(session.getChannelId(), newRecordingName, "wav")
-                            .setMaxDurationSeconds(10)
-                            .setMaxSilenceSeconds(3)
-                            .setBeep(true)
-                            .execute();
-
-                } catch (RestException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        });
+        ari.channels().stopMoh(session.getChannelId()).execute();
+        ari.channels().play(session.getChannelId(), mediaPath).execute();
     }
 }

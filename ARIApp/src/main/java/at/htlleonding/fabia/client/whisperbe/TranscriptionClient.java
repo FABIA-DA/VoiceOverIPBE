@@ -2,34 +2,21 @@ package at.htlleonding.fabia.client.whisperbe;
 
 import at.htlleonding.fabia.client.BaseClient;
 import com.fasterxml.jackson.core.type.TypeReference;
+import okhttp3.*;
 
-import java.io.FileNotFoundException;
-import java.net.URI;
-import java.net.http.HttpRequest;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
-import java.util.concurrent.CompletableFuture;
 
 public final class TranscriptionClient extends BaseClient {
     private static TranscriptionClient client = null;
 
-    private static HttpRequest buildPostRequest(String url, Path filePath) throws FileNotFoundException {
-        return HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .POST(HttpRequest.BodyPublishers.ofFile(filePath))
-                .header("Accept", "application/json")
-                .header("Content-Type", "application/octet-stream")
-                .build();
-    }
-
-    @Override
-    protected String getBaseUrl() {
-        return "http://whisper-be:8000";
-    }
-
-    @Override
-    protected String getController() {
-        return "transcribe";
-    }
+    private static final HttpUrl URL = new  HttpUrl.Builder()
+            .scheme("http")
+            .host("whisper-be")
+            .port(8000)
+            .addPathSegment("transcribe")
+            .build();
 
     public static TranscriptionClient getClient() {
         if (client == null) {
@@ -38,15 +25,23 @@ public final class TranscriptionClient extends BaseClient {
         return client;
     }
 
-    public CompletableFuture<String> transcribe(String filePath){
-        try{
-            HttpRequest request = buildPostRequest(buildUrl(null, null), Path.of(filePath));
+    public String transcribe(String filePath) throws IOException {
+        File file = Path.of(filePath).toFile();
 
-            return getCompletableFuture(request, new TypeReference<WhisperResponse>() {})
-                    .thenApply(WhisperResponse::getText);
-        } catch (FileNotFoundException e) {
-            System.out.println("Whisper transcription error: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
+        RequestBody fileBody = RequestBody.create(file, MediaType.parse("audio/wav"));
+
+        MultipartBody multipartBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", file.getName(), fileBody)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(URL)
+                .post(multipartBody)
+                .build();
+
+        System.out.println(request);
+
+        return getResponse(request, new TypeReference<WhisperResponse>() {}).getText();
     }
 }

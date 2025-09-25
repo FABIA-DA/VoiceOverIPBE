@@ -1,34 +1,23 @@
 package at.htlleonding.fabia.client.coquibe;
 
 import at.htlleonding.fabia.client.BaseClient;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.util.concurrent.CompletableFuture;
+import java.io.IOException;
 
 public final class SpeechGenerationClient extends BaseClient {
     private static SpeechGenerationClient client = null;
 
-    private static HttpRequest buildPostRequest(String url, String jsonBody) {
-        return HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-                .header("Content-Type", "application/json")
-                .header("Accept", "application/json")
-                .build();
-    }
-
-    @Override
-    protected String getBaseUrl() {
-        return "http://coqui-be:8000";
-    }
-
-    @Override
-    protected String getController() {
-        return "convert";
-    }
+    private static final HttpUrl URL = new HttpUrl.Builder()
+            .scheme("http")
+            .host("coqui-be")
+            .port(8000)
+            .addPathSegment("convert")
+            .build();
 
     public static SpeechGenerationClient getClient() {
         if(client == null){
@@ -37,18 +26,16 @@ public final class SpeechGenerationClient extends BaseClient {
         return client;
     }
 
-    public CompletableFuture<Void> generateSpeech(String text, String fileName) {
+    public void generateSpeech(String text, String fileName) throws IOException {
         CoquiRequest requestBody = new CoquiRequest(text, fileName);
+        String jsonBody = OBJECT_MAPPER.writeValueAsString(requestBody);
+        System.out.println(jsonBody);
 
-        try {
-            String jsonBody = OBJECT_MAPPER.writeValueAsString(requestBody);
+        Request request = new Request.Builder()
+                .url(URL)
+                .post(RequestBody.create(jsonBody, MediaType.parse("application/json")))
+                .build();
 
-            HttpRequest request = buildPostRequest(buildUrl(null, null), jsonBody);
-
-            return getCompletableFuture(request, new TypeReference<Void>() {
-            });
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        getResponse(request, new TypeReference<Void>() {});
     }
 }

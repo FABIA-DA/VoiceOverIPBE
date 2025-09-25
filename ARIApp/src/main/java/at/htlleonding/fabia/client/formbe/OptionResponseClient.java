@@ -2,18 +2,19 @@ package at.htlleonding.fabia.client.formbe;
 
 import at.htlleonding.fabia.client.formbe.dtos.OptionResponse;
 import at.htlleonding.fabia.client.formbe.dtos.requests.OptionResponseCreationRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import okhttp3.*;
 
-import java.net.http.HttpRequest;
-import java.util.concurrent.CompletableFuture;
+import java.io.IOException;
 
 public final class OptionResponseClient extends FormBaseClient {
     private static OptionResponseClient client = null;
 
-    @Override
-    protected String getController() {
-        return "api/option-responses";
+    private static HttpUrl getUrl() {
+        return getBuilder()
+                .addPathSegment("api")
+                .addPathSegment("option-responses")
+                .build();
     }
 
     public static OptionResponseClient getClient() {
@@ -23,18 +24,16 @@ public final class OptionResponseClient extends FormBaseClient {
         return client;
     }
 
-    public CompletableFuture<OptionResponse> createOptionResponse(long optionResponseId, String tele) {
+    public OptionResponse createOptionResponse(long optionResponseId, String tele) throws IOException {
         OptionResponseCreationRequest requestBody = new OptionResponseCreationRequest(optionResponseId, tele);
+        String jsonBody = OBJECT_MAPPER.writeValueAsString(requestBody);
 
-        try {
-            String jsonBody = OBJECT_MAPPER.writeValueAsString(requestBody);
+        Request request = new Request.Builder()
+                .url(getUrl())
+                .post(RequestBody.create(jsonBody, MediaType.parse("application/json")))
+                .build();
 
-            HttpRequest request = buildPostRequest(buildUrl(null, null), jsonBody);
-
-            return getCompletableFuture(request, new TypeReference<OptionResponse>() {
-            });
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return getResponse(request, new TypeReference<>() {
+        });
     }
 }
