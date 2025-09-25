@@ -22,7 +22,7 @@ public final class SpeechGenerationClient extends BaseClient {
 
     @Override
     protected String getBaseUrl() {
-        return "http://coqui-be:8000";
+        return "http://coqui-be:8001";
     }
 
     @Override
