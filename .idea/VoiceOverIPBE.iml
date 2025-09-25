@@ -2,7 +2,20 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE.Core/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE.Core/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE.Persistence/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE.Persistence/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE.Shared/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE.Shared/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE.Test/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE.Test/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE.TestInt/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE.TestInt/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/FormBE/FormBE/obj" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

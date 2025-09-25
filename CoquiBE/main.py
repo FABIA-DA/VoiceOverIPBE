@@ -26,6 +26,7 @@ tts = TTS("tts_models/de/css10/vits-neon").to(device)
 
 @app.post("/convert", status_code=status.HTTP_204_NO_CONTENT)
 async def convert(request: ConversionRequest):
+    print(f"Converting text to speech, saving to {request.fileName}.wav")
     audio_path = f"{output_dir}/{request.fileName}.wav"
     tts.tts_to_file(
         text=request.text,

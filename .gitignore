@@ -1,6 +1,7 @@
 Asterisk/asterisk-logs/*
 CoquiApp/.idea
 CoquiApp/out
+FormBE
 
 # Created by https://www.toptal.com/developers/gitignore/api/intellij+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij+all
