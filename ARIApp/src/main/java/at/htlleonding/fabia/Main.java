@@ -1,9 +1,10 @@
 package at.htlleonding.fabia;
 
+import at.htlleonding.fabia.callmanagement.CallManager;
+import at.htlleonding.fabia.callmanagement.CallSession;
+import at.htlleonding.fabia.callmanagement.CallState;
 import at.htlleonding.fabia.client.coquibe.SpeechGenerationClient;
 import at.htlleonding.fabia.client.whisperbe.TranscriptionClient;
-import ch.loway.oss.ari4java.ARI;
-import ch.loway.oss.ari4java.AriVersion;
 import ch.loway.oss.ari4java.generated.models.*;
 import ch.loway.oss.ari4java.tools.ARIException;
 import ch.loway.oss.ari4java.tools.AriConnectionEvent;
@@ -12,17 +13,11 @@ import ch.loway.oss.ari4java.tools.RestException;
 
 import java.io.IOException;
 
+
 public class Main {
     public static void main(String[] args) throws ARIException, InterruptedException {
-        String ariUrl = "http://asterisk:8088";
-        String ariUser = "ariuser";
-        String ariPass = "aripass";
-        String stasisApp = "my-ari-app";
-
-        ARI ari = ARI.build(ariUrl, stasisApp, ariUser, ariPass, AriVersion.IM_FEELING_LUCKY);
-
-        ari.events()
-                .eventWebsocket(stasisApp)
+        AriContext.getInstance().events()
+                .eventWebsocket(AriContext.stasisApp)
                 .setSubscribeAll(true)
                 .execute(new AriWSCallback<Message>() {
                     @Override
@@ -37,12 +32,14 @@ public class Main {
                             manager.addSession(new CallSession(channel.getId(), channel.getName(), CallState.EnteringGroup));
 
                             try {
-                                ari.channels().answer(channel.getId()).execute();
-                                ari.channels().play(channel.getId(), "sound:greeting").execute();
+                                AriContext.getInstance().channels().answer(channel.getId()).execute();
+                                AriContext.getInstance().channels().play(channel.getId(), "sound:greeting").execute();
 
                                 String recordingName = channel.getId() + "_" + System.currentTimeMillis() + "_rec";
                                 System.out.println("Recording channel: " + channel.getId() + " with name: " + recordingName);
-                                ari.channels().record(channel.getId(), recordingName, "wav")
+                                AriContext.getInstance()
+                                        .channels()
+                                        .record(channel.getId(), recordingName, "wav")
                                         .setMaxDurationSeconds(10)
                                         .setMaxSilenceSeconds(3)
                                         .setBeep(true)
@@ -71,7 +68,7 @@ public class Main {
                             System.out.println("Sending file: " + filePath);
 
                             try {
-                                transcribeAndPlay(ari, session, recordingName, filePath);
+                                transcribeAndPlay(session, recordingName, filePath);
                             } catch (RestException | IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -102,13 +99,13 @@ public class Main {
         Thread.currentThread().join();
     }
 
-    public static void transcribeAndPlay(ARI ari, CallSession session, String recordingName, String filePath) throws RestException, IOException {
+    public static void transcribeAndPlay(CallSession session, String recordingName, String filePath) throws RestException, IOException {
         String audioName = recordingName + "_transcribe";
         String mediaPath = "sound:" + audioName;
 
-        ari.channels().startMoh(session.getChannelId()).execute();
+        AriContext.getInstance().channels().startMoh(session.getChannelId()).execute();
 
-        try{
+        try {
             String transcription = TranscriptionClient.getClient().transcribe(filePath);
             System.out.println("Transcribed text: " + transcription);
 
@@ -119,7 +116,7 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        ari.channels().stopMoh(session.getChannelId()).execute();
-        ari.channels().play(session.getChannelId(), mediaPath).execute();
+        AriContext.getInstance().channels().stopMoh(session.getChannelId()).execute();
+        AriContext.getInstance().channels().play(session.getChannelId(), mediaPath).execute();
     }
 }

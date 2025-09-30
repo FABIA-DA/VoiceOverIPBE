@@ -1,4 +1,4 @@
-package at.htlleonding.fabia;
+package at.htlleonding.fabia.callmanagement;
 
 import lombok.Getter;
 import lombok.Setter;
