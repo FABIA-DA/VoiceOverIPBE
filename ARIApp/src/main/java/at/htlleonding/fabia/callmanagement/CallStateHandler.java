@@ -1,5 +1,5 @@
-﻿package at.htlleonding.fabia.callmanagement;
+package at.htlleonding.fabia.callmanagement;
 
-public interface CallStateHandler {
+public sealed interface CallStateHandler permits EnteringGroupHandler {
     void handle(CallSession session);
 }

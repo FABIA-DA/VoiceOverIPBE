@@ -1,4 +1,4 @@
-﻿package at.htlleonding.fabia;
+package at.htlleonding.fabia;
 
 import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.AriVersion;

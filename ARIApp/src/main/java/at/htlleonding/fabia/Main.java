@@ -1,6 +1,7 @@
 package at.htlleonding.fabia;
 
 import at.htlleonding.fabia.callmanagement.CallManager;
+import at.htlleonding.fabia.callmanagement.CallProcessor;
 import at.htlleonding.fabia.callmanagement.CallSession;
 import at.htlleonding.fabia.callmanagement.CallState;
 import at.htlleonding.fabia.client.coquibe.SpeechGenerationClient;
