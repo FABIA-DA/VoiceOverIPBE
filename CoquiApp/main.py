@@ -9,6 +9,7 @@ from TTS.api import TTS
 AudioSegment.converter = which("ffmpeg")
 
 os.makedirs("out", exist_ok=True)
+os.environ["XDG_CACHE_HOME"] = "/models"  # directory where model is already downloaded
 
 # Get device
 device = "cuda" if torch.cuda.is_available() else "cpu"
