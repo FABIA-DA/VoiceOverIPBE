@@ -10,6 +10,7 @@ import ch.loway.oss.ari4java.tools.RestException;
 import java.io.IOException;
 import java.util.List;
 
+@HandledState(CallState.EnteringGroup)
 public final class EnteringGroupHandler implements CallStateHandler{
     @Override
     public void handle(CallSession session) {
