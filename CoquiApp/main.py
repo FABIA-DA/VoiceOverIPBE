@@ -17,7 +17,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # Init TTS
 tts = TTS("tts_models/de/css10/vits-neon").to(device)
 
-with open("test.csv", newline='', encoding="utf-8") as csvfile:
+with open("Phrases.csv", newline='', encoding="utf-8") as csvfile:
   first = True
   reader = csv.reader(csvfile, delimiter=";")
   for row in reader:
@@ -31,5 +31,5 @@ with open("test.csv", newline='', encoding="utf-8") as csvfile:
     sound = AudioSegment.from_file(audio_path)
     sound = sound.set_channels(1).set_frame_rate(8000)
     sound.export(audio_path, format="wav", parameters=["-c:a", "pcm_s16le"])
-    print("Done")
+    print("Done with file")
 print("Done...")

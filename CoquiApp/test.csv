@@ -1,7 +1,0 @@
-key;voice;text
-greeting;tts_models/de/css10/vits-neon;Grüß Gott und willkomen bei Fabia!
-ja;tts_models/de/css10/vits-neon;Ja.
-nein;tts_models/de/css10/vits-neon;Nein.
-nochmal;tts_models/de/css10/vits-neon;Nochmal.
-sentence_1;tts_models/de/css10/vits-neon;Ich möchte gerne ein Glas Wasser haben.
-sentence_2;tts_models/de/css10/vits-neon;Heute sollten wir unsere Koffer packen, bevor es zu spät ist.

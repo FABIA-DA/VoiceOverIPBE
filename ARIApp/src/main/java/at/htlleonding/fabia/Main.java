@@ -1,7 +1,6 @@
 package at.htlleonding.fabia;
 
 import at.htlleonding.fabia.callmanagement.CallManager;
-import at.htlleonding.fabia.callmanagement.CallProcessor;
 import at.htlleonding.fabia.callmanagement.CallSession;
 import at.htlleonding.fabia.callmanagement.CallState;
 import at.htlleonding.fabia.client.coquibe.SpeechGenerationClient;
@@ -30,7 +29,7 @@ public class Main {
                             System.out.println("Name: " + start.getChannel().getName());
 
                             CallManager manager = CallManager.getInstance();
-                            manager.addSession(new CallSession(channel.getId(), channel.getName(), CallState.EnteringGroup));
+                            manager.addSession(new CallSession(channel.getId(), channel.getName(), CallState.EnterGroup));
 
                             try {
                                 AriContext.getInstance().channels().answer(channel.getId()).execute();

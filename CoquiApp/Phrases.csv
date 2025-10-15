@@ -1,2 +1,17 @@
-key;voice;text
-greeting;tts_models/de/css10/vits-neon;Grüß Gott und willkomen bei Fabia!
+key;text
+greeting;Grüß Gott und willkommen bei Fabia!
+group_prechoose;Wir haben diese Gruppen zur Verfügung:
+choose_group;Welche Gruppe möchten Sie wählen?
+form_prechoose;Diese Formulare sind hier vorhanden:
+choose_form;Welches Formular möchten Sie auswählen?
+ungrouped_form_info;Wir haben auch Formulare ohne einer übergeordneten Gruppe.
+form_info;Sehr gut. Fahren wir weiter mit dem Ausfüllen des Formulars.
+form_prerequisites;Für dieses Formular werden folgende Daten benötigt:
+field_skip;Wollen Sie dieses Feld überspringen?
+input_validation;Sind sie mit dieser Eingabe zufrieden?
+input_skipped;Nun fahren wir mit den übersprungenen Feldern fort.
+final_input_validation;Wollen sie sich alle ihre eingaben noch einmal anhören?
+send_question;Soll das Formular mit diesen Eingaben abgesendet werden?
+next_form;Wollen Sie noch ein Formular ausfüllen?
+goodbye;Dankeschön für das Benutzen unseres Services und auf ein baldiges Wiedersehen.
+error;Es gab ein Problem...

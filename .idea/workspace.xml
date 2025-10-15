@@ -5,8 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AriEventHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallAudio.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/EnterFormHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/FieldGroupHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/FormIntroHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/GreetingHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Asterisk/asterisk-config/pjsip.conf" beforeDir="false" afterPath="$PROJECT_DIR$/Asterisk/asterisk-config/pjsip.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AriContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AriContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallSession.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallState.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallStateHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/CallStateHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/EnteringGroupHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/EnterGroupHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Asterisk/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Asterisk/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoquiApp/Phrases.csv" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiApp/Phrases.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoquiApp/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiApp/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CoquiApp/test.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +65,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/FABIA-DA/VoiceOverIPBE.git",
+    "accountId": "e77c3e05-ecae-41fc-b37e-603c14d78248"
+  }
+}]]></component>
   <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$/ARIApp" gradleHome="$USER_HOME$/.gradle/wrapper/dists/gradle-8.14-bin/38aieal9i53h9rfe7vjup95b9/gradle-8.14" javaHome="$USER_HOME$/.jdks/corretto-24.0.2" gradleVersion="8.14" />
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
