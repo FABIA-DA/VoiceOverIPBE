@@ -8,22 +8,34 @@ import lombok.Setter;
 import java.util.LinkedList;
 import java.util.Queue;
 
-@Getter
-@Setter
 public final class CallSession {
-    private String channelId;
-    private String channelName;
+    @Getter
+    private final String channelId;
+    @Getter
+    private final String channelName;
+    @Getter
+    @Setter
     private CallState state;
+    @Getter
+    @Setter
     private Group selectedGroup;
+    @Getter
+    @Setter
     private Form selectedForm;
+    @Getter
+    @Setter
     private Integer currentFieldGroupIdx;
+    @Getter
+    @Setter
     private Integer currentSingleChoiceFieldIdx;
+    @Getter
+    @Setter
     private Integer currentFieldIdx;
-    private Queue<String> audioQueue = new LinkedList<>();
+    @Getter
+    private final Queue<String> audioQueue = new LinkedList<>();
 
-    public CallSession(String channelId, String channelName, CallState state) {
+    public CallSession(String channelId, String channelName) {
         this.channelId = channelId;
         this.channelName = channelName;
-        this.state = state;
     }
 }

@@ -1,4 +1,4 @@
-﻿package at.htlleonding.fabia.callmanagement.handler;
+package at.htlleonding.fabia.callmanagement.handler;
 
 import at.htlleonding.fabia.callmanagement.*;
 import at.htlleonding.fabia.client.coquibe.SpeechGenerationClient;

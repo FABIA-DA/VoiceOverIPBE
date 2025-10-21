@@ -1,10 +1,9 @@
-﻿package at.htlleonding.fabia.callmanagement.handler;
+package at.htlleonding.fabia.callmanagement.handler;
 
 import at.htlleonding.fabia.callmanagement.CallAudio;
 import at.htlleonding.fabia.callmanagement.CallSession;
 import at.htlleonding.fabia.callmanagement.CallState;
 import at.htlleonding.fabia.callmanagement.HandledState;
-import okhttp3.Call;
 
 @HandledState(CallState.Greeting)
 public final class GreetingHandler implements CallStateHandler {

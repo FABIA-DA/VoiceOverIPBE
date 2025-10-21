@@ -1,4 +1,4 @@
-﻿package at.htlleonding.fabia;
+package at.htlleonding.fabia;
 
 import at.htlleonding.fabia.callmanagement.*;
 import ch.loway.oss.ari4java.generated.AriWSHelper;

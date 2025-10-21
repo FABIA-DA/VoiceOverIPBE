@@ -16,7 +16,7 @@ public final class AriContext {
 
             try {
                 ari = ARI.build(ariUrl, stasisApp, ariUser, ariPass, AriVersion.IM_FEELING_LUCKY);
-                //ari.events().eventWebsocket(stasisApp).execute(new AriEventHandler());
+                ari.events().eventWebsocket(stasisApp).execute(new AriEventHandler());
             } catch (ARIException e) {
                 throw new RuntimeException(e);
             }

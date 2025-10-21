@@ -4,27 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AriEventHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallAudio.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/EnterFormHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/FieldGroupHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/FormIntroHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/GreetingHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AriContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AriContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallProcessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallSession.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallState.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/CallStateHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/CallStateHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/EnteringGroupHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmanagement/handler/EnterGroupHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Asterisk/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Asterisk/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CoquiApp/Phrases.csv" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiApp/Phrases.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CoquiApp/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/CoquiApp/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CoquiApp/test.csv" beforeDir="false" />
-    </list>
+    <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

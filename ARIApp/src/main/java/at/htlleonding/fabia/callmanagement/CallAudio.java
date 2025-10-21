@@ -1,4 +1,4 @@
-﻿package at.htlleonding.fabia.callmanagement;
+package at.htlleonding.fabia.callmanagement;
 
 import at.htlleonding.fabia.AriContext;
 import ch.loway.oss.ari4java.tools.RestException;
