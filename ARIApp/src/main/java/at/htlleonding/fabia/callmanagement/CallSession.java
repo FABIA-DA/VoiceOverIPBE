@@ -32,6 +32,9 @@ public final class CallSession {
     @Setter
     private Integer currentFieldIdx;
     @Getter
+    @Setter
+    private String currentRecordingName;
+    @Getter
     private final Queue<String> audioQueue = new LinkedList<>();
 
     public CallSession(String channelId, String channelName, CallState initialState) {
