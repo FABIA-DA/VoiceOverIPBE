@@ -34,8 +34,9 @@ public final class CallSession {
     @Getter
     private final Queue<String> audioQueue = new LinkedList<>();
 
-    public CallSession(String channelId, String channelName) {
+    public CallSession(String channelId, String channelName, CallState initialState) {
         this.channelId = channelId;
         this.channelName = channelName;
+        this.state = initialState;
     }
 }
