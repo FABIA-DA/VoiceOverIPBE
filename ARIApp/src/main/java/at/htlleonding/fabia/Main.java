@@ -25,6 +25,7 @@ public class Main {
                     public void onSuccess(Message event) {
                         System.out.println("Success: " + event.toString());
 
+
                         if (event instanceof StasisStart start) {
                             Channel channel = start.getChannel();
                             System.out.println("Name: " + start.getChannel().getName());
@@ -38,11 +39,15 @@ public class Main {
 
                                 String recordingName = channel.getId() + "_" + System.currentTimeMillis() + "_rec";
                                 System.out.println("Recording channel: " + channel.getId() + " with name: " + recordingName);
+
+                                CallSession session = manager.getSession(channel.getId());
+                                if (session != null) {
+                                    session.setCurrentRecordingName(recordingName);
+                                }
                                 AriContext.getInstance()
                                         .channels()
                                         .record(channel.getId(), recordingName, "wav")
                                         .setMaxDurationSeconds(10)
-                                        .setMaxSilenceSeconds(3)
                                         .setBeep(true)
                                         .execute();
                             } catch (RestException e) {
@@ -82,6 +87,38 @@ public class Main {
                         if (event instanceof ChannelDtmfReceived channelDtmfReceived) {
                             String button = channelDtmfReceived.getDigit();
                             System.out.println("Button pressed: " + button);
+
+                            if ("#".equals(button)) {
+                                String channelId = null;
+                                if (channelDtmfReceived.getChannel() != null) {
+                                    channelId = channelDtmfReceived.getChannel().getId();
+                                } else {
+                                    try {
+                                        java.lang.reflect.Method m = channelDtmfReceived.getClass().getMethod("getChannelId");
+                                        Object cid = m.invoke(channelDtmfReceived);
+                                        if (cid instanceof String) channelId = (String) cid;
+                                    } catch (Exception ignored) {
+                                    }
+                                }
+
+                                if (channelId != null) {
+                                    try {
+                                        CallManager manager = CallManager.getInstance();
+                                        CallSession session = manager.getSession(channelId);
+
+                                        if (session != null && session.getCurrentRecordingName() != null) {
+                                            AriContext.getInstance().recordings().stop(session.getCurrentRecordingName()).execute();
+                                            System.out.println("Stopped recording: " + session.getCurrentRecordingName() + " for channel: " + channelId);
+                                        } else {
+                                            System.out.println("Could not determine recording name to stop for channel: " + channelId);
+                                        }
+                                    } catch (RestException e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    System.out.println("Could not determine channel id to stop recording.");
+                                }
+                            }
                         }
                     }
 
