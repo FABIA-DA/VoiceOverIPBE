@@ -92,7 +92,6 @@ public class Main {
                                 if (channelDtmfReceived.getChannel() != null) {
                                     channelId = channelDtmfReceived.getChannel().getId();
                                 } else {
-                                    // fallback if API provides channelId directly
                                     try {
                                         java.lang.reflect.Method m = channelDtmfReceived.getClass().getMethod("getChannelId");
                                         Object cid = m.invoke(channelDtmfReceived);
@@ -107,7 +106,6 @@ public class Main {
                                         CallSession session = manager.getSession(channelId);
 
                                         if (session != null && session.getCurrentRecordingName() != null) {
-                                            // use recordings().stop(recordingName) instead of non-existing recordStop(...)
                                             AriContext.getInstance().recordings().stop(session.getCurrentRecordingName()).execute();
                                             System.out.println("Stopped recording: " + session.getCurrentRecordingName() + " for channel: " + channelId);
                                         } else {
