@@ -2,6 +2,7 @@ package at.htlleonding.fabia;
 
 import at.htlleonding.fabia.callmanagement.*;
 import ch.loway.oss.ari4java.generated.AriWSHelper;
+import ch.loway.oss.ari4java.generated.models.ChannelHangupRequest;
 import ch.loway.oss.ari4java.generated.models.PlaybackFinished;
 import ch.loway.oss.ari4java.generated.models.RecordingFinished;
 import ch.loway.oss.ari4java.generated.models.StasisStart;
@@ -15,43 +16,39 @@ public class AriEventHandler extends AriWSHelper {
 
     @Override
     protected void onStasisStart(StasisStart message) {
-        super.onStasisStart(message);
-
         System.out.println("New call entered Stasis: " + message.getChannel().getName());
         CallSession session = new CallSession(
                 message.getChannel().getId(),
-                message.getChannel().getName(),
-                CallState.Greeting
+                message.getChannel().getName()
         );
+        session.setState(CallState.Greeting);
         CallManager.getInstance().addSession(session);
-        CallProcessor.process(session);
+        session.nextAudioOrStep();
     }
 
     @Override
     protected void onRecordingFinished(RecordingFinished message) {
-        super.onRecordingFinished(message);
-
         System.out.println("Recording finished: " + message.getRecording().getName());
-        String channelId = message.getRecording().getTarget_uri();
+        String channelId = ActiveAudioRegistry.getInstance().getRecording(message.getRecording().getName()).getChannelId();
         CallSession session = CallManager.getInstance().getSession(channelId);
 
-        CallAudio.playNext(session);
+        session.nextAudioOrStep();
     }
 
     @Override
     protected void onPlaybackFinished(PlaybackFinished message) {
-        super.onPlaybackFinished(message);
-
-        final String channelPrefix = "channel:";
-
-        if(!message.getPlayback().getTarget_uri().startsWith(channelPrefix)){
-            return;
-        }
-
-        System.out.println("Playback finished: " + message.getPlayback().getId());
-        String channelId = message.getPlayback().getTarget_uri().substring(channelPrefix.length() + 1);
+        String prefix = "sound:";
+        String media = message.getPlayback().getMedia_uri().substring(prefix.length());
+        System.out.println("Playback finished: " + media);
+        String channelId = ActiveAudioRegistry.getInstance().getPlayback(media).getChannelId();
         CallSession session = CallManager.getInstance().getSession(channelId);
 
-        CallAudio.playNext(session);
+        session.nextAudioOrStep();
+    }
+
+    @Override
+    protected void onChannelHangupRequest(ChannelHangupRequest message) {
+        String channelId = message.getChannel().getId();
+        CallManager.getInstance().removeSession(channelId);
     }
 }

@@ -16,7 +16,8 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws ARIException, InterruptedException {
-        AriContext.getInstance().events()
+        AriContext.getInstance();
+/*        AriContext.getInstance().events()
                 .eventWebsocket(AriContext.stasisApp)
                 .setSubscribeAll(true)
                 .execute(new AriWSCallback<Message>() {
@@ -29,7 +30,7 @@ public class Main {
                             System.out.println("Name: " + start.getChannel().getName());
 
                             CallManager manager = CallManager.getInstance();
-                            manager.addSession(new CallSession(channel.getId(), channel.getName(), CallState.EnterGroup));
+                            manager.addSession(new CallSession(channel.getId(), channel.getName()));
 
                             try {
                                 AriContext.getInstance().channels().answer(channel.getId()).execute();
@@ -96,7 +97,7 @@ public class Main {
                 });
 
         // Keep running
-        Thread.currentThread().join();
+        Thread.currentThread().join();*/
     }
 
     public static void transcribeAndPlay(CallSession session, String recordingName, String filePath) throws RestException, IOException {

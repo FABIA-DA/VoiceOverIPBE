@@ -16,6 +16,7 @@ AudioSegment.converter = which("ffmpeg")
 
 output_dir = "/app/out"
 os.makedirs(output_dir, exist_ok=True)
+os.environ["XDG_CACHE_HOME"] = "/models"  # directory where model is already downloaded
 
 app = FastAPI()
 

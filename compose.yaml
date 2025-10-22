@@ -111,6 +111,8 @@ services:
       context: ./FormBE
       dockerfile: Dockerfile
     restart: unless-stopped
+    ports:
+      - "5200:5200"
     environment:
       - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
     volumes:

@@ -15,14 +15,12 @@ public final class CallProcessor {
             } catch (RuntimeException e) {
                 System.out.println("Error handling state " + session.getState());
                 e.printStackTrace();
-                CallAudio.enqueueError(session);
             }
         }
 
         CallStateHandler handler = handlerMap.get(session.getState());
         if (handler == null) {
             System.out.println("No handler for state " + session.getState());
-            CallAudio.enqueueError(session);
             return;
         }
 

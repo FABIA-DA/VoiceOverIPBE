@@ -3,8 +3,9 @@ package at.htlleonding.fabia.callmanagement.handler;
 import at.htlleonding.fabia.callmanagement.CallSession;
 import at.htlleonding.fabia.callmanagement.CallState;
 import at.htlleonding.fabia.callmanagement.HandledState;
+import at.htlleonding.fabia.callmanagement.PlaybackItem;
 
-@HandledState(CallState.FieldGroupProcessing)
+@HandledState(CallState.FieldGroup)
 public final class FieldGroupHandler implements CallStateHandler {
     @Override
     public void handle(CallSession session) {
@@ -12,11 +13,8 @@ public final class FieldGroupHandler implements CallStateHandler {
             throw new IllegalStateException("No form was selected");
         }
 
-        try{
+        session.enqueueAudio(new PlaybackItem("goodbye", session.getChannelId()));
 
-        }
-        catch(Exception ex){
-            throw new RuntimeException(ex);
-        }
+        session.nextAudioOrStep();
     }
 }

@@ -26,8 +26,7 @@ public final class CallManager {
         sessions.put(session.getChannelId(), session);
     }
 
-    public void setCallState(String channelId, CallState state){
-        CallSession session = sessions.get(channelId);
-        session.setState(state);
+    public void removeSession(String channelId){
+        sessions.remove(channelId);
     }
 }

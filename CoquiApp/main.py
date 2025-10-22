@@ -25,7 +25,7 @@ with open("Phrases.csv", newline='', encoding="utf-8") as csvfile:
       first = False
       continue
     audio_path  = f"./out/{row[0]}.wav"
-    tts.tts_to_file(text=row[2], file_path=audio_path)
+    tts.tts_to_file(text=row[1], file_path=audio_path)
     print(f"Created file {audio_path}")
     print("Changing sample rate...")
     sound = AudioSegment.from_file(audio_path)
