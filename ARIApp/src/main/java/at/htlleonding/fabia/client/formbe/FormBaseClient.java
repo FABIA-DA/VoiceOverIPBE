@@ -7,7 +7,7 @@ public abstract class FormBaseClient extends BaseClient {
     protected static HttpUrl.Builder getBuilder() {
         return new HttpUrl.Builder()
                 .scheme("http")
-                .host("form-be")
-                .port(8080);
+                .host("backend")
+                .port(5200);
     }
 }

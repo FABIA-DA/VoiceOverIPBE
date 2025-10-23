@@ -11,62 +11,57 @@ import java.io.IOException;
 import java.util.List;
 
 @HandledState(CallState.Group)
-public final class GroupHandler implements CallStateHandler {
+public final class GroupHandler extends StateHandler {
     private List<GroupListDto> groupList = null;
     private RecordingItem recordingItem = null;
 
     @Override
-    public void handle(CallSession session) {
-        switch (session.getCurrentBaseState()) {
-            case BaseState.List -> {
-                System.out.println("Handling group list");
-                try {
-                    String groupsSpeechName = "group-names";
-                    if (groupList == null) {
-                        groupList = GroupClient.getClient().getAllGroups();
-                        String names = CallUtil.ConcatItems(groupList, GroupListDto::getName);
-                        SpeechGenerationClient.getClient().generateSpeech(names, groupsSpeechName);
-                    }
+    protected CallState nextState () {
+        return CallState.Form;
+    }
 
-                    session.enqueueAudio(new PlaybackItem("group_list", session.getChannelId()));
-                    session.enqueueAudio(new PlaybackItem(groupsSpeechName, session.getChannelId()));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            case BaseState.RequestInput -> {
-                System.out.println("Handling group request input");
-                session.enqueueAudio(new PlaybackItem("group_input_request", session.getChannelId()));
-                recordingItem = new RecordingItem(session.getChannelId());
-                session.enqueueAudio(recordingItem);
-            }
-            case BaseState.ProcessInput -> {
-                System.out.println("Handling group process input");
-                if (recordingItem == null) {
-                    return;
-                }
+    @Override
+    protected void handleList (CallSession session) throws IOException {
+        System.out.println("Handling group list");
+        String groupsSpeechName = "group-names";
+        groupList = GroupClient.getClient().getAllGroups();
+        String names = CallUtil.ConcatItems(groupList, GroupListDto::getName);
+        System.out.println("Groups: " + names);
+        SpeechGenerationClient.getClient().generateSpeech("Wir haben diese Gruppen zur Verfügung: " + names, groupsSpeechName);
 
-                try {
-                    String text = TranscriptionClient.getClient().transcribe(recordingItem.getName());
 
-                    if(text == null){
-                        return;
-                    }
+        //session.enqueueAudio(new PlaybackItem("group_list", session.getChannelId()));
+        session.enqueueAudio(new PlaybackItem(groupsSpeechName, session.getChannelId()));
+    }
 
-                    for(GroupListDto group : groupList){
-                        if(group.getName().trim().equalsIgnoreCase(text.trim())){
-                            Group selected = GroupClient.getClient().getGroupById(group.getId());
-                            session.setSelectedGroup(selected);
-                            break;
-                        }
-                    }
-                    session.setState(CallState.Form);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+    @Override
+    protected void handleRequestInput (CallSession session){
+        System.out.println("Handling group request input");
+        session.enqueueAudio(new PlaybackItem("group_input_request", session.getChannelId()));
+        recordingItem = new RecordingItem(session.getChannelId());
+        session.enqueueAudio(recordingItem);
+    }
+
+    @Override
+    protected void handleProcessInput (CallSession session) throws IOException {
+        System.out.println("Handling group process input");
+        if (recordingItem == null) {
+            return;
         }
 
-        session.nextAudioOrStep();
+        String text = TranscriptionClient.getClient().transcribe(recordingItem.getName());
+
+        if (text == null) {
+            return;
+        }
+
+        for (GroupListDto group : groupList) {
+            if (group.getName().trim().equalsIgnoreCase(text.trim())) {
+                Group selected = GroupClient.getClient().getGroupById(group.getId());
+                session.setSelectedGroup(selected);
+                break;
+            }
+        }
+        session.setState(CallState.Form);
     }
 }

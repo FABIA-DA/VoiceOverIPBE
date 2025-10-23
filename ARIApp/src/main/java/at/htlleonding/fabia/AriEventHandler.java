@@ -2,10 +2,7 @@ package at.htlleonding.fabia;
 
 import at.htlleonding.fabia.callmanagement.*;
 import ch.loway.oss.ari4java.generated.AriWSHelper;
-import ch.loway.oss.ari4java.generated.models.ChannelHangupRequest;
-import ch.loway.oss.ari4java.generated.models.PlaybackFinished;
-import ch.loway.oss.ari4java.generated.models.RecordingFinished;
-import ch.loway.oss.ari4java.generated.models.StasisStart;
+import ch.loway.oss.ari4java.generated.models.*;
 import ch.loway.oss.ari4java.tools.AriConnectionEvent;
 
 public class AriEventHandler extends AriWSHelper {
@@ -47,7 +44,7 @@ public class AriEventHandler extends AriWSHelper {
     }
 
     @Override
-    protected void onChannelHangupRequest(ChannelHangupRequest message) {
+    protected void onStasisEnd(StasisEnd message) {
         String channelId = message.getChannel().getId();
         CallManager.getInstance().removeSession(channelId);
     }

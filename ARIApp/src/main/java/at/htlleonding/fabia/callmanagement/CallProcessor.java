@@ -1,12 +1,11 @@
 package at.htlleonding.fabia.callmanagement;
 
-import at.htlleonding.fabia.callmanagement.handler.CallStateHandler;
+import at.htlleonding.fabia.callmanagement.handler.StateHandler;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 public final class CallProcessor {
-    private static final HashMap<CallState, CallStateHandler> handlerMap = new HashMap<>();
+    private static final HashMap<CallState, StateHandler> handlerMap = new HashMap<>();
 
     public static void process(CallSession session) {
         if (handlerMap.isEmpty()) {
@@ -18,7 +17,7 @@ public final class CallProcessor {
             }
         }
 
-        CallStateHandler handler = handlerMap.get(session.getState());
+        StateHandler handler = handlerMap.get(session.getState());
         if (handler == null) {
             System.out.println("No handler for state " + session.getState());
             return;
@@ -28,7 +27,7 @@ public final class CallProcessor {
     }
 
     private static void initMap() {
-        Class<?>[] handlers = CallStateHandler.class.getPermittedSubclasses();
+        Class<?>[] handlers = StateHandler.class.getPermittedSubclasses();
 
         for (Class<?> handler : handlers) {
             HandledState state = handler.getAnnotation(HandledState.class);
@@ -36,7 +35,7 @@ public final class CallProcessor {
                 HandledState handledState = handler.getAnnotation(HandledState.class);
 
                 @SuppressWarnings("unchecked")
-                Class<? extends CallStateHandler> handlerClass = (Class<? extends CallStateHandler>) handler;
+                Class<? extends StateHandler> handlerClass = (Class<? extends StateHandler>) handler;
                 try {
                     handlerMap.put(handledState.value(), handlerClass.getDeclaredConstructor().newInstance());
                 } catch (Exception e) {
