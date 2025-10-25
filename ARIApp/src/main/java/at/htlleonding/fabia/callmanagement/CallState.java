@@ -1,11 +1,12 @@
 package at.htlleonding.fabia.callmanagement;
 
 public enum CallState {
-    Greeting,
-    Group,
-    Form,
-    FieldGroup,
-    SingleChoiceField,
-    Field,
-    Goodbye
+    INIT,
+    GREETING,
+    GROUP,
+    FORM,
+    FIELD_GROUP,
+    SINGLE_CHOICE_FIELD,
+    FIELD,
+    GOODBYE
 }

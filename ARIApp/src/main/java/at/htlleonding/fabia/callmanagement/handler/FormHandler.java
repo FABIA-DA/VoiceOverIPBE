@@ -7,34 +7,27 @@ import at.htlleonding.fabia.client.whisperbe.TranscriptionClient;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-@HandledState(CallState.Form)
+@HandledState(CallState.FORM)
 public final class FormHandler extends StateHandler {
-    private boolean generated = false;
     private RecordingItem recordingItem = null;
-
-    @Override
-    protected CallState nextState() {
-        return CallState.FieldGroup;
-    }
 
     @Override
     protected void handleList(CallSession session) throws IOException {
         final String formsSpeechName = "field-names";
 
-        if (session.getSelectedForm() == null) {
-            throw new IllegalStateException("No form for intro was selected");
+        if (session.getSelectedGroup() == null) {
+            throw new IllegalStateException("No group for form intro was selected");
         }
 
-        if (!generated) {
-            List<Form> forms = session.getSelectedGroup().getForms();
-            String names = CallUtil.ConcatItems(forms, Form::getName);
+        List<Form> forms = session.getSelectedGroup().getForms();
+        String names = CallUtil.ConcatItems(forms, Form::getName);
 
-            SpeechGenerationClient.getClient().generateSpeech(names, formsSpeechName);
-            generated = true;
-        }
+        SpeechGenerationClient.getClient().generateSpeech("Wir haben diese Formulare verfügbar: " + names, formsSpeechName);
 
-        session.enqueueAudio(new PlaybackItem("form_list", session.getChannelId()));
+        //session.enqueueAudio(new PlaybackItem("form_list", session.getChannelId()));
         session.enqueueAudio(new PlaybackItem(formsSpeechName, session.getChannelId()));
     }
 
@@ -51,14 +44,20 @@ public final class FormHandler extends StateHandler {
             return;
         }
 
-        String text = TranscriptionClient.getClient().transcribe(recordingItem.getName());
+        String filePath = "/app/recordings/" + recordingItem.getName() + ".wav";
+
+        String text = TranscriptionClient.getClient().transcribe(filePath);
 
         if (text == null) {
             return;
         }
 
         for (Form form : session.getSelectedGroup().getForms()) {
-            if (form.getName().trim().equalsIgnoreCase(text.trim())) {
+            System.out.println("Going through form");
+            Pattern pattern = Pattern.compile(form.getName(), Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(text);
+            if (matcher.find()) {
+                System.out.println("Selected form: " + form.getName());
                 session.setSelectedForm(form);
                 break;
             }

@@ -8,8 +8,8 @@ public final class CallAudio {
         try {
             AriContext.getInstance().channels()
                     .record(channelId, recordingName, "wav")
-                    .setMaxDurationSeconds(10)
-                    .setMaxSilenceSeconds(3)
+                    .setMaxDurationSeconds(20)
+                    .setMaxSilenceSeconds(5)
                     .setBeep(true)
                     .execute();
         } catch (RestException e) {

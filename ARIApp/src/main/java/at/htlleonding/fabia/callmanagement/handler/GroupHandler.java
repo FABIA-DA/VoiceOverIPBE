@@ -6,19 +6,18 @@ import at.htlleonding.fabia.client.formbe.GroupClient;
 import at.htlleonding.fabia.client.formbe.dtos.Group;
 import at.htlleonding.fabia.client.formbe.dtos.GroupListDto;
 import at.htlleonding.fabia.client.whisperbe.TranscriptionClient;
+import kotlin.text.Regex;
+import kotlin.text.RegexOption;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-@HandledState(CallState.Group)
+@HandledState(CallState.GROUP)
 public final class GroupHandler extends StateHandler {
     private List<GroupListDto> groupList = null;
     private RecordingItem recordingItem = null;
-
-    @Override
-    protected CallState nextState () {
-        return CallState.Form;
-    }
 
     @Override
     protected void handleList (CallSession session) throws IOException {
@@ -49,19 +48,25 @@ public final class GroupHandler extends StateHandler {
             return;
         }
 
-        String text = TranscriptionClient.getClient().transcribe(recordingItem.getName());
+        String filePath = "/app/recordings/" + recordingItem.getName() + ".wav";
+
+        String text = TranscriptionClient.getClient().transcribe(filePath);
 
         if (text == null) {
             return;
         }
 
+        System.out.println("Input text: " + text);
+
         for (GroupListDto group : groupList) {
-            if (group.getName().trim().equalsIgnoreCase(text.trim())) {
+            Pattern pattern = Pattern.compile(group.getName(), Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(text);
+            if (matcher.find()) {
+                System.out.println("Matched group");
                 Group selected = GroupClient.getClient().getGroupById(group.getId());
                 session.setSelectedGroup(selected);
                 break;
             }
         }
-        session.setState(CallState.Form);
     }
 }

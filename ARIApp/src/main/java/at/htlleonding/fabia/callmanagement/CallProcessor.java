@@ -30,15 +30,16 @@ public final class CallProcessor {
         Class<?>[] handlers = StateHandler.class.getPermittedSubclasses();
 
         for (Class<?> handler : handlers) {
-            HandledState state = handler.getAnnotation(HandledState.class);
             if (handler.isAnnotationPresent(HandledState.class)) {
-                HandledState handledState = handler.getAnnotation(HandledState.class);
+                HandledState annotation = handler.getAnnotation(HandledState.class);
 
                 @SuppressWarnings("unchecked")
                 Class<? extends StateHandler> handlerClass = (Class<? extends StateHandler>) handler;
                 try {
-                    handlerMap.put(handledState.value(), handlerClass.getDeclaredConstructor().newInstance());
+                    CallState handledState = annotation.value();
+                    handlerMap.put(handledState, handlerClass.getDeclaredConstructor().newInstance());
                 } catch (Exception e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             }

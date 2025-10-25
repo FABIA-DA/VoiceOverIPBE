@@ -8,6 +8,8 @@ import lombok.Setter;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import static at.htlleonding.fabia.callmanagement.StateSequence.*;
+
 public final class CallSession {
     @Getter
     private final String channelId;
@@ -36,25 +38,15 @@ public final class CallSession {
 
     private final Queue<AudioItem> audioQueue = new LinkedList<>();
 
-    private void advanceBaseState() {
-        switch (currentBaseState) {
-            case Info -> currentBaseState = BaseState.List;
-            case List -> currentBaseState = BaseState.RequestInput;
-            case RequestInput -> currentBaseState = BaseState.ProcessInput;
-            case ProcessInput -> currentBaseState = BaseState.Confirm;
-            case Confirm -> currentBaseState = BaseState.Decide;
-            case Decide -> currentBaseState = BaseState.Done;
-        }
-    }
-
     public CallSession(String channelId, String channelName) {
         this.channelId = channelId;
         this.channelName = channelName;
+        setState(getFirstCallState());
     }
 
     public void setState(CallState state){
         this.state = state;
-        this.currentBaseState = BaseState.Info;
+        this.currentBaseState = getFirstBaseState();
     }
 
     public void enqueueAudio(AudioItem item){
@@ -64,16 +56,25 @@ public final class CallSession {
         audioQueue.add(item);
     }
 
+    private void advanceBaseState(){
+        currentBaseState = StateSequence.advanceBaseState(currentBaseState);
+    }
+
+    public void advanceCallState(){
+        System.out.println("Advance Call State from " + state);
+        setState(StateSequence.advanceCallState(state));
+    }
+
     public void nextAudioOrStep(){
         AudioItem item = audioQueue.poll();
         if (item != null) {
+            System.out.println("Next Audio Item: " + item.getName());
             item.start();
         } else {
-            if(currentBaseState != BaseState.Done){
-                System.out.println("Advanced base state");
+            if(!StateSequence.baseStateIsDone(currentBaseState)){
+                System.out.println("Advanced base state from " + currentBaseState);
                 advanceBaseState();
             }
-            System.out.println("Process call state");
             CallProcessor.process(this);
         }
     }

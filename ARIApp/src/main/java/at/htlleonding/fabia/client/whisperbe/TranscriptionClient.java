@@ -26,6 +26,7 @@ public final class TranscriptionClient extends BaseClient {
     }
 
     public String transcribe(String filePath) throws IOException {
+        System.out.println("Transcription file: " + filePath);
         File file = Path.of(filePath).toFile();
 
         RequestBody fileBody = RequestBody.create(file, MediaType.parse("audio/wav"));

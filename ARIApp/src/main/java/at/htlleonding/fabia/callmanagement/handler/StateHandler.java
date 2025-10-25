@@ -6,18 +6,20 @@ import at.htlleonding.fabia.callmanagement.CallState;
 
 import java.io.IOException;
 
+import static at.htlleonding.fabia.callmanagement.StateSequence.advanceCallState;
+
 public sealed abstract class StateHandler permits GreetingHandler, GroupHandler, FormHandler, FieldGroupHandler {
     public void handle(CallSession session) {
 
         try {
             switch (session.getCurrentBaseState()) {
-                case BaseState.Info -> handleInfo(session);
-                case BaseState.List -> handleList(session);
-                case BaseState.RequestInput -> handleRequestInput(session);
-                case BaseState.ProcessInput -> handleProcessInput(session);
-                case BaseState.Confirm -> handleConfirm(session);
-                case BaseState.Decide -> handleDecide(session);
-                case BaseState.Done -> session.setState(nextState());
+                case BaseState.INFO -> handleInfo(session);
+                case BaseState.LIST -> handleList(session);
+                case BaseState.REQUEST_INPUT -> handleRequestInput(session);
+                case BaseState.PROCESS_INPUT -> handleProcessInput(session);
+                case BaseState.CONFIRM -> handleConfirm(session);
+                case BaseState.DECIDE -> handleDecide(session);
+                case BaseState.DONE -> session.advanceCallState();
 
             }
         } catch (Exception e) {
@@ -27,8 +29,6 @@ public sealed abstract class StateHandler permits GreetingHandler, GroupHandler,
 
         session.nextAudioOrStep();
     }
-
-    protected abstract CallState nextState();
 
     protected void handleInfo(CallSession session) {
     }
