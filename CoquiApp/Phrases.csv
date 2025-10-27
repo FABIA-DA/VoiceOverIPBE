@@ -1,16 +1,17 @@
 key;text
 greeting;Grüß Gott und willkommen bei Fabia!
-group_list;Wir haben diese Gruppen zur Verfügung:
 group_input_request;Welche Gruppe möchten Sie wählen?
-form_list;Diese Formulare sind hier vorhanden:
+group_not_found;Wir konnten nicht verstehen, welche Gruppe Sie auswählen wollten.
 form_input_request;Welches Formular möchten Sie auswählen?
-form_prerequisites;Für dieses Formular werden folgende Daten benötigt:
+form_not_found;Wir konnten nicht verstehen, welches Formular Sie auswählen wollten.
 field_group_info;Sehr gut. Fahren wir weiter mit dem Ausfüllen des Formulars.
+field_group_error;Es wurden schon alle Feld Gruppen durchgegangen.
+single_choice_field_info;Fangen wir mit ein paar Auswahlmöglichkeiten an.
 field_skip;Wollen Sie dieses Feld überspringen?
 input_validation;Sind sie mit dieser Eingabe zufrieden?
 input_skipped;Nun fahren wir mit den übersprungenen Feldern fort.
 final_input_validation;Wollen sie sich alle ihre eingaben noch einmal anhören?
-send_question;Soll das Formular mit diesen Eingaben abgesendet werden?
+send;Soll das Formular mit diesen Eingaben abgesendet werden?
 next_form;Wollen Sie noch ein Formular ausfüllen?
 goodbye;Dankeschön für das Benutzen unseres Services und auf ein baldiges Wiedersehen.
 error;Es gab ein Problem...

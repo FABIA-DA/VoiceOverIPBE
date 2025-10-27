@@ -6,8 +6,6 @@ import at.htlleonding.fabia.client.formbe.GroupClient;
 import at.htlleonding.fabia.client.formbe.dtos.Group;
 import at.htlleonding.fabia.client.formbe.dtos.GroupListDto;
 import at.htlleonding.fabia.client.whisperbe.TranscriptionClient;
-import kotlin.text.Regex;
-import kotlin.text.RegexOption;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,8 +26,6 @@ public final class GroupHandler extends StateHandler {
         System.out.println("Groups: " + names);
         SpeechGenerationClient.getClient().generateSpeech("Wir haben diese Gruppen zur Verfügung: " + names, groupsSpeechName);
 
-
-        //session.enqueueAudio(new PlaybackItem("group_list", session.getChannelId()));
         session.enqueueAudio(new PlaybackItem(groupsSpeechName, session.getChannelId()));
     }
 
@@ -67,6 +63,14 @@ public final class GroupHandler extends StateHandler {
                 session.setSelectedGroup(selected);
                 break;
             }
+        }
+    }
+
+    @Override
+    protected void handleRetry(CallSession session) {
+        if(session.getSelectedGroup() == null){
+            session.enqueueAudio(new PlaybackItem("group_not_found", session.getChannelId()));
+            session.goToInput();
         }
     }
 }

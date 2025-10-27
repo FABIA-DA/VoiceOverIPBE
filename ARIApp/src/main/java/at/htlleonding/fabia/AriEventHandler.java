@@ -13,7 +13,7 @@ public class AriEventHandler extends AriWSHelper {
 
     @Override
     protected void onStasisStart(StasisStart message) {
-        try{
+        try {
             System.out.println("New call entered Stasis: " + message.getChannel().getName());
             CallSession session = new CallSession(
                     message.getChannel().getId(),
@@ -22,8 +22,7 @@ public class AriEventHandler extends AriWSHelper {
             session.advanceCallState();
             CallManager.getInstance().addSession(session);
             session.nextAudioOrStep();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }

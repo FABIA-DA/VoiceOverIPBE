@@ -35,7 +35,6 @@ public final class CallSession {
     @Getter
     @Setter
     private BaseState currentBaseState;
-
     private final Queue<AudioItem> audioQueue = new LinkedList<>();
 
     public CallSession(String channelId, String channelName) {
@@ -44,34 +43,38 @@ public final class CallSession {
         setState(getFirstCallState());
     }
 
-    public void setState(CallState state){
+    public void setState(CallState state) {
         this.state = state;
         this.currentBaseState = getFirstBaseState();
     }
 
-    public void enqueueAudio(AudioItem item){
-        if(item == null){
+    public void goToInput(){
+        currentBaseState = getInputState();
+    }
+
+    public void enqueueAudio(AudioItem item) {
+        if (item == null) {
             return;
         }
         audioQueue.add(item);
     }
 
-    private void advanceBaseState(){
+    private void advanceBaseState() {
         currentBaseState = StateSequence.advanceBaseState(currentBaseState);
     }
 
-    public void advanceCallState(){
+    public void advanceCallState() {
         System.out.println("Advance Call State from " + state);
         setState(StateSequence.advanceCallState(state));
     }
 
-    public void nextAudioOrStep(){
+    public void nextAudioOrStep() {
         AudioItem item = audioQueue.poll();
         if (item != null) {
             System.out.println("Next Audio Item: " + item.getName());
             item.start();
         } else {
-            if(!StateSequence.baseStateIsDone(currentBaseState)){
+            if (!StateSequence.baseStateIsDone(currentBaseState)) {
                 System.out.println("Advanced base state from " + currentBaseState);
                 advanceBaseState();
             }

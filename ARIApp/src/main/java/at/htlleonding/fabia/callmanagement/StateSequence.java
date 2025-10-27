@@ -8,7 +8,8 @@ public final class StateSequence {
             case INFO -> next = BaseState.LIST;
             case LIST -> next = BaseState.REQUEST_INPUT;
             case REQUEST_INPUT -> next = BaseState.PROCESS_INPUT;
-            case PROCESS_INPUT -> next = BaseState.CONFIRM;
+            case PROCESS_INPUT -> next = BaseState.RETRY;
+            case RETRY ->  next = BaseState.CONFIRM;
             case CONFIRM -> next = BaseState.DECIDE;
             case DECIDE -> next = BaseState.DONE;
         }
@@ -17,6 +18,10 @@ public final class StateSequence {
 
     public static BaseState getFirstBaseState(){
         return BaseState.START;
+    }
+
+    public static BaseState getInputState(){
+        return BaseState.REQUEST_INPUT;
     }
 
     public static boolean baseStateIsDone(BaseState current){

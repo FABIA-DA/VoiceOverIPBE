@@ -6,6 +6,7 @@ public enum BaseState {
     LIST,
     REQUEST_INPUT,
     PROCESS_INPUT,
+    RETRY,
     CONFIRM,
     DECIDE,
     DONE

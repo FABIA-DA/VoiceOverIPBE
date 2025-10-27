@@ -1,5 +1,6 @@
 package at.htlleonding.fabia.callmanagement;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,8 +15,8 @@ public final class CallManager {
         return callManager;
     }
 
-    public Map<String, CallSession> getSessions() {
-        return sessions;
+    public Collection<CallSession> getSessions() {
+        return sessions.values();
     }
 
     public CallSession getSession(String channelId){

@@ -27,7 +27,6 @@ public final class FormHandler extends StateHandler {
 
         SpeechGenerationClient.getClient().generateSpeech("Wir haben diese Formulare verfügbar: " + names, formsSpeechName);
 
-        //session.enqueueAudio(new PlaybackItem("form_list", session.getChannelId()));
         session.enqueueAudio(new PlaybackItem(formsSpeechName, session.getChannelId()));
     }
 
@@ -61,6 +60,14 @@ public final class FormHandler extends StateHandler {
                 session.setSelectedForm(form);
                 break;
             }
+        }
+    }
+
+    @Override
+    protected void handleRetry(CallSession session) {
+        if(session.getSelectedForm() == null){
+            session.enqueueAudio(new PlaybackItem("form_not_found", session.getChannelId()));
+            session.goToInput();
         }
     }
 }
