@@ -1,4 +1,4 @@
-package at.htlleonding.fabia.callmanagement;
+package at.htlleonding.fabia.callmgmt.util;
 
 public enum CallState {
     INIT,

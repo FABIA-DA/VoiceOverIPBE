@@ -4,7 +4,6 @@ FROM andrius/asterisk@sha256:6180c354ede3874ebec6baf93e94a10b926b3e79b70524fa35e
 
 # Install only necessary Asterisk modules (Alpine packages)
 RUN apk add --no-cache \
-  asterisk-sounds-en \
   asterisk-sounds-moh \
   asterisk-srtp \
   asterisk-speex

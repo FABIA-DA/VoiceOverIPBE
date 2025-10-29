@@ -1,4 +1,4 @@
-package at.htlleonding.fabia.callmanagement;
+package at.htlleonding.fabia.callmgmt.audiomgmt;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

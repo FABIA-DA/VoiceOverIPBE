@@ -1,6 +1,6 @@
-package at.htlleonding.fabia.callmanagement;
+package at.htlleonding.fabia.callmgmt.audiomgmt;
 
-import java.util.UUID;
+import at.htlleonding.fabia.callmgmt.util.AriUtil;
 
 public final class PlaybackItem extends AudioItem {
     private final String mediaName;
@@ -16,7 +16,7 @@ public final class PlaybackItem extends AudioItem {
             return;
         }
 
-        CallAudio.playSound(channelId, mediaName);
+        AriUtil.playSound(channelId, mediaName);
         ActiveAudioRegistry.getInstance().registerPlayback(this);
     }
 }

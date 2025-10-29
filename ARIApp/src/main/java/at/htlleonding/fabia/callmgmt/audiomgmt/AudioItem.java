@@ -1,4 +1,4 @@
-package at.htlleonding.fabia.callmanagement;
+package at.htlleonding.fabia.callmgmt.audiomgmt;
 
 import lombok.Getter;
 

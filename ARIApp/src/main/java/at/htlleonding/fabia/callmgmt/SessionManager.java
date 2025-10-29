@@ -1,18 +1,18 @@
-package at.htlleonding.fabia.callmanagement;
+package at.htlleonding.fabia.callmgmt;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class CallManager {
-    private static CallManager callManager = null;
+public final class SessionManager {
+    private static SessionManager manager = null;
     private final Map<String, CallSession> sessions = new ConcurrentHashMap<String, CallSession>();
 
-    public static CallManager getInstance() {
-        if (callManager == null) {
-            callManager = new CallManager();
+    public static SessionManager getInstance() {
+        if (manager == null) {
+            manager = new SessionManager();
         }
-        return callManager;
+        return manager;
     }
 
     public Collection<CallSession> getSessions() {
@@ -27,7 +27,7 @@ public final class CallManager {
         sessions.put(session.getChannelId(), session);
     }
 
-    public void removeSession(String channelId){
-        sessions.remove(channelId);
+    public CallSession removeSession(String channelId){
+        return sessions.remove(channelId);
     }
 }

@@ -27,24 +27,38 @@ public final class GroupClient extends FormBaseClient {
     }
 
     public List<GroupListDto> getAllGroups() throws IOException {
-        Request request = new Request.Builder()
-                .url(getGroupBuilder().build())
-                .get()
-                .build();
+        try {
+            Request request = new Request.Builder()
+                    .url(getGroupBuilder().build())
+                    .get()
+                    .build();
 
-        return getResponse(request, new TypeReference<GroupListResponse>() {
-        }).getGroups();
+            List<GroupListDto> list = getResponse(request, new TypeReference<GroupListResponse>() {
+            }).getGroups();
+            logger.info("Got all groups");
+            return list;
+        } catch (IOException e) {
+            logger.error("Tried to get all groups with message {}", e.getMessage());
+            throw e;
+        }
     }
 
     public Group getGroupById(long id) throws IOException {
-        Request request = new Request.Builder()
-                .url(getGroupBuilder()
-                        .addPathSegment(Long.toString(id))
-                        .build())
-                .get()
-                .build();
+        try {
+            Request request = new Request.Builder()
+                    .url(getGroupBuilder()
+                            .addPathSegment(Long.toString(id))
+                            .build())
+                    .get()
+                    .build();
 
-        return getResponse(request, new TypeReference<Group>() {
-        });
+            Group group = getResponse(request, new TypeReference<Group>() {
+            });
+            logger.info("Got group with id {}", id);
+            return group;
+        } catch (IOException e) {
+            logger.error("Tried to get group with id {}, but {}", id, e.getMessage());
+            throw e;
+        }
     }
 }

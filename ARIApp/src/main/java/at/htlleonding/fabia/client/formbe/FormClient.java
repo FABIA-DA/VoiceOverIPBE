@@ -29,25 +29,40 @@ public final class FormClient extends FormBaseClient {
     }
 
     public List<FormListDto> getAllForms() throws IOException {
+        try {
+            Request request = new Request.Builder()
+                    .url(getFormBuilder().build())
+                    .get()
+                    .build();
 
-        Request request = new Request.Builder()
-                .url(getFormBuilder().build())
-                .get()
-                .build();
-
-        return getResponse(request, new TypeReference<>() {
-        });
+            List<FormListDto> list = getResponse(request, new TypeReference<>() {
+            });
+            logger.info("Got all forms");
+            return list;
+        }
+        catch (Exception e) {
+            logger.error("Tried to get all forms, but {}", e.getMessage());
+            throw e;
+        }
     }
 
     public Form getFormById(long id) throws IOException {
-        Request request = new Request.Builder()
-                .url(getFormBuilder()
-                        .addPathSegment(Long.toString(id))
-                        .build())
-                .get()
-                .build();
+        try{
+            Request request = new Request.Builder()
+                    .url(getFormBuilder()
+                            .addPathSegment(Long.toString(id))
+                            .build())
+                    .get()
+                    .build();
 
-        return getResponse(request, new TypeReference<Form>() {
-        });
+            Form form = getResponse(request, new TypeReference<Form>() {
+            });
+            logger.info("Got form with id {}", id);
+            return form;
+        }
+        catch (IOException e) {
+            logger.error("Tried to get form with id {}, but {}", id, e.getMessage());
+            throw e;
+        }
     }
 }

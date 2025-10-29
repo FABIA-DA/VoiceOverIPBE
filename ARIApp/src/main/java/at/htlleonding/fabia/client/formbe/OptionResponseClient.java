@@ -24,16 +24,23 @@ public final class OptionResponseClient extends FormBaseClient {
         return client;
     }
 
-    public OptionResponse createOptionResponse(long optionResponseId, String tele) throws IOException {
-        OptionResponseCreationRequest requestBody = new OptionResponseCreationRequest(optionResponseId, tele);
-        String jsonBody = OBJECT_MAPPER.writeValueAsString(requestBody);
+    public OptionResponse createOptionResponse(long optionId, String tele) throws IOException {
+        try {
+            OptionResponseCreationRequest requestBody = new OptionResponseCreationRequest(optionId, tele);
+            String jsonBody = OBJECT_MAPPER.writeValueAsString(requestBody);
 
-        Request request = new Request.Builder()
-                .url(getUrl())
-                .post(RequestBody.create(jsonBody, MediaType.parse("application/json")))
-                .build();
+            Request request = new Request.Builder()
+                    .url(getUrl())
+                    .post(RequestBody.create(jsonBody, MediaType.parse("application/json")))
+                    .build();
 
-        return getResponse(request, new TypeReference<>() {
-        });
+            OptionResponse response = getResponse(request, new TypeReference<>() {
+            });
+            logger.info("Created option response with id {} and tele {}", response.getId(), tele);
+            return response;
+        } catch (IOException e) {
+            logger.error("Tried to create option response with from option with id {} and tele {}, but {} with message {}", optionId, tele, e.getClass().getSimpleName(), e.getMessage());
+            throw e;
+        }
     }
 }

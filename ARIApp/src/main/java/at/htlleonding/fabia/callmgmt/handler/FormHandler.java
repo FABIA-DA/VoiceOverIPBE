@@ -1,9 +1,13 @@
-package at.htlleonding.fabia.callmanagement.handler;
+package at.htlleonding.fabia.callmgmt.handler;
 
-import at.htlleonding.fabia.callmanagement.*;
+import at.htlleonding.fabia.callmgmt.*;
+import at.htlleonding.fabia.callmgmt.audiomgmt.PlaybackItem;
+import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
+import at.htlleonding.fabia.callmgmt.util.CallState;
+import at.htlleonding.fabia.callmgmt.util.Util;
+import at.htlleonding.fabia.callmgmt.util.HandledState;
 import at.htlleonding.fabia.client.coquibe.SpeechGenerationClient;
 import at.htlleonding.fabia.client.formbe.dtos.Form;
-import at.htlleonding.fabia.client.whisperbe.TranscriptionClient;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,18 +16,20 @@ import java.util.regex.Pattern;
 
 @HandledState(CallState.FORM)
 public final class FormHandler extends StateHandler {
-    private RecordingItem recordingItem = null;
+    public static final FormHandler INSTANCE = new FormHandler();
+    private FormHandler(){
+    }
 
     @Override
     protected void handleList(CallSession session) throws IOException {
-        final String formsSpeechName = "field-names";
+        final String formsSpeechName = "from-names";
 
         if (session.getSelectedGroup() == null) {
             throw new IllegalStateException("No group for form intro was selected");
         }
 
         List<Form> forms = session.getSelectedGroup().getForms();
-        String names = CallUtil.ConcatItems(forms, Form::getName);
+        String names = Util.ConcatItems(forms, Form::getName);
 
         SpeechGenerationClient.getClient().generateSpeech("Wir haben diese Formulare verfügbar: " + names, formsSpeechName);
 
@@ -33,30 +39,24 @@ public final class FormHandler extends StateHandler {
     @Override
     protected void handleRequestInput(CallSession session) {
         session.enqueueAudio(new PlaybackItem("form_input_request", session.getChannelId()));
-        recordingItem = new RecordingItem(session.getChannelId());
+        RecordingItem recordingItem = new RecordingItem(session.getChannelId());
+        session.getFormHandlingState().setRecording(recordingItem);
         session.enqueueAudio(recordingItem);
     }
 
     @Override
     protected void handleProcessInput(CallSession session) throws IOException {
-        if (recordingItem == null) {
-            return;
+        RecordingItem recording =  session.getFormHandlingState().getRecording();
+        if (recording == null) {
+            throw new IllegalStateException("No recording happened before input processing");
         }
 
-        String filePath = "/app/recordings/" + recordingItem.getName() + ".wav";
-
-        String text = TranscriptionClient.getClient().transcribe(filePath);
-
-        if (text == null) {
-            return;
-        }
+        String text = transcribe(recording);
 
         for (Form form : session.getSelectedGroup().getForms()) {
-            System.out.println("Going through form");
             Pattern pattern = Pattern.compile(form.getName(), Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(text);
             if (matcher.find()) {
-                System.out.println("Selected form: " + form.getName());
                 session.setSelectedForm(form);
                 break;
             }
@@ -65,9 +65,11 @@ public final class FormHandler extends StateHandler {
 
     @Override
     protected void handleRetry(CallSession session) {
-        if(session.getSelectedForm() == null){
-            session.enqueueAudio(new PlaybackItem("form_not_found", session.getChannelId()));
-            session.goToInput();
+        if(session.getSelectedForm() != null){
+            return;
         }
+
+        session.enqueueAudio(new PlaybackItem("form_not_found", session.getChannelId()));
+        session.resetBaseState();
     }
 }

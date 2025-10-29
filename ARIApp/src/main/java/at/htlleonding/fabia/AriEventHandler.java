@@ -1,11 +1,16 @@
 package at.htlleonding.fabia;
 
-import at.htlleonding.fabia.callmanagement.*;
+import at.htlleonding.fabia.callmgmt.*;
+import at.htlleonding.fabia.callmgmt.audiomgmt.ActiveAudioRegistry;
 import ch.loway.oss.ari4java.generated.AriWSHelper;
 import ch.loway.oss.ari4java.generated.models.*;
 import ch.loway.oss.ari4java.tools.AriConnectionEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AriEventHandler extends AriWSHelper {
+    private final Logger logger = LoggerFactory.getLogger(AriEventHandler.class);
+
     @Override
     public void onConnectionEvent(AriConnectionEvent event) {
         super.onConnectionEvent(event);
@@ -13,26 +18,21 @@ public class AriEventHandler extends AriWSHelper {
 
     @Override
     protected void onStasisStart(StasisStart message) {
-        try {
-            System.out.println("New call entered Stasis: " + message.getChannel().getName());
-            CallSession session = new CallSession(
-                    message.getChannel().getId(),
-                    message.getChannel().getName()
-            );
-            session.advanceCallState();
-            CallManager.getInstance().addSession(session);
-            session.nextAudioOrStep();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        logger.debug("New call entered Stasis: {}", message.getChannel().getName());
+        CallSession session = new CallSession(
+                message.getChannel().getId(),
+                message.getChannel().getName()
+        );
+        session.advanceCallState();
+        SessionManager.getInstance().addSession(session);
+        session.nextAudioOrStep();
     }
 
     @Override
     protected void onRecordingFinished(RecordingFinished message) {
-        System.out.println("Recording finished: " + message.getRecording().getName());
+        logger.debug("Recording finished: {}", message.getRecording().getName());
         String channelId = ActiveAudioRegistry.getInstance().getRecording(message.getRecording().getName()).getChannelId();
-        CallSession session = CallManager.getInstance().getSession(channelId);
+        CallSession session = SessionManager.getInstance().getSession(channelId);
 
         session.nextAudioOrStep();
     }
@@ -41,16 +41,18 @@ public class AriEventHandler extends AriWSHelper {
     protected void onPlaybackFinished(PlaybackFinished message) {
         String prefix = "sound:";
         String media = message.getPlayback().getMedia_uri().substring(prefix.length());
-        System.out.println("Playback finished: " + media);
+        logger.debug("Playback finished: {}", media);
         String channelId = ActiveAudioRegistry.getInstance().getPlayback(media).getChannelId();
-        CallSession session = CallManager.getInstance().getSession(channelId);
+        CallSession session = SessionManager.getInstance().getSession(channelId);
 
         session.nextAudioOrStep();
     }
 
     @Override
-    protected void onStasisEnd(StasisEnd message) {
+    protected void onChannelHangupRequest(ChannelHangupRequest message) {
         String channelId = message.getChannel().getId();
-        CallManager.getInstance().removeSession(channelId);
+        logger.debug("Channel with id {} hung up", channelId);
+        CallSession session = SessionManager.getInstance().removeSession(channelId);
+        session.setHasHungUp(true);
     }
 }

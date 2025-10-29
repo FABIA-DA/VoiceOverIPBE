@@ -6,14 +6,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public final class OptionResponseCreationRequest {
-    private long id;
+    private long optionId;
     private String telephoneNumber;
 
     public OptionResponseCreationRequest() {
     }
 
-    public OptionResponseCreationRequest(long id, String telephoneNumber) {
-        this.id = id;
-        this.telephoneNumber = telephoneNumber;
+    public OptionResponseCreationRequest(long optionId, String telephoneNumber) {
+        setOptionId(optionId);
+        setTelephoneNumber(telephoneNumber);
     }
 }

@@ -1,4 +1,6 @@
-package at.htlleonding.fabia.callmanagement;
+package at.htlleonding.fabia.callmgmt.audiomgmt;
+
+import at.htlleonding.fabia.callmgmt.util.AriUtil;
 
 import java.util.UUID;
 
@@ -10,7 +12,7 @@ public final class RecordingItem extends AudioItem {
 
     @Override
     public void start() {
-        CallAudio.startRecording(channelId, getName());
+        AriUtil.startRecording(channelId, getName());
         ActiveAudioRegistry.getInstance().registerRecording(this);
     }
 }

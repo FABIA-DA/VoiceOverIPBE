@@ -1,9 +1,13 @@
-package at.htlleonding.fabia.callmanagement;
+package at.htlleonding.fabia.callmgmt.util;
 
 import at.htlleonding.fabia.AriContext;
 import ch.loway.oss.ari4java.tools.RestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public final class CallAudio {
+public final class AriUtil {
+    private static final Logger logger = LoggerFactory.getLogger(AriUtil.class);
+
     public static void startRecording(String channelId, String recordingName) {
         try {
             AriContext.getInstance().channels()
@@ -13,8 +17,7 @@ public final class CallAudio {
                     .setBeep(true)
                     .execute();
         } catch (RestException e) {
-            System.err.println("Failed to start recording " + recordingName + " for channel " + channelId);
-            e.printStackTrace();
+            logger.info("Failed to start recording {} for channel {}: {}", recordingName, channelId, e.getMessage());
         }
     }
 
@@ -22,8 +25,15 @@ public final class CallAudio {
         try {
             AriContext.getInstance().channels().play(channelId, "sound:" + sound).execute();
         } catch (RestException e) {
-            System.out.println("Failed playback for sound " + sound + " for channel " + channelId);
-            e.printStackTrace();
+            logger.info("Failed to start playback {} for channel {}: {}", sound, channelId, e.getMessage());
+        }
+    }
+
+    public static void hangup(String channelId){
+        try{
+            AriContext.getInstance().channels().hangup(channelId);
+        } catch (RestException e) {
+            logger.info("Failed to hangup call for channel {}: {}", channelId, e.getMessage());
         }
     }
 }

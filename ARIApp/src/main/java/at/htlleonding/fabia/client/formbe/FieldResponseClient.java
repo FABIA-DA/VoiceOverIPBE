@@ -28,15 +28,23 @@ public final class FieldResponseClient extends FormBaseClient {
     }
 
     public FieldResponse createFieldResponse(long fieldId, String tele, String value) throws IOException {
-        FieldResponseCreationRequest requestBody = new FieldResponseCreationRequest(fieldId, tele, value);
-        String jsonBody = OBJECT_MAPPER.writeValueAsString(requestBody);
+        try{
+            FieldResponseCreationRequest requestBody = new FieldResponseCreationRequest(fieldId, tele, value);
+            String jsonBody = OBJECT_MAPPER.writeValueAsString(requestBody);
 
-        Request request = new Request.Builder()
-                .url(getUrl())
-                .post(RequestBody.create(jsonBody, MediaType.parse("application/json")))
-                .build();
+            Request request = new Request.Builder()
+                    .url(getUrl())
+                    .post(RequestBody.create(jsonBody, MediaType.parse("application/json")))
+                    .build();
 
-        return getResponse(request, new TypeReference<>() {
-        });
+            FieldResponse response = getResponse(request, new TypeReference<>() {
+            });
+            logger.debug("Created FieldResponse for fieldId {}, tele {}, value: {}", fieldId, tele, value);
+            return response;
+        }
+        catch (IOException e){
+            logger.error("Tried to create field response with field id {}, but {}", fieldId, e.getMessage());
+            throw e;
+        }
     }
 }

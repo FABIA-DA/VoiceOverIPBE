@@ -18,15 +18,20 @@ repositories {
     mavenCentral()
 }
 
+val jacksonVersion = "2.17.2"
+val lombokVersion = "1.18.40"
+
 dependencies {
-    implementation("org.projectlombok:lombok:1.18.40")
-    compileOnly("org.projectlombok:lombok:1.18.40")
-    annotationProcessor("org.projectlombok:lombok:1.18.40")
+    implementation("org.projectlombok:lombok:$lombokVersion")
+    compileOnly("org.projectlombok:lombok:$lombokVersion")
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
     implementation("io.github.ari4java:ari4java:0.17.0")
     implementation("ch.qos.logback:logback-classic:1.5.13")
     implementation("io.projectreactor.netty:reactor-netty:1.1.15")
     implementation("com.squareup.okhttp3:okhttp:5.1.0")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:$jacksonVersion")
+    implementation("joda-time:joda-time:2.14.0")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }

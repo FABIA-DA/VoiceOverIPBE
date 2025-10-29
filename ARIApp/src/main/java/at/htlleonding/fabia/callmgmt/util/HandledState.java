@@ -1,4 +1,4 @@
-package at.htlleonding.fabia.callmanagement;
+package at.htlleonding.fabia.callmgmt.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
