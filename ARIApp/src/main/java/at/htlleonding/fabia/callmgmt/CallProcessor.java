@@ -16,6 +16,8 @@ public final class CallProcessor {
     private static final Map<CallState, StateHandler> handlerMap = initHandlerMap();
 
     public static void process(CallSession session) {
+        logger.debug("Processing session {} in state {}", session.getChannelId(), session.getState());
+
         StateHandler handler = handlerMap.get(session.getState());
 
         if (handler == null) {
@@ -26,7 +28,11 @@ public final class CallProcessor {
         try {
             handler.handle(session);
         } catch (Exception e) {
-            logger.error("Error handling state {} for session {}", session.getState(), session.getChannelId(), e);
+            logger.error("Error handling state {} for session {} - Handler: {}",
+                    session.getState(),
+                    session.getChannelId(),
+                    handler.getClass().getSimpleName(),
+                    e);
         }
     }
 
