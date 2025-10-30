@@ -52,7 +52,7 @@ public class AriEventHandler extends AriWSHelper {
     protected void onChannelHangupRequest(ChannelHangupRequest message) {
         String channelId = message.getChannel().getId();
         logger.debug("Channel with id {} hung up", channelId);
-        CallSession session = SessionManager.getInstance().removeSession(channelId);
-        session.setHasHungUp(true);
+        CallSession session = SessionManager.getInstance().getSession(channelId);
+        session.close(true);
     }
 }

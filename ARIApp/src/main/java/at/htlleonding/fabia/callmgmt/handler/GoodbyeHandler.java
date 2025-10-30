@@ -21,6 +21,6 @@ public final class GoodbyeHandler extends StateHandler {
 
     @Override
     protected void handleDone(CallSession session) {
-        session.hangup();
+        session.close(false);
     }
 }

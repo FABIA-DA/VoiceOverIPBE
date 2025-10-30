@@ -31,7 +31,7 @@ public final class AriUtil {
 
     public static void hangup(String channelId){
         try{
-            AriContext.getInstance().channels().hangup(channelId);
+            AriContext.getInstance().channels().hangup(channelId).execute();
         } catch (RestException e) {
             logger.info("Failed to hangup call for channel {}: {}", channelId, e.getMessage());
         }

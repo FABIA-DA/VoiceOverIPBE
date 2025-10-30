@@ -37,7 +37,6 @@ public final class CallSession {
     @Setter
     private BaseState currentBaseState;
     private final Queue<AudioItem> audioQueue = new LinkedList<>();
-    @Setter
     private boolean hasHungUp = false;
     @Getter
     private final GroupHandlingState groupHandlingState = new GroupHandlingState();
@@ -118,19 +117,19 @@ public final class CallSession {
                 && this.currentFieldIdx < this.usedFields.size() - 1;
     }
 
-    public boolean FieldGroupsEmpty() {
+    public boolean fieldGroupsEmpty() {
         return this.getSelectedForm().getFieldGroups()
                 .isEmpty();
     }
 
-    public boolean SingleChoiceFieldsEmpty() {
+    public boolean singleChoiceFieldsEmpty() {
         return this.getSelectedForm().getFieldGroups()
                 .get(getCurrentFieldGroupIdx())
                 .getSingleChoiceFields()
                 .isEmpty();
     }
 
-    public boolean FieldsEmpty() {
+    public boolean fieldsEmpty() {
         return this.usedFields.isEmpty();
     }
 
@@ -173,7 +172,8 @@ public final class CallSession {
         resetIndexes();
     }
 
-    public void setCurrentFieldGroupIdx(Integer currentFieldGroupIdx) {
+    private void setCurrentFieldGroupIdx(Integer currentFieldGroupIdx) {
+        this.usedFields.clear();
         this.currentFieldGroupIdx = currentFieldGroupIdx;
         if (currentFieldGroupIdx != null) {
             this.usedFields.addAll(
@@ -224,10 +224,18 @@ public final class CallSession {
         audioQueue.add(item);
     }
 
-    public void hangup(){
-        AriUtil.hangup(this.channelId);
+    public void closeCall() {
+        setState(CallState.GOODBYE);
+    }
+
+    public void close(boolean hasSelfHungUp) {
         this.hasHungUp = true;
+        SessionManager.getInstance().removeSession(this.channelId);
         audioQueue.clear();
+
+        if (!hasSelfHungUp) {
+            AriUtil.hangup(this.channelId);
+        }
     }
 
     public void advanceCallState() {
@@ -245,7 +253,7 @@ public final class CallSession {
             logger.debug("Next audio item: {}", item.getName());
             item.start();
         } else {
-            if (!StateSequence.baseStateIsDone(currentBaseState)) {
+            if (currentBaseState != BaseState.DONE) {
                 advanceBaseState();
             }
             CallProcessor.process(this);

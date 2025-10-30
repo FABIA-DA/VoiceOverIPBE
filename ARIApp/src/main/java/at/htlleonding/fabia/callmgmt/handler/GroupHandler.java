@@ -1,6 +1,7 @@
 package at.htlleonding.fabia.callmgmt.handler;
 
 import at.htlleonding.fabia.callmgmt.*;
+import at.htlleonding.fabia.callmgmt.audiomgmt.AudioItem;
 import at.htlleonding.fabia.callmgmt.audiomgmt.PlaybackItem;
 import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
 import at.htlleonding.fabia.callmgmt.util.CallState;
@@ -25,13 +26,21 @@ public final class GroupHandler extends StateHandler {
 
     @Override
     protected void handleList(CallSession session) throws IOException {
-        String groupsSpeechName = "group-names";
+        String groupSpeech = "group-speech";
+
         List<GroupListDto> groupList = GroupClient.getClient().getAllGroups();
+
+        if(groupList.isEmpty()){
+            session.enqueueAudio(new PlaybackItem("groups_empty", session.getChannelId()));
+            session.closeCall();
+            return;
+        }
+
         session.getGroupHandlingState().setGroupList(groupList);
         String names = Util.ConcatItems(groupList, GroupListDto::getName);
-        SpeechGenerationClient.getClient().generateSpeech("Wir haben diese Gruppen zur Verfügung: " + names, groupsSpeechName);
+        SpeechGenerationClient.getClient().generateSpeech("Wir haben diese Gruppen zur Verfügung: " + names, groupSpeech);
 
-        session.enqueueAudio(new PlaybackItem(groupsSpeechName, session.getChannelId()));
+        session.enqueueAudio(new PlaybackItem(groupSpeech, session.getChannelId()));
     }
 
     @Override

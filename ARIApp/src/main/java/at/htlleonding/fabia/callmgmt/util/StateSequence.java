@@ -21,10 +21,6 @@ public final class StateSequence {
         return BaseState.START;
     }
 
-    public static boolean baseStateIsDone(BaseState current) {
-        return current.equals(BaseState.DONE);
-    }
-
     public static CallState advanceCallState(CallState current) {
         CallState next = null;
         switch (current) {
