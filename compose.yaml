@@ -128,6 +128,15 @@ services:
       migrations:
         condition: service_completed_successfully
 
+  frontend:
+    container_name: form-frontend
+    build:
+      context: ./FormFE
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "80:80"
+
 volumes:
   form-db_data:
     external: true

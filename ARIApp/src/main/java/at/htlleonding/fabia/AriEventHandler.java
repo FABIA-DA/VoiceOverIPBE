@@ -32,7 +32,16 @@ public class AriEventHandler extends AriWSHelper {
     protected void onRecordingFinished(RecordingFinished message) {
         logger.debug("Recording finished: {}", message.getRecording().getName());
         String channelId = ActiveAudioRegistry.getInstance().getRecording(message.getRecording().getName()).getChannelId();
+
+        if(channelId == null) {
+            return;
+        }
+
         CallSession session = SessionManager.getInstance().getSession(channelId);
+
+        if(session == null) {
+            return;
+        }
 
         session.nextAudioOrStep();
     }
@@ -41,9 +50,19 @@ public class AriEventHandler extends AriWSHelper {
     protected void onPlaybackFinished(PlaybackFinished message) {
         String prefix = "sound:";
         String media = message.getPlayback().getMedia_uri().substring(prefix.length());
+
         logger.debug("Playback finished: {}", media);
         String channelId = ActiveAudioRegistry.getInstance().getPlayback(media).getChannelId();
+
+        if(channelId == null){
+            return;
+        }
+
         CallSession session = SessionManager.getInstance().getSession(channelId);
+
+        if(session == null){
+            return;
+        }
 
         session.nextAudioOrStep();
     }
@@ -51,8 +70,18 @@ public class AriEventHandler extends AriWSHelper {
     @Override
     protected void onChannelHangupRequest(ChannelHangupRequest message) {
         String channelId = message.getChannel().getId();
+
+        if(channelId == null){
+            return;
+        }
+
         logger.debug("Channel with id {} hung up", channelId);
         CallSession session = SessionManager.getInstance().getSession(channelId);
+
+        if(session == null){
+            return;
+        }
+
         session.close(true);
     }
 }

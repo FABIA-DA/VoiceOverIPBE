@@ -38,7 +38,7 @@ public final class GroupHandler extends StateHandler {
 
         session.getGroupHandlingState().setGroupList(groupList);
         String names = Util.ConcatItems(groupList, GroupListDto::getName);
-        SpeechGenerationClient.getClient().generateSpeech("Wir haben diese Gruppen zur Verfügung: " + names, groupSpeech);
+        SpeechGenerationClient.getClient().generateSpeech("Wir haben diese Formularkategorien zur Verfügung: " + names, groupSpeech);
 
         session.enqueueAudio(new PlaybackItem(groupSpeech, session.getChannelId()));
     }
