@@ -24,10 +24,18 @@ public final class ActiveAudioRegistry {
     }
 
     public AudioItem getRecording(String name) {
-        return activeRecordings.remove(name);
+        return activeRecordings.get(name);
     }
 
     public AudioItem getPlayback(String name) {
-        return activePlaybacks.remove(name);
+        return activePlaybacks.get(name);
+    }
+
+    public void removeRecording(String name) {
+        activePlaybacks.remove(name);
+    }
+
+    public void removePlayback(String name) {
+        activePlaybacks.remove(name);
     }
 }

@@ -5,6 +5,8 @@ import ch.loway.oss.ari4java.tools.RestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+
 public final class AriUtil {
     private static final Logger logger = LoggerFactory.getLogger(AriUtil.class);
 

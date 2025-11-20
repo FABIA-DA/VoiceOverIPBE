@@ -1,6 +1,7 @@
 package at.htlleonding.fabia.callmgmt;
 
 import at.htlleonding.fabia.callmgmt.audiomgmt.AudioItem;
+import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
 import at.htlleonding.fabia.callmgmt.util.*;
 import at.htlleonding.fabia.client.formbe.dtos.*;
 import lombok.Getter;
@@ -9,6 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static at.htlleonding.fabia.callmgmt.util.StateSequence.*;
 
@@ -36,7 +42,7 @@ public final class CallSession {
     @Getter
     @Setter
     private BaseState currentBaseState;
-    private final Queue<AudioItem> audioQueue = new LinkedList<>();
+    private final ConcurrentLinkedQueue<AudioItem> audioQueue = new ConcurrentLinkedQueue<>();
     private boolean hasHungUp = false;
     @Getter
     private final GroupHandlingState groupHandlingState = new GroupHandlingState();
@@ -46,6 +52,8 @@ public final class CallSession {
     private final SingleChoiceFieldHandlingState singleChoiceFieldHandlingState = new SingleChoiceFieldHandlingState();
     @Getter
     private final FieldHandlingState fieldHandlingState = new FieldHandlingState();
+    @Getter
+    private final AtomicBoolean isAudioPlaying = new AtomicBoolean(false);
 
     private void advanceBaseState() {
         currentBaseState = StateSequence.advanceBaseState(currentBaseState);
@@ -244,6 +252,9 @@ public final class CallSession {
     }
 
     public void nextAudioOrStep() {
+        if (isAudioPlaying.get()) {
+            return;
+        }
         if (hasHungUp) {
             return;
         }
