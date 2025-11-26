@@ -1,7 +1,6 @@
 package at.htlleonding.fabia.client;
 
 import at.htlleonding.fabia.callmgmt.util.HttpRequestException;
-import ch.loway.oss.ari4java.tools.RestException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
@@ -9,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public abstract class BaseClient {
     private final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();

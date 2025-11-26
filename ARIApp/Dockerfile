@@ -1,15 +1,2 @@
-FROM gradle:8.14-jdk24-alpine AS build
+FROM 3.9.9-eclipse-temurin-21 AS build
 
-WORKDIR /app
-
-COPY --chown=gradle . .
-
-RUN gradle clean shadowJar --no-daemon
-
-FROM eclipse-temurin:24-jre-alpine
-
-WORKDIR /app
-
-COPY --from=build /app/build/libs/*.jar app.jar
-
-ENTRYPOINT ["java", "-jar", "app.jar"]

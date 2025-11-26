@@ -1,11 +1,8 @@
 package at.htlleonding.fabia.client.whisperbe;
 
-import at.htlleonding.fabia.callmgmt.util.HttpRequestException;
 import at.htlleonding.fabia.client.BaseClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;

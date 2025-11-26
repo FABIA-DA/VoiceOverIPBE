@@ -101,17 +101,17 @@ public final class FieldHandler extends StateHandler {
     @Override
     protected void handleDone(CallSession session) {
         if (session.fieldsLeft()) {
-            System.out.println("redo field handling");
+            logger.debug("More fields left...");
             session.resetBaseState();
             return;
         }
 
         if (session.fieldGroupsLeft()) {
-            System.out.println("go to next field group");
+            logger.debug("More field groups left...");
             session.resetIndexes();
             session.goToFieldGroup();
         } else {
-            System.out.println("finish");
+            logger.debug("Done with all fields");
             super.handleDone(session);
         }
     }
