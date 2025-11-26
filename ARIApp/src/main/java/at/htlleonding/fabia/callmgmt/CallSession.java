@@ -4,6 +4,7 @@ import at.htlleonding.fabia.callmgmt.audiomgmt.AudioItem;
 import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
 import at.htlleonding.fabia.callmgmt.util.*;
 import at.htlleonding.fabia.client.formbe.dtos.*;
+import jakarta.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -19,6 +20,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static at.htlleonding.fabia.callmgmt.util.StateSequence.*;
 
 public final class CallSession {
+    @Inject
+    SessionManager sessionManager;
+    @Inject
+    CallProcessor callProcessor;
+    @Inject
+    AriUtil arUtil;
+
     private static final Logger logger = LoggerFactory.getLogger(CallSession.class);
     @Getter
     private final String channelId;
@@ -238,11 +246,11 @@ public final class CallSession {
 
     public void close(boolean hasSelfHungUp) {
         this.hasHungUp = true;
-        SessionManager.getInstance().removeSession(this.channelId);
+        sessionManager.removeSession(this.channelId);
         audioQueue.clear();
 
         if (!hasSelfHungUp) {
-            AriUtil.hangup(this.channelId);
+            arUtil.hangup(this.channelId);
         }
     }
 
@@ -267,7 +275,7 @@ public final class CallSession {
             if (currentBaseState != BaseState.DONE) {
                 advanceBaseState();
             }
-            CallProcessor.process(this);
+            callProcessor.process(this);
         }
     }
 }

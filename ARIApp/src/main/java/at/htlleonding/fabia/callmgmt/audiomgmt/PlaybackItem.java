@@ -5,8 +5,8 @@ import at.htlleonding.fabia.callmgmt.util.AriUtil;
 public final class PlaybackItem extends AudioItem {
     private final String mediaName;
 
-    public PlaybackItem(String mediaName, String channelId) {
-        super(mediaName, channelId);
+    public PlaybackItem(String mediaName, String channelId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry) {
+        super(mediaName, channelId, ariUtil, audioRegistry);
         this.mediaName = mediaName;
     }
 
@@ -16,7 +16,7 @@ public final class PlaybackItem extends AudioItem {
             return;
         }
 
-        AriUtil.playSound(channelId, mediaName);
-        ActiveAudioRegistry.getInstance().registerPlayback(this);
+        ariUtil.playSound(channelId, mediaName);
+        audioRegistry.registerPlayback(this);
     }
 }

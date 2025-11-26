@@ -3,14 +3,21 @@ package at.htlleonding.fabia.callmgmt.handler;
 import at.htlleonding.fabia.callmgmt.util.BaseState;
 import at.htlleonding.fabia.callmgmt.CallSession;
 import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
-import at.htlleonding.fabia.client.whisperbe.TranscriptionClient;
+import at.htlleonding.fabia.client.whisperbe.TranscriptionService;
+import io.smallrye.mutiny.Uni;
+import jakarta.inject.Inject;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 
 public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandler, FormHandler, GoodbyeHandler, GreetingHandler, GroupHandler, SingleChoiceFieldHandler {
+    @RestClient
+    TranscriptionService transcriptionService;
+
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public void handle(CallSession session) {
@@ -63,17 +70,23 @@ public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandle
         session.advanceCallState();
     }
 
-    protected String transcribe(RecordingItem recording) throws IOException {
+    protected Uni<String> transcribe(RecordingItem recording) {
         String filePath = MessageFormat.format("/app/recordings/{0}.wav", recording.getName());
 
-        String text = TranscriptionClient.getClient().transcribe(filePath);
+        return transcriptionService.transcribe(Path.of(filePath).toFile())
+                .onFailure()
+                .recoverWithNull()
+                .onItem()
+                .transform(response -> {
+                    if (response == null) {
+                        return null;
+                    }
 
-        logger.debug("Transcribed text: {}", text);
-
-        if (text == null) {
-            return "";
-        }
-
-        return text;
+                    return response.getText();
+                }).invoke(text -> {
+                    if (text != null) {
+                        logger.debug("Transcribed text: {}", text);
+                    }
+                });
     }
 }

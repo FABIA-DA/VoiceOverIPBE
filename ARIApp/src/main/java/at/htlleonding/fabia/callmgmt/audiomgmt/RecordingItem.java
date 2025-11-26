@@ -6,13 +6,13 @@ import java.util.UUID;
 
 public final class RecordingItem extends AudioItem {
 
-    public RecordingItem(String channelId) {
-        super("rec-" + UUID.randomUUID(), channelId);
+    public RecordingItem(String channelId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry) {
+        super("rec-" + UUID.randomUUID(), channelId, ariUtil, audioRegistry);
     }
 
     @Override
     public void start() {
-        AriUtil.startRecording(channelId, getName());
-        ActiveAudioRegistry.getInstance().registerRecording(this);
+        ariUtil.startRecording(channelId, getName());
+        audioRegistry.registerRecording(this);
     }
 }

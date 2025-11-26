@@ -15,7 +15,7 @@ public class CoquiRequest {
     }
 
     public CoquiRequest(String text, String fileName) {
-        setText(text);
-        setFileName(fileName);
+        this.text = text;
+        this.fileName = fileName;
     }
 }

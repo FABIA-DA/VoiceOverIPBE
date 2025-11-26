@@ -1,19 +1,14 @@
 package at.htlleonding.fabia.callmgmt;
 
+import jakarta.inject.Singleton;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Singleton
 public final class SessionManager {
-    private static SessionManager manager = null;
     private final Map<String, CallSession> sessions = new ConcurrentHashMap<String, CallSession>();
-
-    public static SessionManager getInstance() {
-        if (manager == null) {
-            manager = new SessionManager();
-        }
-        return manager;
-    }
 
     public Collection<CallSession> getSessions() {
         return sessions.values();

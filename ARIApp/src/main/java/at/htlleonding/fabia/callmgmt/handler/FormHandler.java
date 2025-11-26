@@ -1,27 +1,37 @@
 package at.htlleonding.fabia.callmgmt.handler;
 
 import at.htlleonding.fabia.callmgmt.*;
+import at.htlleonding.fabia.callmgmt.audiomgmt.ActiveAudioRegistry;
 import at.htlleonding.fabia.callmgmt.audiomgmt.PlaybackItem;
 import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
+import at.htlleonding.fabia.callmgmt.util.AriUtil;
 import at.htlleonding.fabia.callmgmt.util.CallState;
 import at.htlleonding.fabia.callmgmt.util.Util;
 import at.htlleonding.fabia.callmgmt.util.HandledState;
-import at.htlleonding.fabia.client.coquibe.SpeechGenerationClient;
+import at.htlleonding.fabia.client.coquibe.CoquiRequest;
+import at.htlleonding.fabia.client.coquibe.SpeechGenerationService;
 import at.htlleonding.fabia.client.formbe.dtos.Form;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Singleton
 @HandledState(CallState.FORM)
 public final class FormHandler extends StateHandler {
-    public static final FormHandler INSTANCE = new FormHandler();
-    private FormHandler(){
-    }
+    @RestClient
+    SpeechGenerationService speechGenerationService;
+    @Inject
+    AriUtil ariUtil;
+    @Inject
+    ActiveAudioRegistry activeAudioRegistry;
 
     @Override
-    protected void handleList(CallSession session) throws IOException {
+    protected void handleList(CallSession session) {
         final String formsSpeechName = "from-names";
 
         if (session.getSelectedGroup() == null) {
@@ -31,27 +41,30 @@ public final class FormHandler extends StateHandler {
         List<Form> forms = session.getSelectedGroup().getForms();
         String names = Util.ConcatItems(forms, Form::getName);
 
-        SpeechGenerationClient.getClient().generateSpeech("Wir haben diese Formulare verfügbar: " + names, formsSpeechName);
-
-        session.enqueueAudio(new PlaybackItem(formsSpeechName, session.getChannelId()));
+        speechGenerationService.generateSpeech(new CoquiRequest("Wir haben diese Formulare verfügbar: " + names, formsSpeechName)).await().indefinitely();
+        session.enqueueAudio(new PlaybackItem(formsSpeechName, session.getChannelId(), ariUtil, activeAudioRegistry));
     }
 
     @Override
     protected void handleRequestInput(CallSession session) {
-        session.enqueueAudio(new PlaybackItem("form_input_request", session.getChannelId()));
-        RecordingItem recordingItem = new RecordingItem(session.getChannelId());
+        session.enqueueAudio(new PlaybackItem("form_input_request", session.getChannelId(), ariUtil, activeAudioRegistry));
+        RecordingItem recordingItem = new RecordingItem(session.getChannelId(), ariUtil, activeAudioRegistry);
         session.getFormHandlingState().setRecording(recordingItem);
         session.enqueueAudio(recordingItem);
     }
 
     @Override
-    protected void handleProcessInput(CallSession session) throws IOException {
-        RecordingItem recording =  session.getFormHandlingState().getRecording();
+    protected void handleProcessInput(CallSession session) {
+        RecordingItem recording = session.getFormHandlingState().getRecording();
         if (recording == null) {
             throw new IllegalStateException("No recording happened before input processing");
         }
 
-        String text = transcribe(recording);
+        String text = transcribe(recording).await().indefinitely();
+
+        if (text == null) {
+            return;
+        }
 
         for (Form form : session.getSelectedGroup().getForms()) {
             Pattern pattern = Pattern.compile(form.getName(), Pattern.CASE_INSENSITIVE);
@@ -65,11 +78,11 @@ public final class FormHandler extends StateHandler {
 
     @Override
     protected void handleRetry(CallSession session) {
-        if(session.getSelectedForm() != null){
+        if (session.getSelectedForm() != null) {
             return;
         }
 
-        session.enqueueAudio(new PlaybackItem("form_not_found", session.getChannelId()));
+        session.enqueueAudio(new PlaybackItem("form_not_found", session.getChannelId(), ariUtil, activeAudioRegistry));
         session.resetBaseState();
     }
 }
