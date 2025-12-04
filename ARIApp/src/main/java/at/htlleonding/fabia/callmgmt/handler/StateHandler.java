@@ -73,7 +73,7 @@ public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandle
     protected Uni<String> transcribe(RecordingItem recording) {
         String filePath = MessageFormat.format("/app/recordings/{0}.wav", recording.getName());
 
-        return transcriptionService.transcribe(Path.of(filePath).toFile())
+        return transcriptionService.transcribe(Path.of(filePath))
                 .onFailure()
                 .recoverWithNull()
                 .onItem()

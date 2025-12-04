@@ -78,10 +78,13 @@ public final class GroupHandler extends StateHandler {
             return;
         }
 
+        logger.debug("Text input: {}", text);
+
         for (GroupListDto group : session.getGroupHandlingState().getGroupList()) {
             Pattern pattern = Pattern.compile(group.getName(), Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(text);
             if (matcher.find()) {
+                logger.debug("Match in group {}", group.getName());
                 Group selected = groupService.getGroupById(group.getId())
                         .await()
                         .indefinitely();

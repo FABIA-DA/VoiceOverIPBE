@@ -20,12 +20,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static at.htlleonding.fabia.callmgmt.util.StateSequence.*;
 
 public final class CallSession {
-    @Inject
-    SessionManager sessionManager;
-    @Inject
-    CallProcessor callProcessor;
-    @Inject
-    AriUtil arUtil;
+    private SessionManager sessionManager;
+    private CallProcessor callProcessor;
+    private AriUtil arUtil;
 
     private static final Logger logger = LoggerFactory.getLogger(CallSession.class);
     @Getter
@@ -73,9 +70,12 @@ public final class CallSession {
         resetBaseState();
     }
 
-    public CallSession(String channelId, String channelName) {
+    public CallSession(String channelId, String channelName, SessionManager sessionManager, CallProcessor callProcessor, AriUtil arUtil) {
         this.channelId = channelId;
         this.channelName = channelName;
+        this.sessionManager = sessionManager;
+        this.callProcessor = callProcessor;
+        this.arUtil = arUtil;
         setState(getFirstCallState());
     }
 

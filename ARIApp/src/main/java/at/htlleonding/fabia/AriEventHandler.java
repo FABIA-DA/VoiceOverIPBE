@@ -2,26 +2,31 @@ package at.htlleonding.fabia;
 
 import at.htlleonding.fabia.callmgmt.*;
 import at.htlleonding.fabia.callmgmt.audiomgmt.ActiveAudioRegistry;
+import at.htlleonding.fabia.callmgmt.util.AriUtil;
 import ch.loway.oss.ari4java.generated.AriWSHelper;
 import ch.loway.oss.ari4java.generated.models.*;
 import ch.loway.oss.ari4java.tools.AriConnectionEvent;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Singleton
+@AllArgsConstructor
 public class AriEventHandler extends AriWSHelper {
-    @Inject
-    SessionManager sessionManager;
-
-    @Inject
-    ActiveAudioRegistry activeAudioRegistry;
+    private SessionManager sessionManager;
+    private ActiveAudioRegistry activeAudioRegistry;
+    private CallProcessor callProcessor;
+    private AriUtil arUtil;
 
     private final Logger logger = LoggerFactory.getLogger(AriEventHandler.class);
 
     @Override
+    public void onConnectionEvent(AriConnectionEvent event) {
+        super.onConnectionEvent(event);
+    }
+
+    @Override
     protected void onPlaybackStarted(PlaybackStarted message) {
+        logger.debug("playback started");
         String prefix = "sound:";
         String media = message.getPlayback().getMedia_uri().substring(prefix.length());
 
@@ -42,15 +47,16 @@ public class AriEventHandler extends AriWSHelper {
 
     @Override
     protected void onRecordingStarted(RecordingStarted message) {
+        logger.debug("recording started");
         String channelId = activeAudioRegistry.getRecording(message.getRecording().getName()).getChannelId();
 
-        if(channelId == null) {
+        if (channelId == null) {
             return;
         }
 
         CallSession session = sessionManager.getSession(channelId);
 
-        if(session == null) {
+        if (session == null) {
             return;
         }
 
@@ -58,19 +64,17 @@ public class AriEventHandler extends AriWSHelper {
     }
 
     @Override
-    public void onConnectionEvent(AriConnectionEvent event) {
-        super.onConnectionEvent(event);
-    }
-
-    @Override
     protected void onStasisStart(StasisStart message) {
         logger.debug("New call entered Stasis: {}", message.getChannel().getName());
         CallSession session = new CallSession(
                 message.getChannel().getId(),
-                message.getChannel().getName()
+                message.getChannel().getName(),
+                sessionManager,
+                callProcessor,
+                arUtil
         );
         session.advanceCallState();
-       sessionManager.addSession(session);
+        sessionManager.addSession(session);
         session.nextAudioOrStep();
     }
 
@@ -80,13 +84,13 @@ public class AriEventHandler extends AriWSHelper {
         String channelId = activeAudioRegistry.getRecording(message.getRecording().getName()).getChannelId();
         activeAudioRegistry.removeRecording(message.getRecording().getName());
 
-        if(channelId == null) {
+        if (channelId == null) {
             return;
         }
 
         CallSession session = sessionManager.getSession(channelId);
 
-        if(session == null) {
+        if (session == null) {
             return;
         }
 
@@ -103,13 +107,13 @@ public class AriEventHandler extends AriWSHelper {
         String channelId = activeAudioRegistry.getPlayback(media).getChannelId();
         activeAudioRegistry.removePlayback(media);
 
-        if(channelId == null){
+        if (channelId == null) {
             return;
         }
 
         CallSession session = sessionManager.getSession(channelId);
 
-        if(session == null){
+        if (session == null) {
             return;
         }
 
@@ -121,14 +125,14 @@ public class AriEventHandler extends AriWSHelper {
     protected void onChannelHangupRequest(ChannelHangupRequest message) {
         String channelId = message.getChannel().getId();
 
-        if(channelId == null){
+        if (channelId == null) {
             return;
         }
 
         logger.debug("Channel with id {} hung up", channelId);
         CallSession session = sessionManager.getSession(channelId);
 
-        if(session == null){
+        if (session == null) {
             return;
         }
 
