@@ -39,6 +39,13 @@ public final class FormHandler extends StateHandler {
         }
 
         List<Form> forms = session.getSelectedGroup().getForms();
+
+        if(forms.isEmpty()){
+            session.enqueueAudio(new PlaybackItem("group-empty", session.getChannelId(), ariUtil, activeAudioRegistry));
+            session.closeCall();
+            return;
+        }
+
         String names = Util.ConcatItems(forms, Form::getName);
 
         speechGenerationService.generateSpeech(new CoquiRequest("Wir haben diese Formulare verfügbar: " + names, formsSpeechName)).await().indefinitely();

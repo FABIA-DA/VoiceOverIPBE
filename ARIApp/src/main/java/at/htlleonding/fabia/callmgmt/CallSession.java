@@ -228,6 +228,10 @@ public final class CallSession {
         setState(CallState.FIELD_GROUP);
     }
 
+    public void goToField() {
+        setState(CallState.FIELD);
+    }
+
     public void resetIndexes() {
         this.currentSingleChoiceFieldIdx = null;
         this.currentFieldIdx = null;

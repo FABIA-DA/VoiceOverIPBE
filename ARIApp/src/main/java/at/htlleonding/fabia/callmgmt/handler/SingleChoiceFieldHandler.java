@@ -42,7 +42,12 @@ public final class SingleChoiceFieldHandler extends StateHandler {
 
         final String singleChoiceFieldSpeech = "single-choice-field-speech";
 
-        if (!session.getSingleChoiceFieldHandlingState().isRetry()) {
+        if(session.singleChoiceFieldsEmpty()){
+            session.goToField();
+            return;
+        }
+
+        if(!session.getSingleChoiceFieldHandlingState().isRetry()){
             session.tryIncreaseSingleChoiceFieldIdx();
         }
 

@@ -21,7 +21,7 @@ public final class GoodbyeHandler extends StateHandler {
 
     @Override
     protected void handleInfo(CallSession session) throws IOException {
-        session.enqueueAudio(new PlaybackItem("goodbye", session.getChannelId(), ariUtil, activeAudioRegistry));
+        session.enqueueAudio(new PlaybackItem("fabia-goodbye", session.getChannelId(), ariUtil, activeAudioRegistry));
     }
 
     @Override

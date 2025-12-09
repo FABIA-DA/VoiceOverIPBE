@@ -39,6 +39,11 @@ public final class FieldHandler extends StateHandler {
             throw new IllegalStateException("No form or field selected");
         }
 
+        if(session.fieldsEmpty()){
+            session.goToFieldGroup();
+            return;
+        }
+
         if (!session.getFieldHandlingState().isRetry()) {
             session.tryIncreaseFieldIdx();
         }
@@ -84,24 +89,24 @@ public final class FieldHandler extends StateHandler {
             throw new IllegalStateException("Tried to handle an input without a recording");
         }
 
-        transcribe(state.getRecording()).subscribe().with(text -> {
-            if (text == null) {
-                return;
-            }
+        String text = transcribe(state.getRecording()).await().indefinitely();
 
-            Field current = session.getCurrentField();
-            Pattern pattern = Pattern.compile(current.getType().getRegex(), Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(text);
-            state.setInputMatched(false);
+        if (text == null) {
+            return;
+        }
 
-            if (matcher.find()) {
-                fieldResponseService.createFieldResponse(new FieldResponseCreationRequest(current.getId(), session.getChannelName(), text))
-                        .log()
-                        .await()
-                        .indefinitely();
-                state.setInputMatched(true);
-            }
-        });
+        Field current = session.getCurrentField();
+        Pattern pattern = Pattern.compile(current.getType().getRegex(), Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(text);
+        state.setInputMatched(false);
+
+        if (matcher.find()) {
+            fieldResponseService.createFieldResponse(new FieldResponseCreationRequest(current.getId(), session.getChannelName(), text))
+                    .log()
+                    .await()
+                    .indefinitely();
+            state.setInputMatched(true);
+        }
     }
 
     @Override

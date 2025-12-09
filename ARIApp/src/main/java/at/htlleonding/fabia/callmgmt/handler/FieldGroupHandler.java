@@ -33,27 +33,27 @@ public final class FieldGroupHandler extends StateHandler {
             throw new IllegalStateException("No form was selected");
         }
 
-        if (session.getSelectedForm().getFieldGroups().isEmpty()) {
+        if (session.fieldGroupsEmpty()) {
             session.enqueueAudio(new PlaybackItem("form_empty", session.getChannelId(), ariUtil, activeAudioRegistry));
+            session.closeCall();
             return;
         }
 
-        if (session.getCurrentFieldGroupIdx() == null) {
-            session.tryIncreaseFieldGroupIdx();
-            session.enqueueAudio(new PlaybackItem("field_group_info", session.getChannelId(), ariUtil, activeAudioRegistry));
+        session.tryIncreaseFieldGroupIdx();
 
-            final String fieldGroupsSpeech = "field-groups-speech";
+        session.enqueueAudio(new PlaybackItem("field_group_info", session.getChannelId(), ariUtil, activeAudioRegistry));
 
-            List<FieldGroup> fieldGroups = session.getSelectedForm().getFieldGroups();
-            String names = Util.ConcatItems(fieldGroups, FieldGroup::getName);
+        final String fieldGroupsSpeech = "field-groups-speech";
 
-            String speech = MessageFormat.format("Es sind folgende Feldgruppen in diesem Formular: {0}", names);
+        List<FieldGroup> fieldGroups = session.getSelectedForm().getFieldGroups();
+        String names = Util.ConcatItems(fieldGroups, FieldGroup::getName);
 
-            CoquiRequest request = new CoquiRequest(speech, fieldGroupsSpeech);
+        String speech = MessageFormat.format("Es sind folgende Feldgruppen in diesem Formular: {0}", names);
 
-            speechGenerationService.generateSpeech(request).await().indefinitely();
-            session.enqueueAudio(new PlaybackItem(fieldGroupsSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
-        }
+        CoquiRequest request = new CoquiRequest(speech, fieldGroupsSpeech);
+
+        speechGenerationService.generateSpeech(request).await().indefinitely();
+        session.enqueueAudio(new PlaybackItem(fieldGroupsSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
     }
 
     @Override

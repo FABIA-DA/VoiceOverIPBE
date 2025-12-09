@@ -1,6 +1,7 @@
 key;text
 greeting;Grüß Gott und willkommen bei Fabia!
 group_input_request;Welche Formularkategorie möchten Sie wählen?
+group-empty;In dieser Formulargruppe sind keine Formulare verfügbar.
 group_not_found;Wir konnten nicht verstehen, welche Kategorie Sie auswählen wollten.
 groups_empty;Zur Zeit haben wir keine Formularkategorien verfügbar.
 form_input_request;Welches Formular möchten Sie auswählen?
@@ -18,5 +19,5 @@ final_input_validation;Wollen sie sich alle ihre Eingaben noch einmal anhören?
 send;Soll das Formular mit diesen Eingaben abgesendet werden?
 next_form;Wollen Sie noch ein Formular ausfüllen?
 no_match;Wir konnten sie nicht verstehen.
-goodbye;Dankeschön für das Benutzen unseres Services und auf ein baldiges Wiedersehen.
+fabia-goodbye;Dankeschön für das Benutzen unseres Services und auf ein baldiges Wiedersehen.
 error;Es gab ein Problem...
