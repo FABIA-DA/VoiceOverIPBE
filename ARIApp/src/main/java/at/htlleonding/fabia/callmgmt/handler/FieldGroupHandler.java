@@ -34,14 +34,14 @@ public final class FieldGroupHandler extends StateHandler {
         }
 
         if (session.fieldGroupsEmpty()) {
-            session.enqueueAudio(new PlaybackItem("form_empty", session.getChannelId(), ariUtil, activeAudioRegistry));
-            session.closeCall();
+            session.enqueueAudio(new PlaybackItem("form-empty", session.getChannelId(), ariUtil, activeAudioRegistry));
+            session.goToGoodbye();
             return;
         }
 
         session.tryIncreaseFieldGroupIdx();
 
-        session.enqueueAudio(new PlaybackItem("field_group_info", session.getChannelId(), ariUtil, activeAudioRegistry));
+        session.enqueueAudio(new PlaybackItem("field-group-info", session.getChannelId(), ariUtil, activeAudioRegistry));
 
         final String fieldGroupsSpeech = "field-groups-speech";
 
@@ -68,7 +68,7 @@ public final class FieldGroupHandler extends StateHandler {
             speechGenerationService.generateSpeech(request).await().indefinitely();
             session.enqueueAudio(new PlaybackItem(fieldGroupSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
         } else {
-            session.enqueueAudio(new PlaybackItem("field_group_error", session.getChannelId(), ariUtil, activeAudioRegistry));
+            session.enqueueAudio(new PlaybackItem("field-group-error", session.getChannelId(), ariUtil, activeAudioRegistry));
         }
     }
 }

@@ -117,7 +117,7 @@ public final class FieldHandler extends StateHandler {
             return;
         }
 
-        session.enqueueAudio(new PlaybackItem("field_input_mismatch", session.getChannelId(), ariUtil, activeAudioRegistry));
+        session.enqueueAudio(new PlaybackItem("field-input-mismatch", session.getChannelId(), ariUtil, activeAudioRegistry));
         state.setRetry(true);
         session.resetBaseState();
     }
@@ -132,7 +132,7 @@ public final class FieldHandler extends StateHandler {
 
         if (session.fieldGroupsLeft()) {
             logger.debug("More field groups left...");
-            session.resetIndexes();
+            session.resetIndices();
             session.goToFieldGroup();
         } else {
             logger.debug("Done with all fields");

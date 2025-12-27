@@ -13,9 +13,14 @@ public final class AriUtil {
 
     private final Logger logger = LoggerFactory.getLogger(AriUtil.class);
 
+    /**
+     * Asks asterisk to start a new recording.
+     * @param channelId The channel id of the caller to record
+     * @param recordingName The name of the recording
+     */
     public void startRecording(String channelId, String recordingName) {
         try {
-            ariContext.ari.channels()
+            ariContext.getAri().channels()
                     .record(channelId, recordingName, "wav")
                     .setMaxDurationSeconds(10)
                     .setMaxSilenceSeconds(5)
@@ -26,17 +31,32 @@ public final class AriUtil {
         }
     }
 
+    /**
+     * Asks asterisk to play a specific sound.
+     * @param channelId The channel id of the caller to play the sound for
+     * @param sound The name of the sound
+     */
     public void playSound(String channelId, String sound) {
         try {
-            ariContext.ari.channels().play(channelId, "sound:" + sound).execute();
+            ariContext.getAri()
+                    .channels()
+                    .play(channelId, "sound:" + sound)
+                    .execute();
         } catch (RestException e) {
             logger.info("Failed to start playback {} for channel {}: {}", sound, channelId, e.getMessage());
         }
     }
 
+    /**
+     * Tries to hang up a call in asterisk.
+     * @param channelId The id of the callers channel
+     */
     public void hangup(String channelId) {
         try {
-            ariContext.ari.channels().hangup(channelId).execute();
+            ariContext.getAri()
+                    .channels()
+                    .hangup(channelId)
+                    .execute();
         } catch (RestException e) {
             logger.info("Failed to hangup call for channel {}: {}", channelId, e.getMessage());
         }

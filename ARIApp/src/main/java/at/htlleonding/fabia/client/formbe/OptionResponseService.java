@@ -10,6 +10,11 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @RegisterRestClient(configKey = "option-response-client")
 public interface OptionResponseService {
+    /**
+     * Creates a new response for a specific option.
+     * @param request The data for the creation of the response
+     * @return The newly created option response
+     */
     @POST
     @Path("")
     @Consumes(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)

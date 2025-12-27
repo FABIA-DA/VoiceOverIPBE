@@ -2,6 +2,9 @@ package at.htlleonding.fabia.callmgmt.audiomgmt;
 
 import at.htlleonding.fabia.callmgmt.util.AriUtil;
 
+/**
+ * This item is data to represent a sound, which is played by asterisk.
+ */
 public final class PlaybackItem extends AudioItem {
     private final String mediaName;
 

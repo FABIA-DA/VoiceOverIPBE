@@ -35,7 +35,10 @@ public class Main implements QuarkusApplication {
     @Override
     public int run(String... args) {
         try {
-            ariContext.ari.events().eventWebsocket(stasisApp).execute(new AriEventHandler(sessionManager, activeAudioRegistry, callProcessor, ariUtil));
+            ariContext.getAri()
+                    .events()
+                    .eventWebsocket(stasisApp)
+                    .execute(new AriEventHandler(sessionManager, activeAudioRegistry, callProcessor, ariUtil));
         } catch (Exception e) {
             throw new RuntimeException("Failed to connect ARI WebSocket", e);
         }

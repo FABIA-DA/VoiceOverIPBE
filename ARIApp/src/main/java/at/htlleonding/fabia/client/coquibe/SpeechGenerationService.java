@@ -8,6 +8,10 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @RegisterRestClient(configKey = "speech-generation-client")
 public interface SpeechGenerationService {
+    /**
+     * Generates a speech from text. And saves it as an audio file.
+     * @param request The text to generate the speech from and the name of the audio file
+     */
     @POST
     @Path("/convert")
     @Consumes(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)

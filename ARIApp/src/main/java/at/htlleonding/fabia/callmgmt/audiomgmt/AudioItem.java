@@ -1,10 +1,10 @@
 package at.htlleonding.fabia.callmgmt.audiomgmt;
 
-import at.htlleonding.fabia.AriContext;
 import at.htlleonding.fabia.callmgmt.util.AriUtil;
 import lombok.Getter;
 
 public abstract class AudioItem {
+    @Getter
     protected final String name;
     @Getter
     protected final String channelId;
@@ -18,8 +18,5 @@ public abstract class AudioItem {
         this.audioRegistry = audioRegistry;
     }
 
-    public String getName() {
-        return name;
-    }
     public abstract void start();
 }

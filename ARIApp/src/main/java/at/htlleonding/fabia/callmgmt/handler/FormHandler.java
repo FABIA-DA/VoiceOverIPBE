@@ -15,7 +15,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +41,7 @@ public final class FormHandler extends StateHandler {
 
         if(forms.isEmpty()){
             session.enqueueAudio(new PlaybackItem("group-empty", session.getChannelId(), ariUtil, activeAudioRegistry));
-            session.closeCall();
+            session.goToGoodbye();
             return;
         }
 
@@ -54,7 +53,7 @@ public final class FormHandler extends StateHandler {
 
     @Override
     protected void handleRequestInput(CallSession session) {
-        session.enqueueAudio(new PlaybackItem("form_input_request", session.getChannelId(), ariUtil, activeAudioRegistry));
+        session.enqueueAudio(new PlaybackItem("form-input-request", session.getChannelId(), ariUtil, activeAudioRegistry));
         RecordingItem recordingItem = new RecordingItem(session.getChannelId(), ariUtil, activeAudioRegistry);
         session.getFormHandlingState().setRecording(recordingItem);
         session.enqueueAudio(recordingItem);
@@ -89,7 +88,7 @@ public final class FormHandler extends StateHandler {
             return;
         }
 
-        session.enqueueAudio(new PlaybackItem("form_not_found", session.getChannelId(), ariUtil, activeAudioRegistry));
+        session.enqueueAudio(new PlaybackItem("form-not-found", session.getChannelId(), ariUtil, activeAudioRegistry));
         session.resetBaseState();
     }
 }

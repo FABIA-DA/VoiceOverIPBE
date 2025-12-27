@@ -65,7 +65,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
 
     @Override
     protected void handleRequestInput(CallSession session) {
-        session.enqueueAudio(new PlaybackItem("single_choice_field_input_request", session.getChannelId(), ariUtil, activeAudioRegistry));
+        session.enqueueAudio(new PlaybackItem("single-choice-field-input-request", session.getChannelId(), ariUtil, activeAudioRegistry));
         RecordingItem recording = new RecordingItem(session.getChannelId(), ariUtil, activeAudioRegistry);
         session.getSingleChoiceFieldHandlingState().setRecording(recording);
         session.enqueueAudio(recording);
@@ -105,7 +105,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
             return;
         }
 
-        session.enqueueAudio(new PlaybackItem("option_not_found", session.getChannelId(), ariUtil, activeAudioRegistry));
+        session.enqueueAudio(new PlaybackItem("option-not-found", session.getChannelId(), ariUtil, activeAudioRegistry));
         session.getSingleChoiceFieldHandlingState().setRetry(true);
         session.resetBaseState();
     }

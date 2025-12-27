@@ -10,6 +10,11 @@ import org.jboss.resteasy.reactive.RestForm;
 
 @RegisterRestClient(configKey = "transcription-client")
 public interface TranscriptionService {
+    /**
+     * Transcribes the audio of a passed file.
+     * @param pathToAudio The path to the audio file
+     * @return The transcribed text
+     */
     @POST
     @Path("/transcribe")
     @Consumes(MediaType.MULTIPART_FORM_DATA)

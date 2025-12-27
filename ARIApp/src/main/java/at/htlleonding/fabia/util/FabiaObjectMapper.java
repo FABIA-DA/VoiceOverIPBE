@@ -4,9 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import io.quarkus.jackson.ObjectMapperCustomizer;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Singleton;
 
-@Singleton
+/**
+ * Customizes the object mapping for serialization and deserialization
+ */
+@ApplicationScoped
 public final class FabiaObjectMapper implements ObjectMapperCustomizer {
     @Override
     public void customize(ObjectMapper objectMapper) {

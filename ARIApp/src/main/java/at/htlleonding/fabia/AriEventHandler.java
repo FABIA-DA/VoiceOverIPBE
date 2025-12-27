@@ -10,6 +10,9 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Handles all necessary ari events to start and advance the call
+ */
 @AllArgsConstructor
 public class AriEventHandler extends AriWSHelper {
     private SessionManager sessionManager;
@@ -136,6 +139,6 @@ public class AriEventHandler extends AriWSHelper {
             return;
         }
 
-        session.close(true);
+        session.endCall(true);
     }
 }

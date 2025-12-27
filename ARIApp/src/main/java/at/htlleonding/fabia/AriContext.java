@@ -3,13 +3,16 @@ package at.htlleonding.fabia;
 import ch.loway.oss.ari4java.ARI;
 import ch.loway.oss.ari4java.AriVersion;
 import ch.loway.oss.ari4java.tools.ARIException;
-import ch.loway.oss.ari4java.tools.RestException;
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import lombok.Getter;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-@Singleton
+/**
+ * A wrapper for the ari connection, which is established on startup
+ */
+@ApplicationScoped
 public final class AriContext {
     @Inject
     @ConfigProperty(name = "fabia.ari.url")
@@ -24,7 +27,8 @@ public final class AriContext {
     @ConfigProperty(name = "fabia.ari.pass")
     String ariPass;
 
-    public ARI ari;
+    @Getter
+    private ARI ari;
 
     @PostConstruct
     void init() {

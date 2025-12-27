@@ -1,23 +1,15 @@
 key;text
 greeting;Grüß Gott und willkommen bei Fabia!
-group_input_request;Welche Formularkategorie möchten Sie wählen?
+group-input-request;Welche Formularkategorie möchten Sie wählen?
 group-empty;In dieser Formulargruppe sind keine Formulare verfügbar.
-group_not_found;Wir konnten nicht verstehen, welche Kategorie Sie auswählen wollten.
-groups_empty;Zur Zeit haben wir keine Formularkategorien verfügbar.
-form_input_request;Welches Formular möchten Sie auswählen?
-form_not_found;Wir konnten nicht verstehen, welches Formular Sie auswählen wollten.
-form_empty;In diesem Formular gibt es keine Felder.
-field_group_info;Fahren wir mit dem Ausfüllen des Formulars fort.
-field_group_error;Es wurden schon alle Feld Gruppen durchgegangen.
-single_choice_field_input_request;Bitte wählen Sie eine der Möglichkeiten aus.
-option_not_found;Wir konnten die ausgewählte Option nicht erkennen.
-field_input_mismatch;Ihre Eingabe entsprach nicht den Anforderungen.
-field_skip;Wollen Sie dieses Feld überspringen?
-input_validation;Sind sie mit dieser Eingabe zufrieden?
-input_skipped;Nun fahren wir mit den übersprungenen Feldern fort.
-final_input_validation;Wollen sie sich alle ihre Eingaben noch einmal anhören?
-send;Soll das Formular mit diesen Eingaben abgesendet werden?
-next_form;Wollen Sie noch ein Formular ausfüllen?
-no_match;Wir konnten sie nicht verstehen.
+group-not-found;Wir konnten nicht verstehen, welche Kategorie Sie auswählen wollten.
+groups-empty;Zur Zeit haben wir keine Formularkategorien verfügbar.
+form-input-request;Welches Formular möchten Sie auswählen?
+form-not-found;Wir konnten nicht verstehen, welches Formular Sie auswählen wollten.
+form-empty;In diesem Formular gibt es keine Felder.
+field-group-info;Fahren wir mit dem Ausfüllen des Formulars fort.
+field-group-error;Es wurden schon alle Feld Gruppen durchgegangen.
+single-choice-field-input-request;Bitte wählen Sie eine der Möglichkeiten aus.
+option-not-found;Wir konnten die ausgewählte Option nicht erkennen.
+field-input-mismatch;Ihre Eingabe entsprach nicht den Anforderungen.
 fabia-goodbye;Dankeschön für das Benutzen unseres Services und auf ein baldiges Wiedersehen.
-error;Es gab ein Problem...

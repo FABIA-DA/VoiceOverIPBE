@@ -4,6 +4,9 @@ import at.htlleonding.fabia.callmgmt.util.AriUtil;
 
 import java.util.UUID;
 
+/**
+ * Represents data for a recording, which is created by asterisk
+ */
 public final class RecordingItem extends AudioItem {
 
     public RecordingItem(String channelId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry) {

@@ -26,6 +26,6 @@ public final class GoodbyeHandler extends StateHandler {
 
     @Override
     protected void handleDone(CallSession session) {
-        session.close(false);
+        session.endCall(false);
     }
 }

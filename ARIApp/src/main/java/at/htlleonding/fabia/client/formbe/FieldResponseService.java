@@ -11,6 +11,11 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @RegisterRestClient(configKey = "field-response-client")
 public interface FieldResponseService {
+    /**
+     * Creates a response for a specific field.
+     * @param request The data to refer to the caller and the value
+     * @return The new field response
+     */
     @POST
     @Path("")
     @Consumes(jakarta.ws.rs.core.MediaType.APPLICATION_JSON)

@@ -16,6 +16,10 @@ public final class CallProcessor {
     private final Logger logger = LoggerFactory.getLogger(CallProcessor.class);
     private final Map<CallState, StateHandler> handlerMap;
 
+    /**
+     * Initializes every handler for call states.
+     * @param handlers All in Quarkus registered state handlers
+     */
     @Inject
     public CallProcessor(Instance<StateHandler> handlers) {
         Map<CallState, StateHandler> map = new EnumMap<>(CallState.class);
@@ -39,6 +43,10 @@ public final class CallProcessor {
         this.handlerMap = Collections.unmodifiableMap(map);
     }
 
+    /**
+     * Tries to process the next step for a session.
+     * @param session The call session to advance
+     */
     public void process(CallSession session) {
         logger.debug("Processing session {} in state {}", session.getChannelId(), session.getState());
 

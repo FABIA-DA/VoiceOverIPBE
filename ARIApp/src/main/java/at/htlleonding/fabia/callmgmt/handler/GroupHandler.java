@@ -43,8 +43,8 @@ public final class GroupHandler extends StateHandler {
                 .getGroups();
 
         if (groupList.isEmpty()) {
-            session.enqueueAudio(new PlaybackItem("groups_empty", session.getChannelId(), ariUtil, activeAudioRegistry));
-            session.closeCall();
+            session.enqueueAudio(new PlaybackItem("groups-empty", session.getChannelId(), ariUtil, activeAudioRegistry));
+            session.goToGoodbye();
             return;
         }
 
@@ -59,7 +59,7 @@ public final class GroupHandler extends StateHandler {
 
     @Override
     protected void handleRequestInput(CallSession session) {
-        session.enqueueAudio(new PlaybackItem("group_input_request", session.getChannelId(), ariUtil, activeAudioRegistry));
+        session.enqueueAudio(new PlaybackItem("group-input-request", session.getChannelId(), ariUtil, activeAudioRegistry));
         RecordingItem recording = new RecordingItem(session.getChannelId(), ariUtil, activeAudioRegistry);
         session.getGroupHandlingState().setRecording(recording);
         session.enqueueAudio(recording);
@@ -97,7 +97,7 @@ public final class GroupHandler extends StateHandler {
     @Override
     protected void handleRetry(CallSession session) {
         if (session.getSelectedGroup() == null) {
-            session.enqueueAudio(new PlaybackItem("group_not_found", session.getChannelId(), ariUtil, activeAudioRegistry));
+            session.enqueueAudio(new PlaybackItem("group-not-found", session.getChannelId(), ariUtil, activeAudioRegistry));
             session.resetBaseState();
         }
     }
