@@ -72,7 +72,7 @@ public final class FieldHandler extends StateHandler {
         Field field = session.getCurrentField();
 
         if (field.getDescription() != null) {
-            String speech = MessageFormat.format("Bitte beachten Sie folgendes für die Eingabe: {0}", field.getDescription());
+            String speech = MessageFormat.format("Bitte beachten Sie folgendes für die Eingabe: {0}", field.getType().getDescription());
             speechGenerationService.generateSpeech(new CoquiRequest(speech, typeDescriptionSpeech)).await().indefinitely();
             session.enqueueAudio(new PlaybackItem(typeDescriptionSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
         }

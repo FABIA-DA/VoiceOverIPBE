@@ -31,7 +31,7 @@ public final class FormHandler extends StateHandler {
 
     @Override
     protected void handleList(CallSession session) {
-        final String formsSpeechName = "from-names";
+        final String formsSpeechName = "form-names";
 
         if (session.getSelectedGroup() == null) {
             throw new IllegalStateException("No group for form intro was selected");
