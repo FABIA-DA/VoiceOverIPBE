@@ -39,6 +39,8 @@ public final class FieldHandler extends StateHandler {
             throw new IllegalStateException("No form or field selected");
         }
 
+        session.addFields(session.getCurrentFieldGroup().getFields());
+
         if(session.fieldsEmpty()){
             session.goToFieldGroup();
             return;
@@ -71,7 +73,7 @@ public final class FieldHandler extends StateHandler {
         final String typeDescriptionSpeech = "type-description";
         Field field = session.getCurrentField();
 
-        if (field.getDescription() != null) {
+        if (field.getType().getDescription() != null && !field.getType().getDescription().isBlank()) {
             String speech = MessageFormat.format("Bitte beachten Sie folgendes für die Eingabe: {0}", field.getType().getDescription());
             speechGenerationService.generateSpeech(new CoquiRequest(speech, typeDescriptionSpeech)).await().indefinitely();
             session.enqueueAudio(new PlaybackItem(typeDescriptionSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));

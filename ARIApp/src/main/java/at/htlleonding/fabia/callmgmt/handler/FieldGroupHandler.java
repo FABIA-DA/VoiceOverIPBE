@@ -63,6 +63,7 @@ public final class FieldGroupHandler extends StateHandler {
 
             FieldGroup fieldGroup = session.getCurrentFieldGroup();
             String speech = MessageFormat.format("Es folgen Felder für die Feldgruppe: {0}", fieldGroup.getName());
+            session.getUsedFields().clear();
 
             CoquiRequest request = new CoquiRequest(speech, fieldGroupSpeech);
             speechGenerationService.generateSpeech(request).await().indefinitely();
