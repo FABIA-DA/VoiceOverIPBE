@@ -10,17 +10,45 @@ services:
     depends_on:
       coqui-app:
         condition: service_completed_successfully
+    restart: unless-stopped
     volumes:
       - shared-sounds:/var/lib/asterisk/sounds
       - recordings:/var/spool/asterisk/recording
       - ./Asterisk/asterisk-config:/etc/asterisk
+    healthcheck:
+      test: [ "CMD-SHELL", "asterisk -rx 'core show uptime' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  coqui-model-loader:
+    build:
+      context: ./CoquiModelLoader
+      dockerfile: Dockerfile
+      args:
+        HF_TOKEN: ${HF_TOKEN}
+    env_file:
+      - .env
+    volumes:
+      - coqui-models:/model
+    restart: no
 
   coqui-app:
     build:
       context: ./CoquiApp
       dockerfile: Dockerfile
+    restart: on-failure
     volumes:
       - shared-sounds:/app/out
+      - coqui-models:/root/.local/share/tts/tts_models--multilingual--multi-dataset--xtts_v2
+    depends_on:
+      coqui-model-loader:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        limits:
+          memory: 6G
 
   ari-app:
     build:
@@ -28,13 +56,14 @@ services:
       dockerfile: Dockerfile
     depends_on:
       asterisk:
-        condition: service_started
+        condition: service_healthy
       whisper-be:
         condition: service_healthy
       coqui-be:
         condition: service_healthy
       backend:
         condition: service_started
+    restart: unless-stopped
     volumes:
       - recordings:/app/recordings
 
@@ -44,6 +73,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    restart: unless-stopped
     volumes:
       - whisper-models:/root/.cache/whisper
     healthcheck:
@@ -58,13 +88,22 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8001:8000"
+    depends_on:
+      coqui-model-loader:
+        condition: service_completed_successfully
     volumes:
       - shared-sounds:/app/out
+      - coqui-models:/root/.local/share/tts/tts_models--multilingual--multi-dataset--xtts_v2
+    restart: unless-stopped
     healthcheck:
       test: [ "CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/healthcheck\")' || exit 1" ]
       interval: 5s
       timeout: 3s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 6G
 
   migrations:
     container_name: formbe-migrations
@@ -142,5 +181,6 @@ volumes:
     external: true
   shared-sounds:
   recordings:
+  coqui-models:
   whisper-models:
   config:

@@ -5,17 +5,17 @@ from pydub.utils import which
 from pydub import AudioSegment
 from TTS.api import TTS
 
+
 # Force Pydub to use Conda-installed FFmpeg
 AudioSegment.converter = which("ffmpeg")
 
 os.makedirs("out", exist_ok=True)
-os.environ["XDG_CACHE_HOME"] = "/models"  # directory where model is already downloaded
 
 # Get device
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Init TTS
-tts = TTS("tts_models/de/css10/vits-neon").to(device)
+tts = TTS(model_name="tts_models/multilingual/multi-dataset/xtts_v2").to(device)
 
 with open("Phrases.csv", newline='', encoding="utf-8") as csvfile:
   first = True
@@ -25,7 +25,10 @@ with open("Phrases.csv", newline='', encoding="utf-8") as csvfile:
       first = False
       continue
     audio_path  = f"./out/{row[0]}.wav"
-    tts.tts_to_file(text=row[1], file_path=audio_path)
+    tts.tts_to_file(text=row[1],
+                    file_path=audio_path,
+                    language="de",
+                    speaker="Ana Florence")
     print(f"Created file {audio_path}")
     print("Changing sample rate...")
     sound = AudioSegment.from_file(audio_path)

@@ -25,9 +25,5 @@ ARG MAMBA_DOCKERFILE_ACTIVATE=1
 COPY --chmod=777 . .
 
 USER root
-# Pre-download the model inside the environment
-ENV XDG_CACHE_HOME=/models
-RUN mkdir -p /models
-RUN micromamba run -p /env python -c "from TTS.api import TTS; TTS(model_name='tts_models/de/css10/vits-neon')"
 
 ENTRYPOINT ["/bin/bash", "-c", "micromamba run -p /env python main.py"]

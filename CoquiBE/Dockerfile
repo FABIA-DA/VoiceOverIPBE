@@ -28,10 +28,5 @@ EXPOSE 8000
 
 USER root
 
-# Download the model into the image
-ENV XDG_CACHE_HOME=/models
-RUN mkdir -p /models
-RUN micromamba run -p /env python -c "from TTS.api import TTS; TTS(model_name='tts_models/de/css10/vits-neon')"
-
 # Run the app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
