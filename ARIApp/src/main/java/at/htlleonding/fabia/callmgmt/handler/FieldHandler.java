@@ -54,12 +54,12 @@ public final class FieldHandler extends StateHandler {
         final String fieldDescription = "field-description";
 
         Field field = session.getCurrentField();
-        String speech = MessageFormat.format("Es folgt das Feld mit dem Namen {0}", field.getName());
 
-        CoquiRequest request = new CoquiRequest(speech, fieldSpeech);
+        CoquiRequest request = new CoquiRequest(field.getName(), fieldSpeech);
 
         speechGenerationService.generateSpeech(request).await().indefinitely();
 
+        session.enqueueAudio(new PlaybackItem("field-intro", session.getChannelId(), ariUtil, activeAudioRegistry));
         session.enqueueAudio(new PlaybackItem(fieldSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
 
         if (field.getDescription() != null && !field.getDescription().isBlank()) {
@@ -74,8 +74,8 @@ public final class FieldHandler extends StateHandler {
         Field field = session.getCurrentField();
 
         if (field.getType().getDescription() != null && !field.getType().getDescription().isBlank()) {
-            String speech = MessageFormat.format("Bitte beachten Sie folgendes für die Eingabe: {0}", field.getType().getDescription());
-            speechGenerationService.generateSpeech(new CoquiRequest(speech, typeDescriptionSpeech)).await().indefinitely();
+            speechGenerationService.generateSpeech(new CoquiRequest(field.getType().getDescription(), typeDescriptionSpeech)).await().indefinitely();
+            session.enqueueAudio(new PlaybackItem("please-consider", session.getChannelId(), ariUtil, activeAudioRegistry));
             session.enqueueAudio(new PlaybackItem(typeDescriptionSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
         }
 

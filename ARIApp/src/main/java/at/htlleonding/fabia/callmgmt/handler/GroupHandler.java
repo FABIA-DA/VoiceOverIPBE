@@ -49,8 +49,9 @@ public final class GroupHandler extends StateHandler {
         }
 
         session.getGroupHandlingState().setGroupList(groupList);
+        session.enqueueAudio(new PlaybackItem("form-group-preamble", session.getChannelId(), ariUtil, activeAudioRegistry));
         String names = Util.ConcatItems(groupList, GroupListDto::getName);
-        speechGenerationService.generateSpeech(new CoquiRequest("Wir haben diese Formularkategorien zur Verfügung: " + names, groupSpeech))
+        speechGenerationService.generateSpeech(new CoquiRequest(names, groupSpeech))
                 .await()
                 .indefinitely();
         session.enqueueAudio(new PlaybackItem(groupSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));

@@ -21,17 +21,17 @@ app = FastAPI()
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-tts = TTS(model_name="tts_models/multilingual/multi-dataset/xtts_v2").to(device)
+tts = TTS(model_name="tts_models/de/css10/vits-neon").to(device)
 
 
 @app.post("/convert", status_code=status.HTTP_204_NO_CONTENT)
 async def convert(request: ConversionRequest):
     print(f"Converting text to speech, saving to {request.fileName}.wav")
     audio_path = f"{output_dir}/{request.fileName}.wav"
-    tts.tts_to_file(text=request.text,
-                    file_path=audio_path,
-                    language="de",
-                    speaker="Ana Florence")
+    tts.tts_to_file(
+        text=request.text,
+        file_path=audio_path,
+    )
 
     sound = AudioSegment.from_file(audio_path)
     sound = sound.set_channels(1).set_frame_rate(8000)

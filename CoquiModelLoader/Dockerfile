@@ -8,6 +8,6 @@ RUN pip install huggingface_hub
 
 # If the Hugging Face Token is set, there is automatic auth for faster download
 # Downloads the xtts-v2 model
-RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('coqui/XTTS-v2', local_dir='/model')"
+RUN python -c "from huggingface_hub import snapshot_download; snapshot_download('coqui/XTTS-v2', local_dir='/models/tts_models--multilingual--multi-dataset--xtts_v2'); snapshot_download('coqui/XTTS-v2', local_dir='/models/tts_models/de/css10/vits-neon')"
 
 CMD ["echo", "Coqui Model loaded"]

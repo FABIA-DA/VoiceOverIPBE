@@ -41,6 +41,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
         }
 
         final String singleChoiceFieldSpeech = "single-choice-field-speech";
+        final String optionSpeech = "option-speech";
 
         if(session.singleChoiceFieldsEmpty()){
             session.goToField();
@@ -57,10 +58,14 @@ public final class SingleChoiceFieldHandler extends StateHandler {
 
         SingleChoiceField field = session.getCurrentSingleChoiceField();
         String options = Util.ConcatItems(field.getOptions(), Option::getName);
-        String speech = MessageFormat.format("Für das Feld mit dem Namen {0} gibt es folgende Optionen: {1}", field.getName(), options);
 
-        speechGenerationService.generateSpeech(new CoquiRequest(speech, singleChoiceFieldSpeech)).await().indefinitely();
+        speechGenerationService.generateSpeech(new CoquiRequest(field.getName(), singleChoiceFieldSpeech)).await().indefinitely();
+        speechGenerationService.generateSpeech(new CoquiRequest(options, optionSpeech)).await().indefinitely();
+
+        session.enqueueAudio(new PlaybackItem("for-the-field", session.getChannelId(), ariUtil, activeAudioRegistry));
         session.enqueueAudio(new PlaybackItem(singleChoiceFieldSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
+        session.enqueueAudio(new PlaybackItem("options-are", session.getChannelId(), ariUtil, activeAudioRegistry));
+        session.enqueueAudio(new PlaybackItem(optionSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
     }
 
     @Override

@@ -47,7 +47,8 @@ public final class FormHandler extends StateHandler {
 
         String names = Util.ConcatItems(forms, Form::getName);
 
-        speechGenerationService.generateSpeech(new CoquiRequest("Wir haben diese Formulare verfügbar: " + names, formsSpeechName)).await().indefinitely();
+        session.enqueueAudio(new PlaybackItem("form-preamble", session.getChannelId(), ariUtil, activeAudioRegistry));
+        speechGenerationService.generateSpeech(new CoquiRequest(names, formsSpeechName)).await().indefinitely();
         session.enqueueAudio(new PlaybackItem(formsSpeechName, session.getChannelId(), ariUtil, activeAudioRegistry));
     }
 

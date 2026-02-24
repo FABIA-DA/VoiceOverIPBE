@@ -31,7 +31,7 @@ services:
     env_file:
       - .env
     volumes:
-      - coqui-models:/model
+      - coqui-models:/models
     restart: no
 
   coqui-app:
@@ -41,7 +41,7 @@ services:
     restart: on-failure
     volumes:
       - shared-sounds:/app/out
-      - coqui-models:/root/.local/share/tts/tts_models--multilingual--multi-dataset--xtts_v2
+      - coqui-models:/root/.local/share/tts
     depends_on:
       coqui-model-loader:
         condition: service_completed_successfully
@@ -93,7 +93,7 @@ services:
         condition: service_completed_successfully
     volumes:
       - shared-sounds:/app/out
-      - coqui-models:/root/.local/share/tts/tts_models--multilingual--multi-dataset--xtts_v2
+      - coqui-models:/root/.local/share/tts
     restart: unless-stopped
     healthcheck:
       test: [ "CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/healthcheck\")' || exit 1" ]

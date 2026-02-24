@@ -48,11 +48,11 @@ public final class FieldGroupHandler extends StateHandler {
         List<FieldGroup> fieldGroups = session.getSelectedForm().getFieldGroups();
         String names = Util.ConcatItems(fieldGroups, FieldGroup::getName);
 
-        String speech = MessageFormat.format("Es sind folgende Feldgruppen in diesem Formular: {0}", names);
 
-        CoquiRequest request = new CoquiRequest(speech, fieldGroupsSpeech);
+        CoquiRequest request = new CoquiRequest(names, fieldGroupsSpeech);
 
         speechGenerationService.generateSpeech(request).await().indefinitely();
+        session.enqueueAudio(new PlaybackItem("field-group-preamble", session.getChannelId(), ariUtil, activeAudioRegistry));
         session.enqueueAudio(new PlaybackItem(fieldGroupsSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
     }
 
@@ -62,11 +62,11 @@ public final class FieldGroupHandler extends StateHandler {
             final String fieldGroupSpeech = "field-group-speech";
 
             FieldGroup fieldGroup = session.getCurrentFieldGroup();
-            String speech = MessageFormat.format("Es folgen Felder für die Feldgruppe: {0}", fieldGroup.getName());
             session.getUsedFields().clear();
 
-            CoquiRequest request = new CoquiRequest(speech, fieldGroupSpeech);
+            CoquiRequest request = new CoquiRequest(fieldGroup.getName(), fieldGroupSpeech);
             speechGenerationService.generateSpeech(request).await().indefinitely();
+            session.enqueueAudio(new PlaybackItem("next-field-group", session.getChannelId(), ariUtil, activeAudioRegistry));
             session.enqueueAudio(new PlaybackItem(fieldGroupSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
         } else {
             session.enqueueAudio(new PlaybackItem("field-group-error", session.getChannelId(), ariUtil, activeAudioRegistry));
