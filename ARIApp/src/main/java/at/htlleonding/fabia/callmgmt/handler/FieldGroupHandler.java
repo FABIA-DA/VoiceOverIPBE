@@ -10,11 +10,11 @@ import at.htlleonding.fabia.callmgmt.util.HandledState;
 import at.htlleonding.fabia.client.coquibe.CoquiRequest;
 import at.htlleonding.fabia.client.coquibe.SpeechGenerationService;
 import at.htlleonding.fabia.client.formbe.dtos.FieldGroup;
+import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 @Singleton
@@ -28,48 +28,86 @@ public final class FieldGroupHandler extends StateHandler {
     ActiveAudioRegistry activeAudioRegistry;
 
     @Override
-    protected void handleInfo(CallSession session) {
+    protected Uni<Void> handleInfoAsync(CallSession session) {
         if (session.getSelectedForm() == null) {
             throw new IllegalStateException("No form was selected");
         }
 
         if (session.fieldGroupsEmpty()) {
-            session.enqueueAudio(new PlaybackItem("form-empty", session.getChannelId(), ariUtil, activeAudioRegistry));
+            session.enqueueAudio(
+                    new PlaybackItem("form-empty",
+                            session.getBridgeId(),
+                            ariUtil,
+                            activeAudioRegistry));
             session.goToGoodbye();
-            return;
+            return Uni.createFrom().voidItem();
         }
-
-        session.tryIncreaseFieldGroupIdx();
-
-        session.enqueueAudio(new PlaybackItem("field-group-info", session.getChannelId(), ariUtil, activeAudioRegistry));
 
         final String fieldGroupsSpeech = "field-groups-speech";
 
-        List<FieldGroup> fieldGroups = session.getSelectedForm().getFieldGroups();
-        String names = Util.ConcatItems(fieldGroups, FieldGroup::getName);
+        return ariUtil.startMohAsync(session.getBridgeId())
+                .chain(() -> {
+                    session.tryIncreaseFieldGroupIdx();
 
+                    List<FieldGroup> fieldGroups = session.getSelectedForm().getFieldGroups();
+                    String names = Util.ConcatItems(fieldGroups, FieldGroup::getName);
+                    CoquiRequest request = new CoquiRequest(names, fieldGroupsSpeech);
 
-        CoquiRequest request = new CoquiRequest(names, fieldGroupsSpeech);
-
-        speechGenerationService.generateSpeech(request).await().indefinitely();
-        session.enqueueAudio(new PlaybackItem("field-group-preamble", session.getChannelId(), ariUtil, activeAudioRegistry));
-        session.enqueueAudio(new PlaybackItem(fieldGroupsSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
+                    return speechGenerationService.generateSpeech(request);
+                })
+                .invoke(() -> {
+                    session.enqueueAudio(
+                            new PlaybackItem("field-group-info",
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                    session.enqueueAudio(
+                            new PlaybackItem("field-group-preamble",
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                    session.enqueueAudio(
+                            new PlaybackItem(fieldGroupsSpeech,
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                })
+                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
     }
 
     @Override
-    protected void handleSingleItem(CallSession session) {
-        if (session.currentFieldGroupInBounds()) {
-            final String fieldGroupSpeech = "field-group-speech";
-
-            FieldGroup fieldGroup = session.getCurrentFieldGroup();
-            session.getUsedFields().clear();
-
-            CoquiRequest request = new CoquiRequest(fieldGroup.getName(), fieldGroupSpeech);
-            speechGenerationService.generateSpeech(request).await().indefinitely();
-            session.enqueueAudio(new PlaybackItem("next-field-group", session.getChannelId(), ariUtil, activeAudioRegistry));
-            session.enqueueAudio(new PlaybackItem(fieldGroupSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
-        } else {
-            session.enqueueAudio(new PlaybackItem("field-group-error", session.getChannelId(), ariUtil, activeAudioRegistry));
+    protected Uni<Void> handleSingleItemAsync(CallSession session) {
+        if (!session.currentFieldGroupInBounds()) {
+            session.enqueueAudio(
+                    new PlaybackItem("field-group-error",
+                            session.getBridgeId(),
+                            ariUtil,
+                            activeAudioRegistry));
+            return Uni.createFrom().voidItem();
         }
+
+        final String fieldGroupSpeech = "field-group-speech";
+
+        return ariUtil.startMohAsync(session.getBridgeId())
+                .chain(() -> {
+                    FieldGroup fieldGroup = session.getCurrentFieldGroup();
+                    session.getUsedFields().clear();
+
+                    CoquiRequest request = new CoquiRequest(fieldGroup.getName(), fieldGroupSpeech);
+                    return speechGenerationService.generateSpeech(request);
+                })
+                .invoke(() -> {
+                    session.enqueueAudio(
+                            new PlaybackItem("next-field-group",
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                    session.enqueueAudio(
+                            new PlaybackItem(fieldGroupSpeech,
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                })
+                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
     }
 }

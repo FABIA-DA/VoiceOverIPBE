@@ -25,5 +25,6 @@ ARG MAMBA_DOCKERFILE_ACTIVATE=1
 COPY --chmod=777 . .
 
 USER root
+ENV COQUI_TOS_AGREED=1
 
 ENTRYPOINT ["/bin/bash", "-c", "micromamba run -p /env python main.py"]

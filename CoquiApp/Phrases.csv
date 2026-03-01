@@ -1,23 +1,20 @@
 key;text
-greeting;Hallo, ich bin Fabia. Ich führe Sie durch die Antragsformulare.
+greeting;Hallo, ich bin Kiara. Ich führe Sie durch die Antragsformulare
 group-input-request;Welche Formularkategorie möchten Sie wählen?
-group-empty;In dieser Formulargruppe sind keine Formulare verfügbar.
-group-not-found;Wir konnten nicht verstehen, welche Kategorie Sie auswählen wollten.
-groups-empty;Zur Zeit haben wir keine Formularkategorien verfügbar.
+group-empty;In dieser Formulargruppe sind keine Formulare verfügbar
+groups-empty;Zur Zeit haben wir keine Formularkategorien verfügbar
 form-input-request;Welches Formular möchten Sie auswählen?
-form-not-found;Wir konnten nicht verstehen, welches Formular Sie auswählen wollten.
-form-empty;In diesem Formular gibt es keine Felder.
-field-group-info;Fahren wir mit dem Ausfüllen des Formulars fort.
-field-group-error;Es wurden schon alle Feld Gruppen durchgegangen.
-single-choice-field-input-request;Bitte wählen Sie eine der Möglichkeiten aus.
-option-not-found;Wir konnten die ausgewählte Option nicht erkennen.
-field-input-mismatch;Ihre Eingabe entsprach nicht den Anforderungen.
-fabia-goodbye;Dankeschön für das Benutzen unseres Services und auf ein baldiges Wiedersehen.
-form-group-preamble;Wir haben diese Formularkategorien zur Verfügung. Bitte suchen Sie sich eine aus.
-form-preamble;Wir haben diese Formulare verfügbar.
-field-group-preamble;Es sind folgende Feldgruppen in diesem Formular.
-next-field-group;Es folgen Felder für die Feldgruppe.
-for-the-field;Für das Feld mit dem Namen.
-options-are;Gibt es folgende Optionen.
-field-intro;Es folgt das Feld mit dem Namen.
-please-consider;Bitte beachten Sie folgendes für die Eingabe.
+form-empty;In diesem Formular gibt es keine Felder
+field-group-info;Fahren wir mit dem Ausfüllen des Formulars fort
+field-group-error;Es wurden schon alle Feld Gruppen durchgegangen
+single-choice-field-input-request;Bitte wählen Sie eine der Möglichkeiten aus
+fabia-goodbye;Dankeschön für das Benutzen unseres Services und auf ein baldiges Wiedersehen
+form-group-preamble;Wir haben diese Formularkategorien zur Verfügung. Bitte suchen Sie sich eine aus
+form-preamble;Wir haben diese Formulare verfügbar
+field-group-preamble;Es sind folgende Feldgruppen in diesem Formular
+next-field-group;Es folgen Felder für die Feldgruppe
+for-the-field;Für das Feld mit dem Namen
+options-are;Gibt es folgende Optionen
+field-intro;Es folgt das Feld mit dem Namen
+please-consider;Bitte beachten Sie folgendes für die Eingabe
+we-understood;Wir haben Sie nicht ganz verstanden. Wir haben folgendes gehört

@@ -24,10 +24,10 @@ public final class CallSession {
 
     private static final Logger logger = LoggerFactory.getLogger(CallSession.class);
     /**
-     * The id of the callers channel from asterisk. The id is unique.
+     * The id of the bridge where the callers channel from asterisk is in. The id is unique.
      */
     @Getter
-    private final String channelId;
+    private final String bridgeId;
     /**
      * The name of the channel from asterisk, which contains callers sip username.
      */
@@ -127,8 +127,8 @@ public final class CallSession {
         resetBaseState();
     }
 
-    public CallSession(String channelId, String channelName, SessionManager sessionManager, CallProcessor callProcessor, AriUtil arUtil) {
-        this.channelId = channelId;
+    public CallSession(String bridgeId, String channelName, SessionManager sessionManager, CallProcessor callProcessor, AriUtil arUtil) {
+        this.bridgeId = bridgeId;
         this.channelName = channelName;
         this.sessionManager = sessionManager;
         this.callProcessor = callProcessor;
@@ -340,6 +340,7 @@ public final class CallSession {
     /**
      * Adds new fields to the fields to be processed.
      * Needed because of the conditional addition by single choice fields and its selected options.
+     *
      * @param fields The new fields.
      */
     public void addFields(Collection<? extends Field> fields) {
@@ -377,6 +378,7 @@ public final class CallSession {
 
     /**
      * Adds a new audio item to the queue.
+     *
      * @param item The new audio to process.
      */
     public void enqueueAudio(AudioItem item) {
@@ -395,15 +397,16 @@ public final class CallSession {
 
     /**
      * Ends the call if not already done.
+     *
      * @param hasSelfHungUp If the caller already hung up
      */
     public void endCall(boolean hasSelfHungUp) {
         this.hasHungUp = true;
-        sessionManager.removeSession(this.channelId);
+        sessionManager.removeSession(this.bridgeId);
         audioQueue.clear();
 
         if (!hasSelfHungUp) {
-            arUtil.hangup(this.channelId);
+            arUtil.hangup(this.bridgeId);
         }
     }
 
@@ -429,7 +432,13 @@ public final class CallSession {
         AudioItem item = audioQueue.poll();
         if (item != null) {
             logger.debug("Next audio item: {}", item.getName());
-            item.start();
+            item.startAsync()
+                    .subscribe().with(
+                            success -> {
+                            },
+                            failure -> {
+                            }
+                    );
         } else {
             if (currentBaseState != BaseState.DONE) {
                 advanceBaseState();

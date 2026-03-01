@@ -10,6 +10,7 @@ public class SingleChoiceFieldHandlingState {
     private RecordingItem recording;
     private boolean optionMatch;
     private boolean retry;
+    private String transcript;
 
     public SingleChoiceFieldHandlingState(){
     }

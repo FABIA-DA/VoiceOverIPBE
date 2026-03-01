@@ -1,6 +1,7 @@
 package at.htlleonding.fabia.callmgmt.audiomgmt;
 
 import at.htlleonding.fabia.callmgmt.util.AriUtil;
+import io.smallrye.mutiny.Uni;
 
 import java.util.UUID;
 
@@ -9,13 +10,13 @@ import java.util.UUID;
  */
 public final class RecordingItem extends AudioItem {
 
-    public RecordingItem(String channelId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry) {
-        super("rec-" + UUID.randomUUID(), channelId, ariUtil, audioRegistry);
+    public RecordingItem(String bridgeId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry) {
+        super("rec-" + UUID.randomUUID(), bridgeId, ariUtil, audioRegistry);
     }
 
     @Override
-    public void start() {
-        ariUtil.startRecording(channelId, getName());
+    public Uni<Void> startAsync() {
         audioRegistry.registerRecording(this);
+        return ariUtil.startRecordingAsync(bridgeId, getName());
     }
 }

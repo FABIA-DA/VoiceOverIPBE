@@ -11,6 +11,7 @@ import at.htlleonding.fabia.callmgmt.util.HandledState;
 import at.htlleonding.fabia.client.coquibe.CoquiRequest;
 import at.htlleonding.fabia.client.coquibe.SpeechGenerationService;
 import at.htlleonding.fabia.client.formbe.dtos.Form;
+import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -30,66 +31,119 @@ public final class FormHandler extends StateHandler {
     ActiveAudioRegistry activeAudioRegistry;
 
     @Override
-    protected void handleList(CallSession session) {
+    protected Uni<Void> handleListAsync(CallSession session) {
         final String formsSpeechName = "form-names";
 
-        if (session.getSelectedGroup() == null) {
-            throw new IllegalStateException("No group for form intro was selected");
-        }
+        return ariUtil.startMohAsync(session.getBridgeId())
+                .flatMap(success -> {
+                    if (session.getSelectedGroup() == null) {
+                        throw new IllegalStateException("No group for form intro was selected");
+                    }
 
-        List<Form> forms = session.getSelectedGroup().getForms();
+                    List<Form> forms = session.getSelectedGroup().getForms();
 
-        if(forms.isEmpty()){
-            session.enqueueAudio(new PlaybackItem("group-empty", session.getChannelId(), ariUtil, activeAudioRegistry));
-            session.goToGoodbye();
-            return;
-        }
+                    if (forms.isEmpty()) {
+                        session.enqueueAudio(
+                                new PlaybackItem("group-empty",
+                                        session.getBridgeId(),
+                                        ariUtil,
+                                        activeAudioRegistry));
+                        session.goToGoodbye();
+                        return Uni.createFrom().voidItem();
+                    }
 
-        String names = Util.ConcatItems(forms, Form::getName);
+                    String names = Util.ConcatItems(forms, Form::getName);
 
-        session.enqueueAudio(new PlaybackItem("form-preamble", session.getChannelId(), ariUtil, activeAudioRegistry));
-        speechGenerationService.generateSpeech(new CoquiRequest(names, formsSpeechName)).await().indefinitely();
-        session.enqueueAudio(new PlaybackItem(formsSpeechName, session.getChannelId(), ariUtil, activeAudioRegistry));
+                    session.enqueueAudio(
+                            new PlaybackItem("form-preamble",
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+
+                    return speechGenerationService.generateSpeech(
+                            new CoquiRequest(names, formsSpeechName));
+                })
+                .invoke(() -> {
+                    session.enqueueAudio(
+                            new PlaybackItem(formsSpeechName,
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                })
+                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
     }
 
     @Override
-    protected void handleRequestInput(CallSession session) {
-        session.enqueueAudio(new PlaybackItem("form-input-request", session.getChannelId(), ariUtil, activeAudioRegistry));
-        RecordingItem recordingItem = new RecordingItem(session.getChannelId(), ariUtil, activeAudioRegistry);
-        session.getFormHandlingState().setRecording(recordingItem);
-        session.enqueueAudio(recordingItem);
+    protected Uni<Void> handleRequestInputAsync(CallSession session) {
+        return Uni.createFrom().voidItem().invoke(() -> {
+            session.enqueueAudio(
+                    new PlaybackItem("form-input-request",
+                            session.getBridgeId(),
+                            ariUtil,
+                            activeAudioRegistry));
+            RecordingItem recordingItem = new RecordingItem(session.getBridgeId(), ariUtil, activeAudioRegistry);
+            session.getFormHandlingState().setRecording(recordingItem);
+            session.enqueueAudio(recordingItem);
+        });
     }
 
     @Override
-    protected void handleProcessInput(CallSession session) {
+    protected Uni<Void> handleProcessInputAsync(CallSession session) {
         RecordingItem recording = session.getFormHandlingState().getRecording();
         if (recording == null) {
             throw new IllegalStateException("No recording happened before input processing");
         }
 
-        String text = transcribe(recording).await().indefinitely();
+        return ariUtil.startMohAsync(session.getBridgeId())
+                .chain(() -> transcribe(recording))
+                .invoke(text -> {
+                    session.getFormHandlingState().setTranscript(text);
 
-        if (text == null) {
-            return;
-        }
+                    if (text == null || text.isBlank()) {
+                        return;
+                    }
 
-        for (Form form : session.getSelectedGroup().getForms()) {
-            Pattern pattern = Pattern.compile(form.getName(), Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(text);
-            if (matcher.find()) {
-                session.setSelectedForm(form);
-                break;
-            }
-        }
+                    for (Form form : session.getSelectedGroup().getForms()) {
+                        if (text.replace(" ", "")
+                                .toLowerCase()
+                                .contains(form.getName().toLowerCase())) {
+                            session.setSelectedForm(form);
+                            break;
+                        }
+                    }
+                })
+                .replaceWithVoid();
     }
 
     @Override
-    protected void handleRetry(CallSession session) {
+    protected Uni<Void> handleRetryAsync(CallSession session) {
+        Uni<Void> endMoh = Uni.createFrom()
+                .voidItem()
+                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
         if (session.getSelectedForm() != null) {
-            return;
+            return endMoh;
         }
 
-        session.enqueueAudio(new PlaybackItem("form-not-found", session.getChannelId(), ariUtil, activeAudioRegistry));
-        session.resetBaseState();
+        final String userTranscriptSpeech = "form-user-transcript";
+
+        return
+                speechGenerationService.generateSpeech(
+                                new CoquiRequest(
+                                        session.getFormHandlingState().getTranscript(),
+                                        userTranscriptSpeech))
+                        .invoke(() -> {
+                            session.enqueueAudio(
+                                    new PlaybackItem("we-understood",
+                                            session.getBridgeId(),
+                                            ariUtil,
+                                            activeAudioRegistry));
+                            session.enqueueAudio(
+                                    new PlaybackItem(userTranscriptSpeech,
+                                            session.getBridgeId(),
+                                            ariUtil,
+                                            activeAudioRegistry));
+                            session.resetBaseState();
+                        })
+                        .eventually(() -> endMoh);
     }
 }

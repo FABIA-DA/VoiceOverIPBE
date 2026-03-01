@@ -11,15 +11,13 @@ import at.htlleonding.fabia.callmgmt.util.HandledState;
 import at.htlleonding.fabia.client.coquibe.CoquiRequest;
 import at.htlleonding.fabia.client.coquibe.SpeechGenerationService;
 import at.htlleonding.fabia.client.formbe.GroupService;
-import at.htlleonding.fabia.client.formbe.dtos.Group;
 import at.htlleonding.fabia.client.formbe.dtos.GroupListDto;
+import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Singleton
 @HandledState(CallState.GROUP)
@@ -34,72 +32,114 @@ public final class GroupHandler extends StateHandler {
     ActiveAudioRegistry activeAudioRegistry;
 
     @Override
-    protected void handleList(CallSession session) {
+    protected Uni<Void> handleListAsync(CallSession session) {
         String groupSpeech = "group-speech";
 
-        List<GroupListDto> groupList = groupService.getAllGroups()
-                .await()
-                .indefinitely()
-                .getGroups();
+        return ariUtil.startMohAsync(session.getBridgeId())
+                .chain(groupService::getAllGroups)
+                .flatMap(groupList -> {
+                    List<GroupListDto> groups = groupList.getGroups();
 
-        if (groupList.isEmpty()) {
-            session.enqueueAudio(new PlaybackItem("groups-empty", session.getChannelId(), ariUtil, activeAudioRegistry));
-            session.goToGoodbye();
-            return;
-        }
+                    if (groups.isEmpty()) {
+                        session.enqueueAudio(new PlaybackItem("groups-empty", session.getBridgeId(), ariUtil, activeAudioRegistry));
+                        session.goToGoodbye();
+                        return Uni.createFrom().voidItem();
+                    }
 
-        session.getGroupHandlingState().setGroupList(groupList);
-        session.enqueueAudio(new PlaybackItem("form-group-preamble", session.getChannelId(), ariUtil, activeAudioRegistry));
-        String names = Util.ConcatItems(groupList, GroupListDto::getName);
-        speechGenerationService.generateSpeech(new CoquiRequest(names, groupSpeech))
-                .await()
-                .indefinitely();
-        session.enqueueAudio(new PlaybackItem(groupSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
+                    session.getGroupHandlingState().setGroupList(groups);
+                    String names = Util.ConcatItems(groups, GroupListDto::getName);
 
+                    return speechGenerationService.generateSpeech(new CoquiRequest(names, groupSpeech));
+                })
+                .invoke(() -> {
+                    session.enqueueAudio(new PlaybackItem("form-group-preamble", session.getBridgeId(), ariUtil, activeAudioRegistry));
+                    session.enqueueAudio(new PlaybackItem(groupSpeech, session.getBridgeId(), ariUtil, activeAudioRegistry));
+                })
+                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
     }
 
     @Override
-    protected void handleRequestInput(CallSession session) {
-        session.enqueueAudio(new PlaybackItem("group-input-request", session.getChannelId(), ariUtil, activeAudioRegistry));
-        RecordingItem recording = new RecordingItem(session.getChannelId(), ariUtil, activeAudioRegistry);
-        session.getGroupHandlingState().setRecording(recording);
-        session.enqueueAudio(recording);
+    protected Uni<Void> handleRequestInputAsync(CallSession session) {
+        return Uni.createFrom().voidItem()
+                .invoke(() -> {
+                    session.enqueueAudio(
+                            new PlaybackItem("group-input-request",
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                    RecordingItem recording = new RecordingItem(session.getBridgeId(), ariUtil, activeAudioRegistry);
+                    session.getGroupHandlingState().setRecording(recording);
+                    session.enqueueAudio(recording);
+                });
     }
 
     @Override
-    protected void handleProcessInput(CallSession session) {
+    protected Uni<Void> handleProcessInputAsync(CallSession session) {
         RecordingItem recording = session.getGroupHandlingState().getRecording();
         if (recording == null) {
             throw new IllegalStateException("No recording happened before input processing");
         }
 
-        String text = transcribe(recording).await().indefinitely();
+        return ariUtil.startMohAsync(session.getBridgeId())
+                .chain(() -> transcribe(recording))
+                .flatMap(text -> {
+                    session.getGroupHandlingState().setTranscript(text);
 
-        if (text == null) {
-            return;
-        }
+                    if (text == null || text.isBlank()) {
+                        return Uni.createFrom().nullItem();
+                    }
 
-        logger.debug("Text input: {}", text);
+                    logger.debug("Text input: {}", text);
+                    long groupId = -1;
 
-        for (GroupListDto group : session.getGroupHandlingState().getGroupList()) {
-            Pattern pattern = Pattern.compile(group.getName(), Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(text);
-            if (matcher.find()) {
-                logger.debug("Match in group {}", group.getName());
-                Group selected = groupService.getGroupById(group.getId())
-                        .await()
-                        .indefinitely();
-                session.setSelectedGroup(selected);
-                break;
-            }
-        }
+                    for (GroupListDto group : session.getGroupHandlingState().getGroupList()) {
+                        if (text.replace(" ", "")
+                                .toLowerCase()
+                                .contains(group.getName().toLowerCase())) {
+                            logger.debug("Match in group {}", group.getName());
+                            groupId = group.getId();
+                            break;
+                        }
+                    }
+
+                    return groupService.getGroupById(groupId);
+                }).invoke(group -> {
+                    if (group != null) {
+                        session.setSelectedGroup(group);
+                    }
+                }).replaceWithVoid();
     }
 
     @Override
-    protected void handleRetry(CallSession session) {
-        if (session.getSelectedGroup() == null) {
-            session.enqueueAudio(new PlaybackItem("group-not-found", session.getChannelId(), ariUtil, activeAudioRegistry));
-            session.resetBaseState();
+    protected Uni<Void> handleRetryAsync(CallSession session) {
+        Uni<Void> endMoh = Uni.createFrom()
+                .voidItem()
+                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
+
+        if (session.getSelectedGroup() != null) {
+            return endMoh;
         }
+
+        final String userTranscriptSpeech = "group-user-transcript";
+
+        return speechGenerationService.generateSpeech(
+                        new CoquiRequest(
+                                session.getGroupHandlingState().getTranscript(),
+                                userTranscriptSpeech))
+                .invoke(() -> {
+                    session.enqueueAudio(
+                            new PlaybackItem("we-understood",
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                    session.enqueueAudio(
+                            new PlaybackItem(userTranscriptSpeech,
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+
+                    session.resetBaseState();
+                })
+                .eventually(() -> endMoh);
     }
 }

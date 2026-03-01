@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 /**
  * Handles all necessary ari events to start and advance the call
  */
@@ -18,7 +20,7 @@ public class AriEventHandler extends AriWSHelper {
     private SessionManager sessionManager;
     private ActiveAudioRegistry activeAudioRegistry;
     private CallProcessor callProcessor;
-    private AriUtil arUtil;
+    private AriUtil ariUtil;
 
     private final Logger logger = LoggerFactory.getLogger(AriEventHandler.class);
 
@@ -33,7 +35,7 @@ public class AriEventHandler extends AriWSHelper {
         String prefix = "sound:";
         String media = message.getPlayback().getMedia_uri().substring(prefix.length());
 
-        String channelId = activeAudioRegistry.getPlayback(media).getChannelId();
+        String channelId = activeAudioRegistry.getPlayback(media).getBridgeId();
 
         if (channelId == null) {
             return;
@@ -51,7 +53,7 @@ public class AriEventHandler extends AriWSHelper {
     @Override
     protected void onRecordingStarted(RecordingStarted message) {
         logger.debug("recording started");
-        String channelId = activeAudioRegistry.getRecording(message.getRecording().getName()).getChannelId();
+        String channelId = activeAudioRegistry.getRecording(message.getRecording().getName()).getBridgeId();
 
         if (channelId == null) {
             return;
@@ -68,14 +70,29 @@ public class AriEventHandler extends AriWSHelper {
 
     @Override
     protected void onStasisStart(StasisStart message) {
-        logger.debug("New call entered Stasis: {}", message.getChannel().getName());
+        Channel channel = message.getChannel();
+        logger.debug("New call entered Stasis: {}", channel.getName());
+
+        if(!Objects.equals(channel.getState(), "Up")){
+            ariUtil.answer(channel.getId());
+        }
+
+        Bridge bridge = ariUtil.createBridge();
+
+        if(bridge == null){
+            return;
+        }
+
+        ariUtil.addChannelToBridge(bridge.getId(), channel.getId());
+
         CallSession session = new CallSession(
-                message.getChannel().getId(),
-                message.getChannel().getName(),
+                bridge.getId(),
+                channel.getName(),
                 sessionManager,
                 callProcessor,
-                arUtil
+                ariUtil
         );
+
         session.advanceCallState();
         sessionManager.addSession(session);
         session.nextAudioOrStep();
@@ -84,7 +101,7 @@ public class AriEventHandler extends AriWSHelper {
     @Override
     protected void onRecordingFinished(RecordingFinished message) {
         logger.debug("Recording finished: {}", message.getRecording().getName());
-        String channelId = activeAudioRegistry.getRecording(message.getRecording().getName()).getChannelId();
+        String channelId = activeAudioRegistry.getRecording(message.getRecording().getName()).getBridgeId();
         activeAudioRegistry.removeRecording(message.getRecording().getName());
 
         if (channelId == null) {
@@ -107,7 +124,7 @@ public class AriEventHandler extends AriWSHelper {
         String media = message.getPlayback().getMedia_uri().substring(prefix.length());
 
         logger.debug("Playback finished: {}", media);
-        String channelId = activeAudioRegistry.getPlayback(media).getChannelId();
+        String channelId = activeAudioRegistry.getPlayback(media).getBridgeId();
         activeAudioRegistry.removePlayback(media);
 
         if (channelId == null) {
@@ -125,7 +142,7 @@ public class AriEventHandler extends AriWSHelper {
     }
 
     @Override
-    protected void onChannelHangupRequest(ChannelHangupRequest message) {
+    protected void onStasisEnd(StasisEnd message) {
         String channelId = message.getChannel().getId();
 
         if (channelId == null) {
@@ -140,5 +157,7 @@ public class AriEventHandler extends AriWSHelper {
         }
 
         session.endCall(true);
+        ariUtil.destroyBridge(session.getBridgeId());
+        sessionManager.removeSession(session.getBridgeId());
     }
 }

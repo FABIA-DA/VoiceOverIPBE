@@ -1,9 +1,7 @@
 package at.htlleonding.fabia.callmgmt;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Singleton;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,15 +10,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @ApplicationScoped
 public final class SessionManager {
-    private final Map<String, CallSession> sessions = new ConcurrentHashMap<String, CallSession>();
+    private final Map<String, CallSession> sessions = new ConcurrentHashMap<>();
 
     /**
      * Gets a specific session by its id
-     * @param channelId The id of the asterisk channel
+     * @param bridgeId The id of the asterisk bridge
      * @return The call session.
      */
-    public CallSession getSession(String channelId){
-        return sessions.get(channelId);
+    public CallSession getSession(String bridgeId){
+        return sessions.get(bridgeId);
     }
 
     /**
@@ -28,15 +26,15 @@ public final class SessionManager {
      * @param session The session to add
      */
     public void addSession(CallSession session){
-        sessions.put(session.getChannelId(), session);
+        sessions.put(session.getBridgeId(), session);
     }
 
     /**
      * Deletes a session from the currently saved ones and returns it.
-     * @param channelId The id of the session to be removed
+     * @param bridgeId The id of the bridge to be removed
      * @return The removed session
      */
-    public CallSession removeSession(String channelId){
-        return sessions.remove(channelId);
+    public CallSession removeSession(String bridgeId){
+        return sessions.remove(bridgeId);
     }
 }

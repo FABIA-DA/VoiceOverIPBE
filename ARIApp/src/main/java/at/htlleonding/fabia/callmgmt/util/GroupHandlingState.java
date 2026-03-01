@@ -12,6 +12,7 @@ import java.util.List;
 public class GroupHandlingState {
     private List<GroupListDto> groupList;
     private RecordingItem recording;
+    private String transcript;
 
     public GroupHandlingState() {
     }

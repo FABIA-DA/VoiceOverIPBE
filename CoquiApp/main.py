@@ -25,6 +25,7 @@ with open("Phrases.csv", newline='', encoding="utf-8") as csvfile:
       first = False
       continue
     audio_path  = f"./out/{row[0]}.wav"
+    formatted = row[1].replace(".", ",")
     tts.tts_to_file(text=row[1],
                     file_path=audio_path,
                     language="de",

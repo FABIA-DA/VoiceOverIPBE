@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class FormHandlingState {
     private RecordingItem recording;
+    private String transcript;
 
     public FormHandlingState(){
     }

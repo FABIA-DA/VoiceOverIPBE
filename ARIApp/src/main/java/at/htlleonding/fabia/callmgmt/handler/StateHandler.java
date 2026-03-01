@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.text.MessageFormat;
 
+import static at.htlleonding.fabia.callmgmt.util.BaseState.*;
+
 /**
  * Handler for a specific call state to handle all needed base states.
  */
@@ -24,80 +26,94 @@ public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandle
 
     /**
      * Tries to handle the current step.
+     *
      * @param session The call session to process
      */
-    public void handle(CallSession session) {
+    public Uni<Void> handleAsync(CallSession session) {
 
-        try {
-            switch (session.getCurrentBaseState()) {
-                case BaseState.INFO -> handleInfo(session);
-                case BaseState.LIST -> handleList(session);
-                case BaseState.SINGLE_ITEM -> handleSingleItem(session);
-                case BaseState.REQUEST_INPUT -> handleRequestInput(session);
-                case BaseState.PROCESS_INPUT -> handleProcessInput(session);
-                case BaseState.RETRY -> handleRetry(session);
-                case BaseState.DONE -> handleDone(session);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        Uni<Void> uni = switch (session.getCurrentBaseState()) {
+            case START -> Uni.createFrom().voidItem();
+            case INFO -> handleInfoAsync(session);
+            case LIST -> handleListAsync(session);
+            case SINGLE_ITEM -> handleSingleItemAsync(session);
+            case REQUEST_INPUT -> handleRequestInputAsync(session);
+            case PROCESS_INPUT -> handleProcessInputAsync(session);
+            case RETRY -> handleRetryAsync(session);
+            case DONE -> handleDoneAsync(session);
+        };
 
-        session.nextAudioOrStep();
+        return uni.invoke(session::nextAudioOrStep);
     }
 
     /**
      * Handles the Info base state.
+     *
      * @param session The session to handle
      */
-    protected void handleInfo(CallSession session) throws IOException {
+    protected Uni<Void> handleInfoAsync(CallSession session) {
+        return Uni.createFrom().voidItem();
     }
 
     /**
      * Handles the List base state.
+     *
      * @param session The session to handle for it
      */
-    protected void handleList(CallSession session) {
+    protected Uni<Void> handleListAsync(CallSession session) {
+        return Uni.createFrom().voidItem();
     }
 
     /**
      * Handles the Single Item base state.
+     *
      * @param session The session to handle
      */
-    protected void handleSingleItem(CallSession session) {
+    protected Uni<Void> handleSingleItemAsync(CallSession session) {
+        return Uni.createFrom().voidItem();
     }
 
     /**
      * Handles the Request Input base state.
+     *
      * @param session The session to handle
      */
-    protected void handleRequestInput(CallSession session) {
+    protected Uni<Void> handleRequestInputAsync(CallSession session) {
+        return Uni.createFrom().voidItem();
     }
 
     /**
      * Handles the Process Input base state.
+     *
      * @param session The session to handle
      */
-    protected void handleProcessInput(CallSession session) {
+    protected Uni<Void> handleProcessInputAsync(CallSession session) {
+        return Uni.createFrom().voidItem();
     }
 
     /**
      * Handles the Retry base state.
+     *
      * @param session The session to handle
      */
-    protected void handleRetry(CallSession session) {
+    protected Uni<Void> handleRetryAsync(CallSession session) {
+        return Uni.createFrom().voidItem();
     }
 
     /**
      * Handles the Done base state.
+     *
      * @param session The session to handle
      */
-    protected void handleDone(CallSession session) {
-        session.advanceCallState();
+    protected Uni<Void> handleDoneAsync(CallSession session) {
+        return Uni.createFrom().deferred(() -> {
+            session.advanceCallState();
+            return Uni.createFrom().voidItem();
+        });
     }
 
     /**
      * Transcribes a recording.
+     *
      * @param recording The recording item with the file name
      * @return The transcribed text
      */

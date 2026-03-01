@@ -10,6 +10,7 @@ public class FieldHandlingState {
     private RecordingItem recording;
     private boolean inputMatched;
     private boolean retry;
+    private String transcript;
 
     public FieldHandlingState(){
     }

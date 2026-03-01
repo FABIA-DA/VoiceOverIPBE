@@ -18,6 +18,7 @@ public final class CallProcessor {
 
     /**
      * Initializes every handler for call states.
+     *
      * @param handlers All in Quarkus registered state handlers
      */
     @Inject
@@ -45,10 +46,11 @@ public final class CallProcessor {
 
     /**
      * Tries to process the next step for a session.
+     *
      * @param session The call session to advance
      */
     public void process(CallSession session) {
-        logger.debug("Processing session {} in state {}", session.getChannelId(), session.getState());
+        logger.debug("Processing session {} in state {}", session.getBridgeId(), session.getState());
 
         StateHandler handler = handlerMap.get(session.getState());
 
@@ -57,14 +59,17 @@ public final class CallProcessor {
             return;
         }
 
-        try {
-            handler.handle(session);
-        } catch (Exception e) {
-            logger.error("Error handling state {} for session {} - Handler: {}",
-                    session.getState(),
-                    session.getChannelId(),
-                    handler.getClass().getSimpleName(),
-                    e);
-        }
+
+        handler.handleAsync(session)
+                .subscribe().with(
+                        success -> {
+                        },
+                        failure -> {
+                            logger.error("Error handling state {} for session {} - Handler: {}",
+                                    session.getState(),
+                                    session.getBridgeId(),
+                                    handler.getClass().getSimpleName());
+                        }
+                );
     }
 }

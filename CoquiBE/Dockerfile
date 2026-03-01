@@ -7,7 +7,7 @@ COPY environment.yml .
 
 USER root
 # Install OS dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends espeak \
+RUN apt-get update && apt-get install -y --no-install-recommends espeak build-essential \
  && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /env && chown $MAMBA_USER /env
 USER $MAMBA_USER
@@ -27,6 +27,7 @@ COPY --chmod=777 . .
 EXPOSE 8000
 
 USER root
+ENV COQUI_TOS_AGREED=1
 
 # Run the app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

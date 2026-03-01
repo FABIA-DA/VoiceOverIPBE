@@ -14,11 +14,11 @@ import at.htlleonding.fabia.client.formbe.OptionResponseService;
 import at.htlleonding.fabia.client.formbe.dtos.Option;
 import at.htlleonding.fabia.client.formbe.dtos.SingleChoiceField;
 import at.htlleonding.fabia.client.formbe.dtos.requests.OptionResponseCreationRequest;
+import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,20 +35,17 @@ public final class SingleChoiceFieldHandler extends StateHandler {
     ActiveAudioRegistry activeAudioRegistry;
 
     @Override
-    protected void handleSingleItem(CallSession session) {
+    protected Uni<Void> handleSingleItemAsync(CallSession session) {
         if (!session.fieldGroupValid()) {
             throw new IllegalStateException("Did not select a form or field group");
         }
 
-        final String singleChoiceFieldSpeech = "single-choice-field-speech";
-        final String optionSpeech = "option-speech";
-
-        if(session.singleChoiceFieldsEmpty()){
+        if (session.singleChoiceFieldsEmpty()) {
             session.goToField();
-            return;
+            return Uni.createFrom().voidItem();
         }
 
-        if(!session.getSingleChoiceFieldHandlingState().isRetry()){
+        if (!session.getSingleChoiceFieldHandlingState().isRetry()) {
             session.tryIncreaseSingleChoiceFieldIdx();
         }
 
@@ -56,71 +53,134 @@ public final class SingleChoiceFieldHandler extends StateHandler {
             throw new IllegalStateException("Single Choice Field Idx not in bounds");
         }
 
+        final String singleChoiceFieldSpeech = "single-choice-field-speech";
+        final String optionSpeech = "option-speech";
         SingleChoiceField field = session.getCurrentSingleChoiceField();
         String options = Util.ConcatItems(field.getOptions(), Option::getName);
 
-        speechGenerationService.generateSpeech(new CoquiRequest(field.getName(), singleChoiceFieldSpeech)).await().indefinitely();
-        speechGenerationService.generateSpeech(new CoquiRequest(options, optionSpeech)).await().indefinitely();
-
-        session.enqueueAudio(new PlaybackItem("for-the-field", session.getChannelId(), ariUtil, activeAudioRegistry));
-        session.enqueueAudio(new PlaybackItem(singleChoiceFieldSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
-        session.enqueueAudio(new PlaybackItem("options-are", session.getChannelId(), ariUtil, activeAudioRegistry));
-        session.enqueueAudio(new PlaybackItem(optionSpeech, session.getChannelId(), ariUtil, activeAudioRegistry));
+        return ariUtil.startMohAsync(session.getBridgeId())
+                .flatMap(ignored ->
+                        Uni.combine()
+                                .all()
+                                .unis(speechGenerationService.generateSpeech(
+                                                new CoquiRequest(field.getName(), singleChoiceFieldSpeech)),
+                                        speechGenerationService.generateSpeech(
+                                                new CoquiRequest(options, optionSpeech)))
+                                .asTuple())
+                .invoke(() -> {
+                    session.enqueueAudio(
+                            new PlaybackItem("for-the-field",
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                    session.enqueueAudio(
+                            new PlaybackItem(singleChoiceFieldSpeech,
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                    session.enqueueAudio(
+                            new PlaybackItem("options-are",
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                    session.enqueueAudio(
+                            new PlaybackItem(optionSpeech,
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                })
+                .replaceWithVoid()
+                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
     }
 
     @Override
-    protected void handleRequestInput(CallSession session) {
-        session.enqueueAudio(new PlaybackItem("single-choice-field-input-request", session.getChannelId(), ariUtil, activeAudioRegistry));
-        RecordingItem recording = new RecordingItem(session.getChannelId(), ariUtil, activeAudioRegistry);
-        session.getSingleChoiceFieldHandlingState().setRecording(recording);
-        session.enqueueAudio(recording);
+    protected Uni<Void> handleRequestInputAsync(CallSession session) {
+        return Uni.createFrom().voidItem()
+                .invoke(() -> {
+                    session.enqueueAudio(new PlaybackItem("single-choice-field-input-request", session.getBridgeId(), ariUtil, activeAudioRegistry));
+                    RecordingItem recording = new RecordingItem(session.getBridgeId(), ariUtil, activeAudioRegistry);
+                    session.getSingleChoiceFieldHandlingState().setRecording(recording);
+                    session.enqueueAudio(recording);
+                });
     }
 
     @Override
-    protected void handleProcessInput(CallSession session) {
+    protected Uni<Void> handleProcessInputAsync(CallSession session) {
         RecordingItem recording = session.getSingleChoiceFieldHandlingState().getRecording();
         if (recording == null) {
             throw new IllegalStateException("No recording happened before input processing");
         }
 
-        String text = transcribe(recording).await().indefinitely();
+        return ariUtil.startMohAsync(session.getBridgeId())
+                .chain(() -> transcribe(recording))
+                .flatMap(text -> {
+                    session.getSingleChoiceFieldHandlingState().setTranscript(text);
 
-        if (text == null) {
-            return;
-        }
+                    if (text == null || text.isBlank()) {
+                        return Uni.createFrom().voidItem();
+                    }
 
-        for (Option option : session.getCurrentSingleChoiceField().getOptions()) {
-            Pattern pattern = Pattern.compile(option.getName(), Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(text);
-            if (matcher.find()) {
-                session.getSingleChoiceFieldHandlingState().setOptionMatch(true);
-                optionResponseService.createOptionResponse(new OptionResponseCreationRequest(option.getId(), session.getChannelName()))
-                        .await()
-                        .indefinitely();
-                session.addFields(option.getFields());
-                break;
-            }
-        }
+                    long optionId = -1;
+
+                    for (Option option : session.getCurrentSingleChoiceField().getOptions()) {
+                        if (text.toLowerCase().contains(option.getName().toLowerCase())) {
+                            session.getSingleChoiceFieldHandlingState().setOptionMatch(true);
+                            optionId = option.getId();
+
+                            session.addFields(option.getFields());
+                            break;
+                        }
+                    }
+
+                    return optionResponseService.createOptionResponse(
+                            new OptionResponseCreationRequest(
+                                    optionId,
+                                    session.getChannelName()));
+                })
+                .replaceWithVoid();
     }
 
     @Override
-    protected void handleRetry(CallSession session) {
+    protected Uni<Void> handleRetryAsync(CallSession session) {
+        Uni<Void> endMoh = Uni.createFrom().voidItem()
+                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
+
         if (session.getSingleChoiceFieldHandlingState().isOptionMatch()) {
             session.getSingleChoiceFieldHandlingState().setRetry(false);
-            return;
+            return endMoh;
         }
 
-        session.enqueueAudio(new PlaybackItem("option-not-found", session.getChannelId(), ariUtil, activeAudioRegistry));
-        session.getSingleChoiceFieldHandlingState().setRetry(true);
-        session.resetBaseState();
+        final String userTranscriptSpeech = "scf-user-transcript";
+
+        return ariUtil.startMohAsync(session.getBridgeId())
+                .chain(() -> speechGenerationService.generateSpeech(
+                        new CoquiRequest(
+                                session.getSingleChoiceFieldHandlingState().getTranscript(),
+                                userTranscriptSpeech)))
+                .invoke(() -> {
+                    session.enqueueAudio(
+                            new PlaybackItem("we-understood",
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                    session.enqueueAudio(
+                            new PlaybackItem(userTranscriptSpeech,
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+
+                    session.getSingleChoiceFieldHandlingState().setRetry(true);
+                    session.resetBaseState();
+                })
+                .eventually(() -> endMoh);
     }
 
     @Override
-    protected void handleDone(CallSession session) {
+    protected Uni<Void> handleDoneAsync(CallSession session) {
         if (session.singleChoiceFieldsLeft()) {
-            session.resetBaseState();
+            return Uni.createFrom().voidItem().invoke(session::resetBaseState);
         } else {
-            super.handleDone(session);
+            return super.handleDoneAsync(session);
         }
     }
 }

@@ -6,10 +6,9 @@ import at.htlleonding.fabia.callmgmt.util.AriUtil;
 import at.htlleonding.fabia.callmgmt.util.CallState;
 import at.htlleonding.fabia.callmgmt.util.HandledState;
 import at.htlleonding.fabia.callmgmt.audiomgmt.PlaybackItem;
+import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import java.io.IOException;
 
 @Singleton
 @HandledState(CallState.GOODBYE)
@@ -20,12 +19,13 @@ public final class GoodbyeHandler extends StateHandler {
     ActiveAudioRegistry activeAudioRegistry;
 
     @Override
-    protected void handleInfo(CallSession session) throws IOException {
-        session.enqueueAudio(new PlaybackItem("fabia-goodbye", session.getChannelId(), ariUtil, activeAudioRegistry));
+    protected Uni<Void> handleInfoAsync(CallSession session) {
+        return Uni.createFrom().voidItem().invoke(() ->
+                session.enqueueAudio(new PlaybackItem("fabia-goodbye", session.getBridgeId(), ariUtil, activeAudioRegistry)));
     }
 
     @Override
-    protected void handleDone(CallSession session) {
-        session.endCall(false);
+    protected Uni<Void> handleDoneAsync(CallSession session) {
+        return Uni.createFrom().voidItem().invoke(() -> session.endCall(false));
     }
 }
