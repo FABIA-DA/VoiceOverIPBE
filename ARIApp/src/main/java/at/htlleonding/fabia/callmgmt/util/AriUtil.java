@@ -21,7 +21,7 @@ public final class AriUtil {
 
     private void startRecording(String bridgeId, String recordingName) throws RestException {
         ariContext.getAri()
-                .bridges()
+                .channels()
                 .record(bridgeId, recordingName, "wav")
                 .setMaxDurationSeconds(10)
                 .setMaxSilenceSeconds(5)
@@ -50,8 +50,8 @@ public final class AriUtil {
 
     private void playSound(String bridgeId, String sound) throws RestException {
         ariContext.getAri()
-                .bridges()
-                .play(bridgeId, "sound:" + sound)
+                .channels()
+                .play(bridgeId, "sound:custom/" + sound)
                 .execute();
     }
 
@@ -140,7 +140,7 @@ public final class AriUtil {
 
     private void startMoh(String bridgeId) throws RestException {
         ariContext.getAri()
-                .bridges()
+                .channels()
                 .startMoh(bridgeId)
                 .execute();
     }
@@ -160,7 +160,7 @@ public final class AriUtil {
 
     private void endMoh(String bridgeId) throws RestException {
         ariContext.getAri()
-                .bridges()
+                .channels()
                 .stopMoh(bridgeId)
                 .execute();
     }

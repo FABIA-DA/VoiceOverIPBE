@@ -8,9 +8,11 @@ import lombok.Setter;
 @Setter
 public class FieldHandlingState {
     private RecordingItem recording;
+    private RecordingItem correctnessRecording;
     private boolean inputMatched;
     private boolean retry;
     private String transcript;
+    private String correctnessTranscript;
 
     public FieldHandlingState(){
     }

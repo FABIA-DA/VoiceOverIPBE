@@ -1,13 +1,8 @@
 ﻿import os
 import torch
 import csv
-from pydub.utils import which
-from pydub import AudioSegment
 from TTS.api import TTS
-
-
-# Force Pydub to use Conda-installed FFmpeg
-AudioSegment.converter = which("ffmpeg")
+import numpy as np
 
 os.makedirs("out", exist_ok=True)
 
@@ -24,16 +19,22 @@ with open("Phrases.csv", newline='', encoding="utf-8") as csvfile:
     if first:
       first = False
       continue
-    audio_path  = f"./out/{row[0]}.wav"
+    # Sample Rate is already fitting
+    audio_path  = f"./out/{row[0]}.sln24"
     formatted = row[1].replace(".", ",")
-    tts.tts_to_file(text=row[1],
-                    file_path=audio_path,
-                    language="de",
-                    speaker="Ana Florence")
+    wav_array = tts.tts(text=row[1], language="de", speaker="Aaron Dreschner")
+
+    # Scale to -1.0 .. 1.0 max amplitude
+    max_amp = np.max(np.abs(wav_array))
+    if max_amp > 0:
+        wav_array = wav_array / max_amp
+
+    # Convert to int16 for WAV
+    wav_int16 = (wav_array * 32767).astype(np.int16)
+
+    #Writing int16 as little endian, signed and 2 bytes
+    with open(audio_path, "wb") as f:
+      f.write(wav_int16.astype('<i2').tobytes())
+
     print(f"Created file {audio_path}")
-    print("Changing sample rate...")
-    sound = AudioSegment.from_file(audio_path)
-    sound = sound.set_channels(1).set_frame_rate(8000)
-    sound.export(audio_path, format="wav", parameters=["-c:a", "pcm_s16le"])
-    print("Done with file")
 print("Done...")

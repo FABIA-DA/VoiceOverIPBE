@@ -35,9 +35,12 @@ public final class FormHandler extends StateHandler {
         final String formsSpeechName = "form-names";
 
         return ariUtil.startMohAsync(session.getBridgeId())
-                .flatMap(success -> {
+                .flatMap(v -> {
                     if (session.getSelectedGroup() == null) {
-                        throw new IllegalStateException("No group for form intro was selected");
+                        logger.error("No group for form intro was selected");
+                        session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+                        session.goToGoodbye();
+                        return Uni.createFrom().voidItem();
                     }
 
                     List<Form> forms = session.getSelectedGroup().getForms();
@@ -64,6 +67,10 @@ public final class FormHandler extends StateHandler {
                             new CoquiRequest(names, formsSpeechName));
                 })
                 .invoke(() -> {
+                    if(session.getState() == CallState.GOODBYE){
+                        return;
+                    }
+
                     session.enqueueAudio(
                             new PlaybackItem(formsSpeechName,
                                     session.getBridgeId(),
@@ -91,7 +98,10 @@ public final class FormHandler extends StateHandler {
     protected Uni<Void> handleProcessInputAsync(CallSession session) {
         RecordingItem recording = session.getFormHandlingState().getRecording();
         if (recording == null) {
-            throw new IllegalStateException("No recording happened before input processing");
+            logger.error("No recording happened before input processing");
+            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.goToGoodbye();
+            return Uni.createFrom().voidItem();
         }
 
         return ariUtil.startMohAsync(session.getBridgeId())
@@ -124,6 +134,14 @@ public final class FormHandler extends StateHandler {
             return endMoh;
         }
 
+        session.resetBaseState();
+
+        String transcript = session.getFormHandlingState().getTranscript();
+        if(transcript == null || transcript.isBlank()){
+            session.enqueueAudio(new PlaybackItem("could-not-understand", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            return endMoh;
+        }
+
         final String userTranscriptSpeech = "form-user-transcript";
 
         return
@@ -142,7 +160,6 @@ public final class FormHandler extends StateHandler {
                                             session.getBridgeId(),
                                             ariUtil,
                                             activeAudioRegistry));
-                            session.resetBaseState();
                         })
                         .eventually(() -> endMoh);
     }

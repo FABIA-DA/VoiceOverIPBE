@@ -1,20 +1,22 @@
 key;text
-greeting;Hallo, ich bin Kiara. Ich führe Sie durch die Antragsformulare
+greeting;Hallo und herzlich willkommen beim Land Oberösterreich
+instructions-1;Ich bin Fabian, Ihr automatischer Assistent. Wir werden in den nächsten Minuten gemeinsam ein Formular ausfüllen
+instructions-2;Bitte sprechen Sie deutlich, und haben Sie etwas Geduld
+form-group-preamble;Ich habe folgende Kategorien zur Auswahl
 group-input-request;Welche Formularkategorie möchten Sie wählen?
-group-empty;In dieser Formulargruppe sind keine Formulare verfügbar
-groups-empty;Zur Zeit haben wir keine Formularkategorien verfügbar
+group-empty;In dieser Kategorie sind keine Formulare verfügbar
+groups-empty;Zur Zeit habe ich keine Formularkategorien verfügbar
+form-preamble;Ich habe diese Formulare verfügbar
 form-input-request;Welches Formular möchten Sie auswählen?
 form-empty;In diesem Formular gibt es keine Felder
-field-group-info;Fahren wir mit dem Ausfüllen des Formulars fort
-field-group-error;Es wurden schon alle Feld Gruppen durchgegangen
+options-are;Es gibt folgende Optionen
 single-choice-field-input-request;Bitte wählen Sie eine der Möglichkeiten aus
-fabia-goodbye;Dankeschön für das Benutzen unseres Services und auf ein baldiges Wiedersehen
-form-group-preamble;Wir haben diese Formularkategorien zur Verfügung. Bitte suchen Sie sich eine aus
-form-preamble;Wir haben diese Formulare verfügbar
-field-group-preamble;Es sind folgende Feldgruppen in diesem Formular
-next-field-group;Es folgen Felder für die Feldgruppe
-for-the-field;Für das Feld mit dem Namen
-options-are;Gibt es folgende Optionen
-field-intro;Es folgt das Feld mit dem Namen
+field-intro;Bitte nennen Sie folgendes
 please-consider;Bitte beachten Sie folgendes für die Eingabe
-we-understood;Wir haben Sie nicht ganz verstanden. Wir haben folgendes gehört
+please-check;Bitte korrigieren Sie mich, wenn ich falsch liege
+could-not-understand;Ich habe Sie nicht ganz verstanden
+i-heard;Ich habe folgendes gehört
+input-ok;Passt ihnen ihre Eingabe?
+action-will-follow;Ihr Anliegen wird bearbeitet
+error;Es gab ein Problem, der Anruf wird abgebrochen
+fabia-goodbye;Vielen Dank für Ihren Anruf

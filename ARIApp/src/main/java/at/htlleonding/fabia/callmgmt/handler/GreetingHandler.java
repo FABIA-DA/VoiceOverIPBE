@@ -22,6 +22,8 @@ public final class GreetingHandler extends StateHandler {
     protected Uni<Void> handleInfoAsync(CallSession session) {
         return Uni.createFrom().deferred(() -> {
             session.enqueueAudio(new PlaybackItem("greeting", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.enqueueAudio(new PlaybackItem("instructions-1", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.enqueueAudio(new PlaybackItem("instructions-2", session.getBridgeId(), ariUtil, activeAudioRegistry));
             return Uni.createFrom().voidItem();
         });
     }

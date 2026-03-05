@@ -38,6 +38,7 @@ public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandle
             case SINGLE_ITEM -> handleSingleItemAsync(session);
             case REQUEST_INPUT -> handleRequestInputAsync(session);
             case PROCESS_INPUT -> handleProcessInputAsync(session);
+            case CHECK_CORRECTNESS ->handleCheckCorrectnessAsync(session);
             case RETRY -> handleRetryAsync(session);
             case DONE -> handleDoneAsync(session);
         };
@@ -87,6 +88,10 @@ public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandle
      * @param session The session to handle
      */
     protected Uni<Void> handleProcessInputAsync(CallSession session) {
+        return Uni.createFrom().voidItem();
+    }
+
+    protected Uni<Void> handleCheckCorrectnessAsync(CallSession session) {
         return Uni.createFrom().voidItem();
     }
 

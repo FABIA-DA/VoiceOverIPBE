@@ -18,9 +18,9 @@ import static at.htlleonding.fabia.callmgmt.util.StateSequence.*;
  * Represents a session of a caller with everything needed to know their state in the call.
  */
 public final class CallSession {
-    private SessionManager sessionManager;
-    private CallProcessor callProcessor;
-    private AriUtil arUtil;
+    private final SessionManager sessionManager;
+    private final CallProcessor callProcessor;
+    private final AriUtil arUtil;
 
     private static final Logger logger = LoggerFactory.getLogger(CallSession.class);
     /**
@@ -104,7 +104,7 @@ public final class CallSession {
     @Getter
     private final FieldHandlingState fieldHandlingState = new FieldHandlingState();
     /**
-     * True if audio is playing and flase if not.
+     * True if audio is playing and false if not.
      */
     @Getter
     private final AtomicBoolean isAudioPlaying = new AtomicBoolean(false);
@@ -115,6 +115,10 @@ public final class CallSession {
     private void advanceBaseState() {
         currentBaseState = StateSequence.advanceBaseState(currentBaseState);
         logger.debug("Advance base state to {}", currentBaseState);
+    }
+
+    public void skipCurrentHandler(){
+        currentBaseState = BaseState.RETRY;
     }
 
     /**
@@ -246,13 +250,16 @@ public final class CallSession {
      * Tries to increase the field group index. If it is null it is set to 0.
      */
     public void tryIncreaseFieldGroupIdx() {
+        logger.debug("Trying to increase field group index from {}", currentFieldGroupIdx);
         if (this.getSelectedForm() != null && getCurrentFieldGroupIdx() == null) {
-            currentFieldGroupIdx = 0;
+            this.currentFieldGroupIdx = 0;
+            resetForFieldGroup();
             return;
         }
 
         if (currentFieldGroupInBounds()) {
             currentFieldGroupIdx++;
+            resetForFieldGroup();
         }
     }
 
@@ -296,13 +303,11 @@ public final class CallSession {
     }
 
     /**
-     * Sets the current field group index and resets the single choice- and field indices.
-     *
-     * @param currentFieldGroupIdx The new index for the field group
+     * Resets the single choice index and the current fields.
      */
-    private void setCurrentFieldGroupIdx(Integer currentFieldGroupIdx) {
+    private void resetForFieldGroup() {
         this.usedFields.clear();
-        this.currentFieldGroupIdx = currentFieldGroupIdx;
+        this.currentSingleChoiceFieldIdx = null;
         if (currentFieldGroupIdx != null) {
             this.usedFields.addAll(
                     selectedForm.getFieldGroups()

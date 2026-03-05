@@ -7,12 +7,9 @@ services:
       - "5060:5060/udp"
       - "8088:8088"
       - "10000-10100:10000-10100/udp"
-    depends_on:
-      coqui-app:
-        condition: service_completed_successfully
     restart: unless-stopped
     volumes:
-      - shared-sounds:/var/lib/asterisk/sounds
+      - shared-audio:/var/lib/asterisk/sounds/custom
       - recordings:/var/spool/asterisk/recording
       - ./Asterisk/asterisk-config:/etc/asterisk
     healthcheck:
@@ -22,33 +19,13 @@ services:
       retries: 5
       start_period: 20s
 
-#  coqui-model-loader:
-#    build:
-#      context: ./CoquiModelLoader
-#      dockerfile: Dockerfile
-#      args:
-#        HF_TOKEN: ${HF_TOKEN}
-#    env_file:
-#      - .env
-#    volumes:
-#      - coqui-models:/models
-#    restart: no
-
   coqui-app:
     build:
       context: ./CoquiApp
       dockerfile: Dockerfile
-    restart: on-failure
+    restart: no
     volumes:
-      - shared-sounds:/app/out
-      - coqui-models:/root/.local/share/tts
-#    depends_on:
-#      coqui-model-loader:
-#        condition: service_completed_successfully
-    deploy:
-      resources:
-        limits:
-          memory: 6G
+      - shared-audio:/app/out
 
   ari-app:
     build:
@@ -75,12 +52,13 @@ services:
       - "8000:8000"
     restart: unless-stopped
     volumes:
-      - whisper-models:/root/.cache/whisper
+      - whisper-cache:/home/mambauser/.cache
     healthcheck:
       test: [ "CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/healthcheck\")' || exit 1" ]
       interval: 5s
       timeout: 3s
       retries: 5
+      start_period: 120s
 
   coqui-be:
     build:
@@ -88,11 +66,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8001:8000"
-#    depends_on:
-#      coqui-model-loader:
-#        condition: service_completed_successfully
     volumes:
-      - shared-sounds:/app/out
+      - shared-audio:/app/out
+      - coqui-be-cache:/root/.cache
       - coqui-models:/root/.local/share/tts
     restart: unless-stopped
     healthcheck:
@@ -100,10 +76,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 6G
+      start_period: 120s
 
   migrations:
     container_name: formbe-migrations
@@ -179,8 +152,13 @@ services:
 volumes:
   form-db_data:
     external: true
-  shared-sounds:
+  shared-audio:
+    external: true
   recordings:
+    external: true
+  coqui-be-cache:
+    external: true
   coqui-models:
-  whisper-models:
-  config:
+    external: true
+  whisper-cache:
+    external: true

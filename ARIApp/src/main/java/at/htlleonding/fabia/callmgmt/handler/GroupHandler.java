@@ -52,6 +52,10 @@ public final class GroupHandler extends StateHandler {
                     return speechGenerationService.generateSpeech(new CoquiRequest(names, groupSpeech));
                 })
                 .invoke(() -> {
+                    if(session.getState() == CallState.GOODBYE){
+                        return;
+                    }
+
                     session.enqueueAudio(new PlaybackItem("form-group-preamble", session.getBridgeId(), ariUtil, activeAudioRegistry));
                     session.enqueueAudio(new PlaybackItem(groupSpeech, session.getBridgeId(), ariUtil, activeAudioRegistry));
                 })
@@ -77,18 +81,20 @@ public final class GroupHandler extends StateHandler {
     protected Uni<Void> handleProcessInputAsync(CallSession session) {
         RecordingItem recording = session.getGroupHandlingState().getRecording();
         if (recording == null) {
-            throw new IllegalStateException("No recording happened before input processing");
+            logger.error("No recording happened before input processing");
+            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.goToGoodbye();
+            return Uni.createFrom().voidItem();
         }
 
         return ariUtil.startMohAsync(session.getBridgeId())
                 .chain(() -> transcribe(recording))
                 .flatMap(text -> {
-                    session.getGroupHandlingState().setTranscript(text);
-
                     if (text == null || text.isBlank()) {
                         return Uni.createFrom().nullItem();
                     }
 
+                    session.getGroupHandlingState().setTranscript(text);
                     logger.debug("Text input: {}", text);
                     long groupId = -1;
 
@@ -100,6 +106,10 @@ public final class GroupHandler extends StateHandler {
                             groupId = group.getId();
                             break;
                         }
+                    }
+
+                    if(groupId == -1){
+                        return Uni.createFrom().nullItem();
                     }
 
                     return groupService.getGroupById(groupId);
@@ -120,6 +130,14 @@ public final class GroupHandler extends StateHandler {
             return endMoh;
         }
 
+        session.resetBaseState();
+
+        String transcript = session.getGroupHandlingState().getTranscript();
+        if(transcript == null || transcript.isBlank()){
+            session.enqueueAudio(new PlaybackItem("could-not-understand", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            return endMoh;
+        }
+
         final String userTranscriptSpeech = "group-user-transcript";
 
         return speechGenerationService.generateSpeech(
@@ -137,8 +155,6 @@ public final class GroupHandler extends StateHandler {
                                     session.getBridgeId(),
                                     ariUtil,
                                     activeAudioRegistry));
-
-                    session.resetBaseState();
                 })
                 .eventually(() -> endMoh);
     }

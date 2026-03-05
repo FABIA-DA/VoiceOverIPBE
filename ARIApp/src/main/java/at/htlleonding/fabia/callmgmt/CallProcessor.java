@@ -33,8 +33,8 @@ public final class CallProcessor {
 
             CallState state = annotation.value();
             if (map.containsKey(state)) {
-                throw new IllegalStateException(
-                        "Duplicate handler for state " + state + ": " + handler.getClass().getName());
+                logger.warn("Duplicate handler for state {}: {} skipped", state, handler.getClass().getName());
+                continue;
             }
 
             map.put(state, handler);
@@ -68,7 +68,8 @@ public final class CallProcessor {
                             logger.error("Error handling state {} for session {} - Handler: {}",
                                     session.getState(),
                                     session.getBridgeId(),
-                                    handler.getClass().getSimpleName());
+                                    handler.getClass().getSimpleName(),
+                                    failure);
                         }
                 );
     }

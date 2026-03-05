@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class CoquiRequest {
     private String text;
+    @JsonProperty("file_name")
     private String fileName;
 
     public CoquiRequest() {

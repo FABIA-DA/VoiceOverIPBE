@@ -32,7 +32,7 @@ public class AriEventHandler extends AriWSHelper {
     @Override
     protected void onPlaybackStarted(PlaybackStarted message) {
         logger.debug("playback started");
-        String prefix = "sound:";
+        String prefix = "sound:custom/";
         String media = message.getPlayback().getMedia_uri().substring(prefix.length());
 
         String channelId = activeAudioRegistry.getPlayback(media).getBridgeId();
@@ -77,16 +77,16 @@ public class AriEventHandler extends AriWSHelper {
             ariUtil.answer(channel.getId());
         }
 
-        Bridge bridge = ariUtil.createBridge();
+        /*Bridge bridge = ariUtil.createBridge();
 
         if(bridge == null){
             return;
         }
 
-        ariUtil.addChannelToBridge(bridge.getId(), channel.getId());
+        ariUtil.addChannelToBridge(bridge.getId(), channel.getId());*/
 
         CallSession session = new CallSession(
-                bridge.getId(),
+                channel.getId(),
                 channel.getName(),
                 sessionManager,
                 callProcessor,
@@ -120,7 +120,7 @@ public class AriEventHandler extends AriWSHelper {
 
     @Override
     protected void onPlaybackFinished(PlaybackFinished message) {
-        String prefix = "sound:";
+        String prefix = "sound:custom/";
         String media = message.getPlayback().getMedia_uri().substring(prefix.length());
 
         logger.debug("Playback finished: {}", media);

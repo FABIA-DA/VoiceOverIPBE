@@ -19,9 +19,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Singleton
 @HandledState(CallState.SINGLE_CHOICE_FIELD)
 public final class SingleChoiceFieldHandler extends StateHandler {
@@ -37,20 +34,28 @@ public final class SingleChoiceFieldHandler extends StateHandler {
     @Override
     protected Uni<Void> handleSingleItemAsync(CallSession session) {
         if (!session.fieldGroupValid()) {
-            throw new IllegalStateException("Did not select a form or field group");
+            logger.error("Did not select a form or field group");
+            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.goToGoodbye();
+            return Uni.createFrom().voidItem();
         }
 
         if (session.singleChoiceFieldsEmpty()) {
+            logger.debug("Single Choice Fields empty transitioning to Fields...");
             session.goToField();
             return Uni.createFrom().voidItem();
         }
 
         if (!session.getSingleChoiceFieldHandlingState().isRetry()) {
+            logger.debug("Trying to increase the Single Choice Field Index");
             session.tryIncreaseSingleChoiceFieldIdx();
         }
 
         if (!session.currentSingleChoiceFieldInBounds()) {
-            throw new IllegalStateException("Single Choice Field Idx not in bounds");
+            logger.error("Single Choice Field Idx not in bounds");
+            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.goToGoodbye();
+            return Uni.createFrom().voidItem();
         }
 
         final String singleChoiceFieldSpeech = "single-choice-field-speech";
@@ -59,7 +64,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
         String options = Util.ConcatItems(field.getOptions(), Option::getName);
 
         return ariUtil.startMohAsync(session.getBridgeId())
-                .flatMap(ignored ->
+                .chain(() ->
                         Uni.combine()
                                 .all()
                                 .unis(speechGenerationService.generateSpeech(
@@ -69,7 +74,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
                                 .asTuple())
                 .invoke(() -> {
                     session.enqueueAudio(
-                            new PlaybackItem("for-the-field",
+                            new PlaybackItem("field-intro",
                                     session.getBridgeId(),
                                     ariUtil,
                                     activeAudioRegistry));
@@ -108,7 +113,10 @@ public final class SingleChoiceFieldHandler extends StateHandler {
     protected Uni<Void> handleProcessInputAsync(CallSession session) {
         RecordingItem recording = session.getSingleChoiceFieldHandlingState().getRecording();
         if (recording == null) {
-            throw new IllegalStateException("No recording happened before input processing");
+            logger.error("No recording happened before input processing");
+            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.goToGoodbye();
+            return Uni.createFrom().voidItem();
         }
 
         return ariUtil.startMohAsync(session.getBridgeId())
@@ -132,6 +140,10 @@ public final class SingleChoiceFieldHandler extends StateHandler {
                         }
                     }
 
+                    if(optionId == -1){
+                        return Uni.createFrom().voidItem();
+                    }
+
                     return optionResponseService.createOptionResponse(
                             new OptionResponseCreationRequest(
                                     optionId,
@@ -150,6 +162,19 @@ public final class SingleChoiceFieldHandler extends StateHandler {
             return endMoh;
         }
 
+        session.getSingleChoiceFieldHandlingState().setRetry(true);
+        session.resetBaseState();
+
+        String transcript = session.getSingleChoiceFieldHandlingState().getTranscript();
+        if(transcript == null || transcript.isBlank()){
+            session.enqueueAudio(
+                    new PlaybackItem("could-not-understand",
+                            session.getBridgeId(),
+                            ariUtil,
+                            activeAudioRegistry));
+            return endMoh;
+        }
+
         final String userTranscriptSpeech = "scf-user-transcript";
 
         return ariUtil.startMohAsync(session.getBridgeId())
@@ -159,7 +184,12 @@ public final class SingleChoiceFieldHandler extends StateHandler {
                                 userTranscriptSpeech)))
                 .invoke(() -> {
                     session.enqueueAudio(
-                            new PlaybackItem("we-understood",
+                            new PlaybackItem("could-not-understand",
+                                    session.getBridgeId(),
+                                    ariUtil,
+                                    activeAudioRegistry));
+                    session.enqueueAudio(
+                            new PlaybackItem("i-heard",
                                     session.getBridgeId(),
                                     ariUtil,
                                     activeAudioRegistry));
@@ -168,9 +198,6 @@ public final class SingleChoiceFieldHandler extends StateHandler {
                                     session.getBridgeId(),
                                     ariUtil,
                                     activeAudioRegistry));
-
-                    session.getSingleChoiceFieldHandlingState().setRetry(true);
-                    session.resetBaseState();
                 })
                 .eventually(() -> endMoh);
     }

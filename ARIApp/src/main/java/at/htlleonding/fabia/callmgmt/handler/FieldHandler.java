@@ -4,10 +4,7 @@ import at.htlleonding.fabia.callmgmt.*;
 import at.htlleonding.fabia.callmgmt.audiomgmt.ActiveAudioRegistry;
 import at.htlleonding.fabia.callmgmt.audiomgmt.PlaybackItem;
 import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
-import at.htlleonding.fabia.callmgmt.util.AriUtil;
-import at.htlleonding.fabia.callmgmt.util.CallState;
-import at.htlleonding.fabia.callmgmt.util.FieldHandlingState;
-import at.htlleonding.fabia.callmgmt.util.HandledState;
+import at.htlleonding.fabia.callmgmt.util.*;
 import at.htlleonding.fabia.client.coquibe.CoquiRequest;
 import at.htlleonding.fabia.client.coquibe.SpeechGenerationService;
 import at.htlleonding.fabia.client.formbe.FieldResponseService;
@@ -18,6 +15,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,16 +31,22 @@ public final class FieldHandler extends StateHandler {
     @Inject
     ActiveAudioRegistry activeAudioRegistry;
 
+    private final String userTranscriptSpeech = "field-user-transcript";
+
+
     @Override
     protected Uni<Void> handleSingleItemAsync(CallSession session) {
         if (!session.fieldGroupValid()) {
-            throw new IllegalStateException("No form or field selected");
+            logger.error("No form or field selected");
+            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.goToGoodbye();
+            return Uni.createFrom().voidItem();
         }
 
         session.addFields(session.getCurrentFieldGroup().getFields());
 
         if (session.fieldsEmpty()) {
-            session.goToFieldGroup();
+            session.skipCurrentHandler();
             return Uni.createFrom().voidItem();
         }
 
@@ -66,7 +70,7 @@ public final class FieldHandler extends StateHandler {
         Uni<Void> finalDescriptionSpeech = descriptionSpeech;
         return ariUtil.startMohAsync(session.getBridgeId())
                 .flatMap(v -> Uni.combine().all().unis(mainSpeech, finalDescriptionSpeech).asTuple())
-                .invoke(tuple -> {
+                .invoke(() -> {
                     session.enqueueAudio(new PlaybackItem("field-intro", session.getBridgeId(), ariUtil, activeAudioRegistry));
                     session.enqueueAudio(new PlaybackItem(fieldSpeech, session.getBridgeId(), ariUtil, activeAudioRegistry));
 
@@ -103,7 +107,10 @@ public final class FieldHandler extends StateHandler {
     protected Uni<Void> handleProcessInputAsync(CallSession session) {
         FieldHandlingState state = session.getFieldHandlingState();
         if (state.getRecording() == null) {
-            throw new IllegalStateException("Tried to handle an input without a recording");
+            logger.error("Tried to handle an input without a recording");
+            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.goToGoodbye();
+            return Uni.createFrom().voidItem();
         }
 
         Field current = session.getCurrentField();
@@ -112,7 +119,7 @@ public final class FieldHandler extends StateHandler {
         return ariUtil.startMohAsync(session.getBridgeId())
                 .chain(() -> transcribe(state.getRecording()))
                 .flatMap(text -> {
-                    session.getFieldHandlingState().setTranscript(text);
+                    state.setTranscript(text);
 
                     if (text == null || text.isBlank()) {
                         return Uni.createFrom().voidItem();
@@ -121,37 +128,79 @@ public final class FieldHandler extends StateHandler {
                     Matcher matcher = pattern.matcher(text);
                     state.setInputMatched(false);
 
-
                     if (matcher.find()) {
                         state.setInputMatched(true);
                         return fieldResponseService.createFieldResponse(new FieldResponseCreationRequest(current.getId(), session.getChannelName(), text));
                     }
 
                     return Uni.createFrom().voidItem();
-                }).replaceWithVoid();
+                }).replaceWithVoid()
+                .chain(() -> speechGenerationService.generateSpeech(new CoquiRequest(session.getFieldHandlingState().getTranscript(), userTranscriptSpeech)))
+                .invoke(() -> {
+                    if(!state.isInputMatched()){
+                        return;
+                    }
+
+                    RecordingItem recording = new RecordingItem(session.getBridgeId(), ariUtil, activeAudioRegistry);
+                    state.setCorrectnessRecording(recording);
+
+                    session.enqueueAudio(new PlaybackItem("please-check", session.getBridgeId(), ariUtil, activeAudioRegistry));
+                    session.enqueueAudio(new PlaybackItem("i-heard", session.getBridgeId(), ariUtil, activeAudioRegistry));
+                    session.enqueueAudio(new PlaybackItem(userTranscriptSpeech, session.getBridgeId(), ariUtil, activeAudioRegistry));
+                    session.enqueueAudio(new PlaybackItem("input-ok", session.getBridgeId(), ariUtil, activeAudioRegistry));
+                    session.enqueueAudio(recording);
+                })
+                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
+    }
+
+    @Override
+    protected Uni<Void> handleCheckCorrectnessAsync(CallSession session) {
+        FieldHandlingState state = session.getFieldHandlingState();
+        if (!state.isInputMatched()) {
+            return Uni.createFrom().voidItem();
+        }
+
+        if(state.getCorrectnessRecording() == null){
+            logger.error("Tried to check field input correctness without recording");
+            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.goToGoodbye();
+            return Uni.createFrom().voidItem();
+        }
+
+        return ariUtil.startMohAsync(session.getBridgeId())
+                .chain(() -> transcribe(state.getCorrectnessRecording()))
+                .invoke(text -> {
+                    state.setRetry(!text.toLowerCase().contains("ja"));
+                })
+                .replaceWithVoid()
+                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
     }
 
     @Override
     protected Uni<Void> handleRetryAsync(CallSession session) {
-        Uni<Void> endMoh = Uni.createFrom().voidItem().eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
 
         FieldHandlingState state = session.getFieldHandlingState();
         if (state.isInputMatched()) {
             state.setRetry(false);
-            return endMoh;
+            return Uni.createFrom().voidItem();
         }
 
-        final String userTranscriptSpeech = "field-user-transcript";
+        state.setRetry(true);
+        session.resetBaseState();
+
+        String transcript = session.getFieldHandlingState().getTranscript();
+        if(transcript == null || transcript.isBlank()){
+            session.enqueueAudio(new PlaybackItem("could-not-understand", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            return Uni.createFrom().voidItem();
+        }
 
         return ariUtil.startMohAsync(session.getBridgeId())
                 .chain(() -> speechGenerationService.generateSpeech(new CoquiRequest(session.getFieldHandlingState().getTranscript(), userTranscriptSpeech)))
                 .invoke(() -> {
-                    session.enqueueAudio(new PlaybackItem("we-understood", session.getBridgeId(), ariUtil, activeAudioRegistry));
+                    session.enqueueAudio(new PlaybackItem("could-not-understand", session.getBridgeId(), ariUtil, activeAudioRegistry));
+                    session.enqueueAudio(new PlaybackItem("i-heard", session.getBridgeId(), ariUtil, activeAudioRegistry));
                     session.enqueueAudio(new PlaybackItem(userTranscriptSpeech, session.getBridgeId(), ariUtil, activeAudioRegistry));
-
-                    state.setRetry(true);
-                    session.resetBaseState();
-                }).eventually(() -> endMoh);
+                }).eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
     }
 
     @Override
@@ -169,7 +218,14 @@ public final class FieldHandler extends StateHandler {
             return Uni.createFrom().voidItem();
         } else {
             logger.debug("Done with all fields");
-            return super.handleDoneAsync(session);
+
+            return Uni.createFrom().voidItem().invoke(() -> {
+                session.enqueueAudio(
+                        new PlaybackItem("action-will-follow",
+                                session.getBridgeId(),
+                                ariUtil,
+                                activeAudioRegistry));
+            }).chain(() -> super.handleDoneAsync(session));
         }
     }
 }

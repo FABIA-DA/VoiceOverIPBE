@@ -15,13 +15,17 @@ public enum BaseState {
      */
     SINGLE_ITEM,
     /**
-     * Should represent a state, where as input is requested
+     * Should represent a state, where input is requested
      */
     REQUEST_INPUT,
     /**
-     * Should represent a state, where the previously requested input is processed
+     * Should represent a state, where the previously requested input is processed and a check for correctness is requested
      */
     PROCESS_INPUT,
+    /**
+     * Should handle the correctness input from the previous state
+     */
+    CHECK_CORRECTNESS,
     /**
      * Should give some information if the call state is retried
      */

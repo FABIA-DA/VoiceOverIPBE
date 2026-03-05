@@ -3,20 +3,22 @@ package at.htlleonding.fabia.callmgmt.util;
 public final class StateSequence {
     /**
      * Advances the base state in a specific order.
+     *
      * @param current The current base
      * @return The new base state
      */
     public static BaseState advanceBaseState(BaseState current) {
-        BaseState next = null;
-        switch (current) {
-            case START -> next = BaseState.INFO;
-            case INFO -> next = BaseState.LIST;
-            case LIST -> next = BaseState.SINGLE_ITEM;
-            case SINGLE_ITEM -> next = BaseState.REQUEST_INPUT;
-            case REQUEST_INPUT -> next = BaseState.PROCESS_INPUT;
-            case PROCESS_INPUT -> next = BaseState.RETRY;
-            case RETRY -> next = BaseState.DONE;
-        }
+        BaseState next;
+        next = switch (current) {
+            case START -> BaseState.INFO;
+            case INFO -> BaseState.LIST;
+            case LIST -> BaseState.SINGLE_ITEM;
+            case SINGLE_ITEM -> BaseState.REQUEST_INPUT;
+            case REQUEST_INPUT -> BaseState.PROCESS_INPUT;
+            case PROCESS_INPUT -> BaseState.CHECK_CORRECTNESS;
+            case CHECK_CORRECTNESS -> BaseState.RETRY;
+            case RETRY, DONE -> BaseState.DONE;
+        };
         return next;
     }
 
@@ -26,6 +28,7 @@ public final class StateSequence {
 
     /**
      * Advances the call state in a specific order.
+     *
      * @param current The current call state
      * @return The next call state
      */
