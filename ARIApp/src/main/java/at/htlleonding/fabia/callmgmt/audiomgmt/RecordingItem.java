@@ -17,6 +17,6 @@ public final class RecordingItem extends AudioItem {
     @Override
     public Uni<Void> startAsync() {
         audioRegistry.registerRecording(this);
-        return ariUtil.startRecordingAsync(bridgeId, getName());
+        return ariUtil.startRecordingAsync(channelId, getName());
     }
 }

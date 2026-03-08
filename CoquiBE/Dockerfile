@@ -14,7 +14,7 @@ ARG MAMBA_DOCKERFILE_ACTIVATE=1
 ENV PATH=/env/bin:$PATH
 
 # Install the used model
-RUN python -c "from TTS.api import TTS; TTS(model_name='tts_models/de/thorsten/vits')"
+#RUN python -c "from TTS.api import TTS; TTS(model_name='tts_models/de/thorsten/vits')"
 
 EXPOSE 8000
 

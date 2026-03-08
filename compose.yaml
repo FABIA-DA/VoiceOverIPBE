@@ -58,7 +58,6 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-      start_period: 120s
 
   coqui-be:
     build:
@@ -76,7 +75,6 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-      start_period: 120s
 
   migrations:
     container_name: formbe-migrations

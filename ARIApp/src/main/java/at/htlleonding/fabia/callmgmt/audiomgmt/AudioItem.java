@@ -8,13 +8,13 @@ public abstract class AudioItem {
     @Getter
     protected final String name;
     @Getter
-    protected final String bridgeId;
+    protected final String channelId;
     protected final AriUtil ariUtil;
     protected final ActiveAudioRegistry audioRegistry;
 
-    protected AudioItem(String name, String bridgeId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry) {
+    protected AudioItem(String name, String channelId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry) {
         this.name = name;
-        this.bridgeId = bridgeId;
+        this.channelId = channelId;
         this.ariUtil = ariUtil;
         this.audioRegistry = audioRegistry;
     }

@@ -35,7 +35,7 @@ public class AriEventHandler extends AriWSHelper {
         String prefix = "sound:custom/";
         String media = message.getPlayback().getMedia_uri().substring(prefix.length());
 
-        String channelId = activeAudioRegistry.getPlayback(media).getBridgeId();
+        String channelId = activeAudioRegistry.getPlayback(media).getChannelId();
 
         if (channelId == null) {
             return;
@@ -53,7 +53,7 @@ public class AriEventHandler extends AriWSHelper {
     @Override
     protected void onRecordingStarted(RecordingStarted message) {
         logger.debug("recording started");
-        String channelId = activeAudioRegistry.getRecording(message.getRecording().getName()).getBridgeId();
+        String channelId = activeAudioRegistry.getRecording(message.getRecording().getName()).getChannelId();
 
         if (channelId == null) {
             return;
@@ -73,24 +73,16 @@ public class AriEventHandler extends AriWSHelper {
         Channel channel = message.getChannel();
         logger.debug("New call entered Stasis: {}", channel.getName());
 
-        if(!Objects.equals(channel.getState(), "Up")){
+        if (!Objects.equals(channel.getState(), "Up")) {
             ariUtil.answer(channel.getId());
         }
-
-        /*Bridge bridge = ariUtil.createBridge();
-
-        if(bridge == null){
-            return;
-        }
-
-        ariUtil.addChannelToBridge(bridge.getId(), channel.getId());*/
 
         CallSession session = new CallSession(
                 channel.getId(),
                 channel.getName(),
                 sessionManager,
                 callProcessor,
-                ariUtil
+                ariUtil, activeAudioRegistry
         );
 
         session.advanceCallState();
@@ -101,7 +93,7 @@ public class AriEventHandler extends AriWSHelper {
     @Override
     protected void onRecordingFinished(RecordingFinished message) {
         logger.debug("Recording finished: {}", message.getRecording().getName());
-        String channelId = activeAudioRegistry.getRecording(message.getRecording().getName()).getBridgeId();
+        String channelId = activeAudioRegistry.getRecording(message.getRecording().getName()).getChannelId();
         activeAudioRegistry.removeRecording(message.getRecording().getName());
 
         if (channelId == null) {
@@ -124,16 +116,18 @@ public class AriEventHandler extends AriWSHelper {
         String media = message.getPlayback().getMedia_uri().substring(prefix.length());
 
         logger.debug("Playback finished: {}", media);
-        String channelId = activeAudioRegistry.getPlayback(media).getBridgeId();
+        String channelId = activeAudioRegistry.getPlayback(media).getChannelId();
         activeAudioRegistry.removePlayback(media);
 
         if (channelId == null) {
+            logger.warn("Channel id was null in the media");
             return;
         }
 
         CallSession session = sessionManager.getSession(channelId);
 
         if (session == null) {
+            logger.warn("No session with this channel id in session manager");
             return;
         }
 
@@ -157,7 +151,6 @@ public class AriEventHandler extends AriWSHelper {
         }
 
         session.endCall(true);
-        ariUtil.destroyBridge(session.getBridgeId());
-        sessionManager.removeSession(session.getBridgeId());
+        sessionManager.removeSession(session.getChannelId());
     }
 }

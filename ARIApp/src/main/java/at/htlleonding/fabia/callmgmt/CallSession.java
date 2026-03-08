@@ -1,6 +1,9 @@
 package at.htlleonding.fabia.callmgmt;
 
+import at.htlleonding.fabia.callmgmt.audiomgmt.ActiveAudioRegistry;
 import at.htlleonding.fabia.callmgmt.audiomgmt.AudioItem;
+import at.htlleonding.fabia.callmgmt.audiomgmt.PlaybackItem;
+import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
 import at.htlleonding.fabia.callmgmt.util.*;
 import at.htlleonding.fabia.client.formbe.dtos.*;
 import lombok.Getter;
@@ -20,14 +23,15 @@ import static at.htlleonding.fabia.callmgmt.util.StateSequence.*;
 public final class CallSession {
     private final SessionManager sessionManager;
     private final CallProcessor callProcessor;
-    private final AriUtil arUtil;
+    private final AriUtil ariUtil;
+    private final ActiveAudioRegistry audioRegistry;
 
     private static final Logger logger = LoggerFactory.getLogger(CallSession.class);
     /**
-     * The id of the bridge where the callers channel from asterisk is in. The id is unique.
+     * The id of the callers channel from asterisk. The id is unique.
      */
     @Getter
-    private final String bridgeId;
+    private final String channelId;
     /**
      * The name of the channel from asterisk, which contains callers sip username.
      */
@@ -117,7 +121,7 @@ public final class CallSession {
         logger.debug("Advance base state to {}", currentBaseState);
     }
 
-    public void skipCurrentHandler(){
+    public void skipCurrentHandler() {
         currentBaseState = BaseState.RETRY;
     }
 
@@ -131,12 +135,13 @@ public final class CallSession {
         resetBaseState();
     }
 
-    public CallSession(String bridgeId, String channelName, SessionManager sessionManager, CallProcessor callProcessor, AriUtil arUtil) {
-        this.bridgeId = bridgeId;
+    public CallSession(String channelId, String channelName, SessionManager sessionManager, CallProcessor callProcessor, AriUtil arUtil, ActiveAudioRegistry audioRegistry) {
+        this.channelId = channelId;
         this.channelName = channelName;
         this.sessionManager = sessionManager;
         this.callProcessor = callProcessor;
-        this.arUtil = arUtil;
+        this.ariUtil = arUtil;
+        this.audioRegistry = audioRegistry;
         setState(getFirstCallState());
     }
 
@@ -382,15 +387,34 @@ public final class CallSession {
     }
 
     /**
-     * Adds a new audio item to the queue.
+     * Adds a new recording to the queue.
      *
-     * @param item The new audio to process.
+     * @return The enqueued recording
      */
-    public void enqueueAudio(AudioItem item) {
-        if (item == null) {
+    public RecordingItem enqueue() {
+        RecordingItem recording = new RecordingItem(getChannelId(), this.ariUtil, this.audioRegistry);
+        audioRegistry.registerRecording(recording);
+        audioQueue.add(recording);
+        return recording;
+    }
+
+    /**
+     * Adds new playbacks to the queue.
+     *
+     * @param name The name for the set of sounds (for logging)
+     * @param mediaNames The names of the media to play sequentially, file names without extension
+     */
+    public void enqueue(String name, String... mediaNames) {
+        if (mediaNames == null
+                || mediaNames.length < 1) {
+            logger.info("Tried to enqueue playback with empty media names");
             return;
         }
-        audioQueue.add(item);
+
+        for (String mediaName : mediaNames) {
+            PlaybackItem playback = new PlaybackItem(name, getChannelId(), this.ariUtil, this.audioRegistry, mediaName);
+            this.audioQueue.add(playback);
+        }
     }
 
     /**
@@ -407,11 +431,11 @@ public final class CallSession {
      */
     public void endCall(boolean hasSelfHungUp) {
         this.hasHungUp = true;
-        sessionManager.removeSession(this.bridgeId);
+        sessionManager.removeSession(this.channelId);
         audioQueue.clear();
 
         if (!hasSelfHungUp) {
-            arUtil.hangup(this.bridgeId);
+            ariUtil.hangup(this.channelId);
         }
     }
 

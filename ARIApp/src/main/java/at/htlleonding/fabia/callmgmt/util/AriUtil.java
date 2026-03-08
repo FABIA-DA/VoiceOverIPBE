@@ -1,7 +1,6 @@
 package at.htlleonding.fabia.callmgmt.util;
 
 import at.htlleonding.fabia.AriContext;
-import ch.loway.oss.ari4java.generated.models.Bridge;
 import ch.loway.oss.ari4java.tools.RestException;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
@@ -10,8 +9,6 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
-
 @ApplicationScoped
 public final class AriUtil {
     @Inject
@@ -19,10 +16,10 @@ public final class AriUtil {
 
     private final Logger logger = LoggerFactory.getLogger(AriUtil.class);
 
-    private void startRecording(String bridgeId, String recordingName) throws RestException {
+    private void startRecording(String channelId, String recordingName) throws RestException {
         ariContext.getAri()
                 .channels()
-                .record(bridgeId, recordingName, "wav")
+                .record(channelId, recordingName, "wav")
                 .setMaxDurationSeconds(10)
                 .setMaxSilenceSeconds(5)
                 .setBeep(true)
@@ -32,42 +29,43 @@ public final class AriUtil {
     /**
      * Asks asterisk to start a new recording.
      *
-     * @param bridgeId      The bridge id of the caller to record
+     * @param channelId     The channel id of the caller to record
      * @param recordingName The name of the recording
      */
-    public Uni<Void> startRecordingAsync(String bridgeId, String recordingName) {
+    public Uni<Void> startRecordingAsync(String channelId, String recordingName) {
         return Uni.createFrom().deferred(() -> {
                     try {
-                        startRecording(bridgeId, recordingName);
+                        startRecording(channelId, recordingName);
                         return Uni.createFrom().voidItem();
                     } catch (RestException e) {
-                        logger.error("Failed to start recording {} for bridge {}", recordingName, bridgeId, e);
+                        logger.error("Failed to start recording {} for bridge {}", recordingName, channelId, e);
                         return Uni.createFrom().failure(e);
                     }
                 })
                 .runSubscriptionOn(Infrastructure.getDefaultExecutor());
     }
 
-    private void playSound(String bridgeId, String sound) throws RestException {
+    private void playSound(String channelId, String sound) throws RestException {
         ariContext.getAri()
                 .channels()
-                .play(bridgeId, "sound:custom/" + sound)
+                .play(channelId, "sound:custom/" + sound)
                 .execute();
     }
 
     /**
-     * Asks asterisk to play a specific sound.
+     * Asks asterisk to play  specific sound.
      *
-     * @param bridgeId The bridge id of the caller to play the sound for
-     * @param sound    The name of the sound
+     * @param channelId
+     *The channel id of the caller to play the sound for
+     * @param sound   The name of the sound
      */
-    public Uni<Void> playSoundAsync(String bridgeId, String sound) {
+    public Uni<Void> playSoundAsync(String channelId, String name, String sound) {
         return Uni.createFrom().deferred(() -> {
                     try {
-                        playSound(bridgeId, sound);
+                        playSound(channelId, sound);
                         return Uni.createFrom().voidItem();
                     } catch (RestException e) {
-                        logger.error("Failed to start playback {} for bridge {}", sound, bridgeId, e);
+                        logger.error("Failed to start playback {} for channel {}", name, channelId, e);
                         return Uni.createFrom().failure(e);
                     }
                 })
@@ -90,43 +88,6 @@ public final class AriUtil {
         }
     }
 
-    public Bridge createBridge() {
-        try {
-            return ariContext.getAri()
-                    .bridges()
-                    .create()
-                    .setType("mixing")
-                    .setName("bridge-" + UUID.randomUUID())
-                    .execute();
-        } catch (RestException e) {
-            logger.error("Failed to create bridge", e);
-        }
-
-        return null;
-    }
-
-    public void destroyBridge(String bridgeId) {
-        try {
-            ariContext.getAri()
-                    .bridges()
-                    .destroy(bridgeId)
-                    .execute();
-        } catch (RestException e) {
-            logger.error("Failed to destroy bridge {}", bridgeId, e);
-        }
-    }
-
-    public void addChannelToBridge(String bridgeId, String channelId) {
-        try {
-            ariContext.getAri()
-                    .bridges()
-                    .addChannel(bridgeId, channelId)
-                    .execute();
-        } catch (RestException e) {
-            logger.error("Failed to add channel {} to bridge {}", channelId, bridgeId, e);
-        }
-    }
-
     public void answer(String channelId) {
         try {
             ariContext.getAri()
@@ -138,40 +99,40 @@ public final class AriUtil {
         }
     }
 
-    private void startMoh(String bridgeId) throws RestException {
+    private void startMoh(String channelId) throws RestException {
         ariContext.getAri()
                 .channels()
-                .startMoh(bridgeId)
+                .startMoh(channelId)
                 .execute();
     }
 
-    public Uni<Void> startMohAsync(String bridgeId) {
+    public Uni<Void> startMohAsync(String channelId) {
         return Uni.createFrom().deferred(() -> {
                     try {
-                        startMoh(bridgeId);
+                        startMoh(channelId);
                         return Uni.createFrom().voidItem();
                     } catch (RestException e) {
-                        logger.error("Failed to start moh for bridge {}", bridgeId, e);
+                        logger.error("Failed to start moh for bridge {}", channelId, e);
                         return Uni.createFrom().failure(e);
                     }
                 })
                 .runSubscriptionOn(Infrastructure.getDefaultExecutor());
     }
 
-    private void endMoh(String bridgeId) throws RestException {
+    private void endMoh(String channelId) throws RestException {
         ariContext.getAri()
                 .channels()
-                .stopMoh(bridgeId)
+                .stopMoh(channelId)
                 .execute();
     }
 
-    public Uni<Void> endMohAsync(String bridgeId) {
+    public Uni<Void> endMohAsync(String channelId) {
         return Uni.createFrom().deferred(() -> {
                     try {
-                        endMoh(bridgeId);
+                        endMoh(channelId);
                         return Uni.createFrom().voidItem();
                     } catch (RestException e) {
-                        logger.error("Failed to stop moh for bridge {}", bridgeId, e);
+                        logger.error("Failed to stop moh for bridge {}", channelId, e);
                         return Uni.createFrom().failure(e);
                     }
                 })

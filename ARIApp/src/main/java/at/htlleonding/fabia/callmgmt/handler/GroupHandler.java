@@ -1,8 +1,6 @@
 package at.htlleonding.fabia.callmgmt.handler;
 
 import at.htlleonding.fabia.callmgmt.*;
-import at.htlleonding.fabia.callmgmt.audiomgmt.ActiveAudioRegistry;
-import at.htlleonding.fabia.callmgmt.audiomgmt.PlaybackItem;
 import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
 import at.htlleonding.fabia.callmgmt.util.AriUtil;
 import at.htlleonding.fabia.callmgmt.util.CallState;
@@ -28,20 +26,18 @@ public final class GroupHandler extends StateHandler {
     GroupService groupService;
     @Inject
     AriUtil ariUtil;
-    @Inject
-    ActiveAudioRegistry activeAudioRegistry;
 
     @Override
     protected Uni<Void> handleListAsync(CallSession session) {
         String groupSpeech = "group-speech";
 
-        return ariUtil.startMohAsync(session.getBridgeId())
+        return ariUtil.startMohAsync(session.getChannelId())
                 .chain(groupService::getAllGroups)
                 .flatMap(groupList -> {
                     List<GroupListDto> groups = groupList.getGroups();
 
                     if (groups.isEmpty()) {
-                        session.enqueueAudio(new PlaybackItem("groups-empty", session.getBridgeId(), ariUtil, activeAudioRegistry));
+                        session.enqueue("empty-groups", "groups-empty");
                         session.goToGoodbye();
                         return Uni.createFrom().voidItem();
                     }
@@ -52,28 +48,21 @@ public final class GroupHandler extends StateHandler {
                     return speechGenerationService.generateSpeech(new CoquiRequest(names, groupSpeech));
                 })
                 .invoke(() -> {
-                    if(session.getState() == CallState.GOODBYE){
+                    if (session.getState() == CallState.GOODBYE) {
                         return;
                     }
 
-                    session.enqueueAudio(new PlaybackItem("form-group-preamble", session.getBridgeId(), ariUtil, activeAudioRegistry));
-                    session.enqueueAudio(new PlaybackItem(groupSpeech, session.getBridgeId(), ariUtil, activeAudioRegistry));
+                    session.enqueue("group-intro", "form-group-preamble", groupSpeech);
                 })
-                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
+                .eventually(() -> ariUtil.endMohAsync(session.getChannelId()));
     }
 
     @Override
     protected Uni<Void> handleRequestInputAsync(CallSession session) {
         return Uni.createFrom().voidItem()
                 .invoke(() -> {
-                    session.enqueueAudio(
-                            new PlaybackItem("group-input-request",
-                                    session.getBridgeId(),
-                                    ariUtil,
-                                    activeAudioRegistry));
-                    RecordingItem recording = new RecordingItem(session.getBridgeId(), ariUtil, activeAudioRegistry);
-                    session.getGroupHandlingState().setRecording(recording);
-                    session.enqueueAudio(recording);
+                    session.enqueue("group-input-request", "group-input-request");
+                    session.getGroupHandlingState().setRecording(session.enqueue());
                 });
     }
 
@@ -82,12 +71,12 @@ public final class GroupHandler extends StateHandler {
         RecordingItem recording = session.getGroupHandlingState().getRecording();
         if (recording == null) {
             logger.error("No recording happened before input processing");
-            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.enqueue("group-recording-null", "error");
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
 
-        return ariUtil.startMohAsync(session.getBridgeId())
+        return ariUtil.startMohAsync(session.getChannelId())
                 .chain(() -> transcribe(recording))
                 .flatMap(text -> {
                     if (text == null || text.isBlank()) {
@@ -108,7 +97,7 @@ public final class GroupHandler extends StateHandler {
                         }
                     }
 
-                    if(groupId == -1){
+                    if (groupId == -1) {
                         return Uni.createFrom().nullItem();
                     }
 
@@ -124,7 +113,7 @@ public final class GroupHandler extends StateHandler {
     protected Uni<Void> handleRetryAsync(CallSession session) {
         Uni<Void> endMoh = Uni.createFrom()
                 .voidItem()
-                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
+                .eventually(() -> ariUtil.endMohAsync(session.getChannelId()));
 
         if (session.getSelectedGroup() != null) {
             return endMoh;
@@ -133,8 +122,8 @@ public final class GroupHandler extends StateHandler {
         session.resetBaseState();
 
         String transcript = session.getGroupHandlingState().getTranscript();
-        if(transcript == null || transcript.isBlank()){
-            session.enqueueAudio(new PlaybackItem("could-not-understand", session.getBridgeId(), ariUtil, activeAudioRegistry));
+        if (transcript == null || transcript.isBlank()) {
+            session.enqueue("could-not-find-transcript", "could-not-understand");
             return endMoh;
         }
 
@@ -145,16 +134,7 @@ public final class GroupHandler extends StateHandler {
                                 session.getGroupHandlingState().getTranscript(),
                                 userTranscriptSpeech))
                 .invoke(() -> {
-                    session.enqueueAudio(
-                            new PlaybackItem("we-understood",
-                                    session.getBridgeId(),
-                                    ariUtil,
-                                    activeAudioRegistry));
-                    session.enqueueAudio(
-                            new PlaybackItem(userTranscriptSpeech,
-                                    session.getBridgeId(),
-                                    ariUtil,
-                                    activeAudioRegistry));
+                    session.enqueue("group-check", "we-understood", userTranscriptSpeech);
                 })
                 .eventually(() -> endMoh);
     }

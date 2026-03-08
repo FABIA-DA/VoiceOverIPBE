@@ -2,24 +2,22 @@ package at.htlleonding.fabia.callmgmt.audiomgmt;
 
 import at.htlleonding.fabia.callmgmt.util.AriUtil;
 import io.smallrye.mutiny.Uni;
+import lombok.Getter;
 
 /**
  * This item is data to represent a sound, which is played by asterisk.
  */
 public final class PlaybackItem extends AudioItem {
-    private final String mediaName;
-
-    public PlaybackItem(String mediaName, String bridgeId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry) {
-        super(mediaName, bridgeId, ariUtil, audioRegistry);
-        this.mediaName = mediaName;
+    public PlaybackItem(String name, String channelId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry, String mediaName) {
+        super(mediaName, channelId, ariUtil, audioRegistry);
     }
 
     @Override
     public Uni<Void> startAsync() {
-        if(mediaName == null){
+        if(getName() == null){
             return Uni.createFrom().voidItem();
         }
         audioRegistry.registerPlayback(this);
-        return ariUtil.playSoundAsync(bridgeId, mediaName);
+        return ariUtil.playSoundAsync(getChannelId(), getName(), getName());
     }
 }

@@ -1,8 +1,6 @@
 package at.htlleonding.fabia.callmgmt.handler;
 
 import at.htlleonding.fabia.callmgmt.*;
-import at.htlleonding.fabia.callmgmt.audiomgmt.ActiveAudioRegistry;
-import at.htlleonding.fabia.callmgmt.audiomgmt.PlaybackItem;
 import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
 import at.htlleonding.fabia.callmgmt.util.AriUtil;
 import at.htlleonding.fabia.callmgmt.util.CallState;
@@ -28,14 +26,12 @@ public final class SingleChoiceFieldHandler extends StateHandler {
     OptionResponseService optionResponseService;
     @Inject
     AriUtil ariUtil;
-    @Inject
-    ActiveAudioRegistry activeAudioRegistry;
 
     @Override
     protected Uni<Void> handleSingleItemAsync(CallSession session) {
         if (!session.fieldGroupValid()) {
             logger.error("Did not select a form or field group");
-            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.enqueue("field-group-invalid", "error");
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
@@ -53,7 +49,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
 
         if (!session.currentSingleChoiceFieldInBounds()) {
             logger.error("Single Choice Field Idx not in bounds");
-            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.enqueue("scf-out-of-bounds", "error");
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
@@ -63,7 +59,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
         SingleChoiceField field = session.getCurrentSingleChoiceField();
         String options = Util.ConcatItems(field.getOptions(), Option::getName);
 
-        return ariUtil.startMohAsync(session.getBridgeId())
+        return ariUtil.startMohAsync(session.getChannelId())
                 .chain(() ->
                         Uni.combine()
                                 .all()
@@ -73,39 +69,18 @@ public final class SingleChoiceFieldHandler extends StateHandler {
                                                 new CoquiRequest(options, optionSpeech)))
                                 .asTuple())
                 .invoke(() -> {
-                    session.enqueueAudio(
-                            new PlaybackItem("field-intro",
-                                    session.getBridgeId(),
-                                    ariUtil,
-                                    activeAudioRegistry));
-                    session.enqueueAudio(
-                            new PlaybackItem(singleChoiceFieldSpeech,
-                                    session.getBridgeId(),
-                                    ariUtil,
-                                    activeAudioRegistry));
-                    session.enqueueAudio(
-                            new PlaybackItem("options-are",
-                                    session.getBridgeId(),
-                                    ariUtil,
-                                    activeAudioRegistry));
-                    session.enqueueAudio(
-                            new PlaybackItem(optionSpeech,
-                                    session.getBridgeId(),
-                                    ariUtil,
-                                    activeAudioRegistry));
+                    session.enqueue("scf-intro", "field-intro", singleChoiceFieldSpeech, "options-are", optionSpeech);
                 })
                 .replaceWithVoid()
-                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
+                .eventually(() -> ariUtil.endMohAsync(session.getChannelId()));
     }
 
     @Override
     protected Uni<Void> handleRequestInputAsync(CallSession session) {
         return Uni.createFrom().voidItem()
                 .invoke(() -> {
-                    session.enqueueAudio(new PlaybackItem("single-choice-field-input-request", session.getBridgeId(), ariUtil, activeAudioRegistry));
-                    RecordingItem recording = new RecordingItem(session.getBridgeId(), ariUtil, activeAudioRegistry);
-                    session.getSingleChoiceFieldHandlingState().setRecording(recording);
-                    session.enqueueAudio(recording);
+                    session.enqueue("scf-input", "single-choice-field-input-request");
+                    session.getSingleChoiceFieldHandlingState().setRecording(session.enqueue());
                 });
     }
 
@@ -114,12 +89,12 @@ public final class SingleChoiceFieldHandler extends StateHandler {
         RecordingItem recording = session.getSingleChoiceFieldHandlingState().getRecording();
         if (recording == null) {
             logger.error("No recording happened before input processing");
-            session.enqueueAudio(new PlaybackItem("error", session.getBridgeId(), ariUtil, activeAudioRegistry));
+            session.enqueue("scf-recording-null", "error");
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
 
-        return ariUtil.startMohAsync(session.getBridgeId())
+        return ariUtil.startMohAsync(session.getChannelId())
                 .chain(() -> transcribe(recording))
                 .flatMap(text -> {
                     session.getSingleChoiceFieldHandlingState().setTranscript(text);
@@ -140,7 +115,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
                         }
                     }
 
-                    if(optionId == -1){
+                    if (optionId == -1) {
                         return Uni.createFrom().voidItem();
                     }
 
@@ -155,7 +130,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
     @Override
     protected Uni<Void> handleRetryAsync(CallSession session) {
         Uni<Void> endMoh = Uni.createFrom().voidItem()
-                .eventually(() -> ariUtil.endMohAsync(session.getBridgeId()));
+                .eventually(() -> ariUtil.endMohAsync(session.getChannelId()));
 
         if (session.getSingleChoiceFieldHandlingState().isOptionMatch()) {
             session.getSingleChoiceFieldHandlingState().setRetry(false);
@@ -166,38 +141,20 @@ public final class SingleChoiceFieldHandler extends StateHandler {
         session.resetBaseState();
 
         String transcript = session.getSingleChoiceFieldHandlingState().getTranscript();
-        if(transcript == null || transcript.isBlank()){
-            session.enqueueAudio(
-                    new PlaybackItem("could-not-understand",
-                            session.getBridgeId(),
-                            ariUtil,
-                            activeAudioRegistry));
+        if (transcript == null || transcript.isBlank()) {
+            session.enqueue("scf-could-not-understand", "could-not-understand");
             return endMoh;
         }
 
         final String userTranscriptSpeech = "scf-user-transcript";
 
-        return ariUtil.startMohAsync(session.getBridgeId())
+        return ariUtil.startMohAsync(session.getChannelId())
                 .chain(() -> speechGenerationService.generateSpeech(
                         new CoquiRequest(
                                 session.getSingleChoiceFieldHandlingState().getTranscript(),
                                 userTranscriptSpeech)))
                 .invoke(() -> {
-                    session.enqueueAudio(
-                            new PlaybackItem("could-not-understand",
-                                    session.getBridgeId(),
-                                    ariUtil,
-                                    activeAudioRegistry));
-                    session.enqueueAudio(
-                            new PlaybackItem("i-heard",
-                                    session.getBridgeId(),
-                                    ariUtil,
-                                    activeAudioRegistry));
-                    session.enqueueAudio(
-                            new PlaybackItem(userTranscriptSpeech,
-                                    session.getBridgeId(),
-                                    ariUtil,
-                                    activeAudioRegistry));
+                    session.enqueue("scf-retry", "could-not-understand", "i-heard", userTranscriptSpeech);
                 })
                 .eventually(() -> endMoh);
     }
