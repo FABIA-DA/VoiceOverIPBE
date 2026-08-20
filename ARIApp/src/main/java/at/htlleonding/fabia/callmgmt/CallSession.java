@@ -8,6 +8,7 @@ import at.htlleonding.fabia.callmgmt.util.*;
 import at.htlleonding.fabia.client.formbe.dtos.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.With;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,6 +87,7 @@ public final class CallSession {
     /**
      * If the caller has hung up.
      */
+    @Getter
     private boolean hasHungUp = false;
     /**
      * Saves data for the group handling.
@@ -451,10 +453,7 @@ public final class CallSession {
      * Plays the next audio item or handles the next step.
      */
     public void nextAudioOrStep() {
-        if (isAudioPlaying.get()) {
-            return;
-        }
-        if (hasHungUp) {
+        if (hasHungUp || isAudioPlaying.get()) {
             return;
         }
 

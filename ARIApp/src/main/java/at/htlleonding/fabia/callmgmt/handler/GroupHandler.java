@@ -80,6 +80,7 @@ public final class GroupHandler extends StateHandler {
                 .chain(() -> transcribe(recording))
                 .flatMap(text -> {
                     if (text == null || text.isBlank()) {
+                        logger.debug("Group Text input is empty");
                         return Uni.createFrom().nullItem();
                     }
 

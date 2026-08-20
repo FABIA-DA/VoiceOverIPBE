@@ -30,6 +30,9 @@ public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandle
      * @param session The call session to process
      */
     public Uni<Void> handleAsync(CallSession session) {
+        if(session.isHasHungUp()){
+            return Uni.createFrom().voidItem();
+        }
 
         Uni<Void> uni = switch (session.getCurrentBaseState()) {
             case START -> Uni.createFrom().voidItem();

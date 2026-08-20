@@ -53,6 +53,9 @@ services:
     restart: unless-stopped
     volumes:
       - whisper-cache:/home/mambauser/.cache
+    environment:
+      - OPENBLAS_NUM_THREADS=1
+      - OMP_NUM_THREADS=1
     healthcheck:
       test: [ "CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/healthcheck\")' || exit 1" ]
       interval: 5s

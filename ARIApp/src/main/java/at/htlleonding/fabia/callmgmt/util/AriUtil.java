@@ -38,7 +38,7 @@ public final class AriUtil {
                         startRecording(channelId, recordingName);
                         return Uni.createFrom().voidItem();
                     } catch (RestException e) {
-                        logger.error("Failed to start recording {} for bridge {}", recordingName, channelId, e);
+                        logger.error("Failed to start recording {} for channel {}", recordingName, channelId, e);
                         return Uni.createFrom().failure(e);
                     }
                 })
@@ -112,7 +112,7 @@ public final class AriUtil {
                         startMoh(channelId);
                         return Uni.createFrom().voidItem();
                     } catch (RestException e) {
-                        logger.error("Failed to start moh for bridge {}", channelId, e);
+                        logger.error("Failed to start moh for channel {}", channelId, e);
                         return Uni.createFrom().failure(e);
                     }
                 })
@@ -132,7 +132,7 @@ public final class AriUtil {
                         endMoh(channelId);
                         return Uni.createFrom().voidItem();
                     } catch (RestException e) {
-                        logger.error("Failed to stop moh for bridge {}", channelId, e);
+                        logger.error("Failed to stop moh for channel {}", channelId, e);
                         return Uni.createFrom().failure(e);
                     }
                 })

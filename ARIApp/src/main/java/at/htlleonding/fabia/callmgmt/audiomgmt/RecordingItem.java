@@ -10,8 +10,8 @@ import java.util.UUID;
  */
 public final class RecordingItem extends AudioItem {
 
-    public RecordingItem(String bridgeId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry) {
-        super("rec-" + UUID.randomUUID(), bridgeId, ariUtil, audioRegistry);
+    public RecordingItem(String channelId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry) {
+        super("rec-" + UUID.randomUUID(), channelId, ariUtil, audioRegistry);
     }
 
     @Override

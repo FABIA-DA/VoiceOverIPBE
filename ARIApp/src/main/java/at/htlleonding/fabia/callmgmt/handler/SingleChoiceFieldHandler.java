@@ -100,10 +100,12 @@ public final class SingleChoiceFieldHandler extends StateHandler {
                     session.getSingleChoiceFieldHandlingState().setTranscript(text);
 
                     if (text == null || text.isBlank()) {
+                        logger.debug("Scf Text Input is empty");
                         return Uni.createFrom().voidItem();
                     }
 
                     long optionId = -1;
+                    logger.debug("Scf Text Input: {}", text);
 
                     for (Option option : session.getCurrentSingleChoiceField().getOptions()) {
                         if (text.toLowerCase().contains(option.getName().toLowerCase())) {

@@ -50,7 +50,7 @@ public final class CallProcessor {
      * @param session The call session to advance
      */
     public void process(CallSession session) {
-        logger.debug("Processing session with channel id {} and bridge id {} in state {}", session.getChannelId(), session.getChannelId(), session.getState());
+        logger.debug("Processing session with channel id {} in state {}", session.getChannelId(), session.getState());
 
         StateHandler handler = handlerMap.get(session.getState());
 
