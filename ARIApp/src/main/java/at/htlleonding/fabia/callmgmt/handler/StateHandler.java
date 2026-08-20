@@ -30,7 +30,7 @@ public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandle
      * @param session The call session to process
      */
     public Uni<Void> handleAsync(CallSession session) {
-        if(session.isHasHungUp()){
+        if (session.isHasHungUp()) {
             return Uni.createFrom().voidItem();
         }
 
@@ -41,7 +41,7 @@ public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandle
             case SINGLE_ITEM -> handleSingleItemAsync(session);
             case REQUEST_INPUT -> handleRequestInputAsync(session);
             case PROCESS_INPUT -> handleProcessInputAsync(session);
-            case CHECK_CORRECTNESS ->handleCheckCorrectnessAsync(session);
+            case CHECK_CORRECTNESS -> handleCheckCorrectnessAsync(session);
             case RETRY -> handleRetryAsync(session);
             case DONE -> handleDoneAsync(session);
         };
@@ -139,9 +139,7 @@ public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandle
 
                     return response.getText();
                 }).invoke(text -> {
-                    if (text != null) {
-                        logger.debug("Transcribed text: {}", text);
-                    }
+                    logger.debug("Transcribed text: '{}'", text);
                 });
     }
 }

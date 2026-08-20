@@ -115,11 +115,9 @@ public final class FieldHandler extends StateHandler {
                     state.setTranscript(text);
 
                     if (text == null || text.isBlank()) {
-                        logger.debug("Field Text Input is empty");
                         return Uni.createFrom().voidItem();
                     }
 
-                    logger.debug("Field Text Input: {}", text);
                     Matcher matcher = pattern.matcher(text);
                     state.setInputMatched(false);
 

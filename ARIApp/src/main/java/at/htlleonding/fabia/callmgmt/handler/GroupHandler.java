@@ -80,12 +80,10 @@ public final class GroupHandler extends StateHandler {
                 .chain(() -> transcribe(recording))
                 .flatMap(text -> {
                     if (text == null || text.isBlank()) {
-                        logger.debug("Group Text input is empty");
                         return Uni.createFrom().nullItem();
                     }
 
                     session.getGroupHandlingState().setTranscript(text);
-                    logger.debug("Text input: {}", text);
                     long groupId = -1;
 
                     for (GroupListDto group : session.getGroupHandlingState().getGroupList()) {

@@ -84,11 +84,8 @@ public final class FormHandler extends StateHandler {
                     session.getFormHandlingState().setTranscript(text);
 
                     if (text == null || text.isBlank()) {
-                        logger.debug("Form Text Input is empty");
                         return;
                     }
-
-                    logger.debug("Form Text Input: {}", text);
 
                     for (Form form : session.getSelectedGroup().getForms()) {
                         if (text.replace(" ", "")
