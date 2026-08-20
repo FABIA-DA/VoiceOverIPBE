@@ -85,11 +85,6 @@ public final class CallSession {
      */
     private final ConcurrentLinkedQueue<AudioItem> audioQueue = new ConcurrentLinkedQueue<>();
     /**
-     * If the caller has hung up.
-     */
-    @Getter
-    private boolean hasHungUp = false;
-    /**
      * Saves data for the group handling.
      */
     @Getter
@@ -427,18 +422,13 @@ public final class CallSession {
     }
 
     /**
-     * Ends the call if not already done.
+     * Ends the call.
      *
-     * @param hasSelfHungUp If the caller already hung up
      */
-    public void endCall(boolean hasSelfHungUp) {
-        this.hasHungUp = true;
+    public void endCall() {
         sessionManager.removeSession(this.channelId);
         audioQueue.clear();
-
-        if (!hasSelfHungUp) {
-            ariUtil.hangup(this.channelId);
-        }
+        ariUtil.hangup(this.channelId);
     }
 
     /**
@@ -453,7 +443,7 @@ public final class CallSession {
      * Plays the next audio item or handles the next step.
      */
     public void nextAudioOrStep() {
-        if (hasHungUp || isAudioPlaying.get()) {
+        if (isAudioPlaying.get()) {
             return;
         }
 

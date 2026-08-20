@@ -150,7 +150,6 @@ public class AriEventHandler extends AriWSHelper {
             return;
         }
 
-        session.endCall(true);
-        sessionManager.removeSession(session.getChannelId());
+        session.endCall();
     }
 }

@@ -17,6 +17,6 @@ public final class GoodbyeHandler extends StateHandler {
 
     @Override
     protected Uni<Void> handleDoneAsync(CallSession session) {
-        return Uni.createFrom().voidItem().invoke(() -> session.endCall(false));
+        return Uni.createFrom().voidItem().invoke(session::endCall);
     }
 }

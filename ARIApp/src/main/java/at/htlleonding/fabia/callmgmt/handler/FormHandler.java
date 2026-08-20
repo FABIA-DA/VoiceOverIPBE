@@ -124,7 +124,7 @@ public final class FormHandler extends StateHandler {
                                         session.getFormHandlingState().getTranscript(),
                                         userTranscriptSpeech))
                         .invoke(() -> {
-                            session.enqueue("form-check", "we-understood", userTranscriptSpeech);
+                            session.enqueue("form-check", "i-heard", userTranscriptSpeech);
                         })
                         .eventually(() -> endMoh);
     }
