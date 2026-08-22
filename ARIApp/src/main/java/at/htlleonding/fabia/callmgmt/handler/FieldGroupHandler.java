@@ -3,7 +3,9 @@ package at.htlleonding.fabia.callmgmt.handler;
 import at.htlleonding.fabia.callmgmt.*;
 import at.htlleonding.fabia.callmgmt.util.CallState;
 import at.htlleonding.fabia.callmgmt.util.HandledState;
+import at.htlleonding.fabia.callmgmt.util.PlaybackLookup;
 import io.smallrye.mutiny.Uni;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 @Singleton
@@ -13,13 +15,13 @@ public final class FieldGroupHandler extends StateHandler {
     protected Uni<Void> handleInfoAsync(CallSession session) {
         if (session.getSelectedForm() == null) {
             logger.error("No Form was selected");
-            session.enqueue("form-null", "error");
+            session.enqueue("form-null", playbackLookup.error);
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
 
         if (session.fieldGroupsEmpty()) {
-            session.enqueue("form-empty", "form-empty");
+            session.enqueue("form-empty", playbackLookup.formEmpty);
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }

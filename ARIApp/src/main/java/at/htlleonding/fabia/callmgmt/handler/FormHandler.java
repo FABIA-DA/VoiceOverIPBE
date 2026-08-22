@@ -2,10 +2,7 @@ package at.htlleonding.fabia.callmgmt.handler;
 
 import at.htlleonding.fabia.callmgmt.*;
 import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
-import at.htlleonding.fabia.callmgmt.util.AriUtil;
-import at.htlleonding.fabia.callmgmt.util.CallState;
-import at.htlleonding.fabia.callmgmt.util.Util;
-import at.htlleonding.fabia.callmgmt.util.HandledState;
+import at.htlleonding.fabia.callmgmt.util.*;
 import at.htlleonding.fabia.client.coquibe.CoquiRequest;
 import at.htlleonding.fabia.client.coquibe.SpeechGenerationService;
 import at.htlleonding.fabia.client.formbe.dtos.Form;
@@ -32,7 +29,7 @@ public final class FormHandler extends StateHandler {
                 .flatMap(v -> {
                     if (session.getSelectedGroup() == null) {
                         logger.error("No group for form intro was selected");
-                        session.enqueue("group-null", "error");
+                        session.enqueue("group-null", playbackLookup.error);
                         session.goToGoodbye();
                         return Uni.createFrom().voidItem();
                     }
@@ -40,7 +37,7 @@ public final class FormHandler extends StateHandler {
                     List<Form> forms = session.getSelectedGroup().getForms();
 
                     if (forms.isEmpty()) {
-                        session.enqueue("group-empty", "group-empty");
+                        session.enqueue("group-empty", playbackLookup.groupEmpty);
                         session.goToGoodbye();
                         return Uni.createFrom().voidItem();
                     }
@@ -55,7 +52,9 @@ public final class FormHandler extends StateHandler {
                         return;
                     }
 
-                    session.enqueue("form-preamble", "form-preamble", formsSpeechName);
+                    session.enqueue("form-preamble",
+                            playbackLookup.formPreamble,
+                            formsSpeechName);
                 })
                 .eventually(() -> ariUtil.endMohAsync(session.getChannelId()));
     }
@@ -63,7 +62,7 @@ public final class FormHandler extends StateHandler {
     @Override
     protected Uni<Void> handleRequestInputAsync(CallSession session) {
         return Uni.createFrom().voidItem().invoke(() -> {
-            session.enqueue("form-input-request", "form-input-request");
+            session.enqueue("form-input-request", playbackLookup.formInputRequest);
             session.getFormHandlingState().setRecording(session.enqueue());
         });
     }
@@ -73,7 +72,7 @@ public final class FormHandler extends StateHandler {
         RecordingItem recording = session.getFormHandlingState().getRecording();
         if (recording == null) {
             logger.error("No recording happened before input processing");
-            session.enqueue("form-recording-null", "error");
+            session.enqueue("form-recording-null", playbackLookup.error);
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
@@ -112,7 +111,7 @@ public final class FormHandler extends StateHandler {
 
         String transcript = session.getFormHandlingState().getTranscript();
         if (transcript == null || transcript.isBlank()) {
-            session.enqueue("form-input-empty", "could-not-understand");
+            session.enqueue("form-input-empty", playbackLookup.couldNotUnderstand);
             return endMoh;
         }
 
@@ -124,7 +123,9 @@ public final class FormHandler extends StateHandler {
                                         session.getFormHandlingState().getTranscript(),
                                         userTranscriptSpeech))
                         .invoke(() -> {
-                            session.enqueue("form-check", "i-heard", userTranscriptSpeech);
+                            session.enqueue("form-check",
+                                    playbackLookup.iHeard,
+                                    userTranscriptSpeech);
                         })
                         .eventually(() -> endMoh);
     }

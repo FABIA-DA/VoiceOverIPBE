@@ -398,7 +398,7 @@ public final class CallSession {
     /**
      * Adds new playbacks to the queue.
      *
-     * @param name The name for the set of sounds (for logging)
+     * @param name The name for the set of sounds for logging
      * @param mediaNames The names of the media to play sequentially, file names without extension
      */
     public void enqueue(String name, String... mediaNames) {

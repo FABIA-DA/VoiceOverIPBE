@@ -31,7 +31,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
     protected Uni<Void> handleSingleItemAsync(CallSession session) {
         if (!session.fieldGroupValid()) {
             logger.error("Did not select a form or field group");
-            session.enqueue("field-group-invalid", "error");
+            session.enqueue("field-group-invalid", playbackLookup.error);
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
@@ -49,7 +49,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
 
         if (!session.currentSingleChoiceFieldInBounds()) {
             logger.error("Single Choice Field Idx not in bounds");
-            session.enqueue("scf-out-of-bounds", "error");
+            session.enqueue("scf-out-of-bounds", playbackLookup.error);
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
@@ -69,7 +69,11 @@ public final class SingleChoiceFieldHandler extends StateHandler {
                                                 new CoquiRequest(options, optionSpeech)))
                                 .asTuple())
                 .invoke(() -> {
-                    session.enqueue("scf-intro", "field-intro", singleChoiceFieldSpeech, "options-are", optionSpeech);
+                    session.enqueue("scf-intro",
+                            playbackLookup.fieldIntro,
+                            singleChoiceFieldSpeech,
+                            playbackLookup.optionsAre,
+                            optionSpeech);
                 })
                 .replaceWithVoid()
                 .eventually(() -> ariUtil.endMohAsync(session.getChannelId()));
@@ -79,7 +83,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
     protected Uni<Void> handleRequestInputAsync(CallSession session) {
         return Uni.createFrom().voidItem()
                 .invoke(() -> {
-                    session.enqueue("scf-input", "single-choice-field-input-request");
+                    session.enqueue("scf-input", playbackLookup.singleChoiceFieldInputRequest);
                     session.getSingleChoiceFieldHandlingState().setRecording(session.enqueue());
                 });
     }
@@ -89,7 +93,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
         RecordingItem recording = session.getSingleChoiceFieldHandlingState().getRecording();
         if (recording == null) {
             logger.error("No recording happened before input processing");
-            session.enqueue("scf-recording-null", "error");
+            session.enqueue("scf-recording-null", playbackLookup.error);
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
@@ -142,7 +146,7 @@ public final class SingleChoiceFieldHandler extends StateHandler {
 
         String transcript = session.getSingleChoiceFieldHandlingState().getTranscript();
         if (transcript == null || transcript.isBlank()) {
-            session.enqueue("scf-could-not-understand", "could-not-understand");
+            session.enqueue("scf-could-not-understand", playbackLookup.couldNotUnderstand);
             return endMoh;
         }
 
@@ -154,7 +158,10 @@ public final class SingleChoiceFieldHandler extends StateHandler {
                                 session.getSingleChoiceFieldHandlingState().getTranscript(),
                                 userTranscriptSpeech)))
                 .invoke(() -> {
-                    session.enqueue("scf-retry", "could-not-understand", "i-heard", userTranscriptSpeech);
+                    session.enqueue("scf-retry",
+                            playbackLookup.couldNotUnderstand,
+                            playbackLookup.iHeard,
+                            userTranscriptSpeech);
                 })
                 .eventually(() -> endMoh);
     }

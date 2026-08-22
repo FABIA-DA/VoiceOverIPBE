@@ -32,7 +32,7 @@ public final class FieldHandler extends StateHandler {
     protected Uni<Void> handleSingleItemAsync(CallSession session) {
         if (!session.fieldGroupValid()) {
             logger.error("No form or field selected");
-            session.enqueue("field-group-invalid", "error");
+            session.enqueue("field-group-invalid", playbackLookup.error);
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
@@ -65,7 +65,7 @@ public final class FieldHandler extends StateHandler {
         return ariUtil.startMohAsync(session.getChannelId())
                 .flatMap(v -> Uni.combine().all().unis(mainSpeech, finalDescriptionSpeech).asTuple())
                 .invoke(() -> {
-                    String[] media = new String[]{"field-intro", fieldSpeech};
+                    String[] media = new String[]{playbackLookup.fieldIntro, fieldSpeech};
 
                     if (field.getDescription() != null && !field.getDescription().isBlank()) {
                         media = Arrays.copyOf(media, 3);
@@ -87,7 +87,7 @@ public final class FieldHandler extends StateHandler {
             fieldDescriptionSpeech = ariUtil.startMohAsync(session.getChannelId())
                     .chain(() -> speechGenerationService.generateSpeech(new CoquiRequest(field.getType().getDescription(), typeDescriptionSpeech)))
                     .invoke(() -> {
-                        session.enqueue("field-input-request", "please-consider", typeDescriptionSpeech);
+                        session.enqueue("field-input-request", playbackLookup.pleaseConsider, typeDescriptionSpeech);
                     }).eventually(() -> ariUtil.endMohAsync(session.getChannelId()));
         }
 
@@ -101,7 +101,7 @@ public final class FieldHandler extends StateHandler {
         FieldHandlingState state = session.getFieldHandlingState();
         if (state.getRecording() == null) {
             logger.error("Tried to handle an input without a recording");
-            session.enqueue("field-recording-null", "error");
+            session.enqueue("field-recording-null", playbackLookup.error);
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
@@ -123,18 +123,24 @@ public final class FieldHandler extends StateHandler {
 
                     if (matcher.find()) {
                         state.setInputMatched(true);
-                        return fieldResponseService.createFieldResponse(new FieldResponseCreationRequest(current.getId(), session.getChannelName(), text));
+                        return fieldResponseService.createFieldResponse(
+                                new FieldResponseCreationRequest(current.getId(), session.getChannelName(), text));
                     }
 
                     return Uni.createFrom().voidItem();
                 }).replaceWithVoid()
-                .chain(() -> speechGenerationService.generateSpeech(new CoquiRequest(session.getFieldHandlingState().getTranscript(), userTranscriptSpeech)))
+                .chain(() -> speechGenerationService.generateSpeech(
+                        new CoquiRequest(session.getFieldHandlingState().getTranscript(), userTranscriptSpeech)))
                 .invoke(() -> {
                     if (!state.isInputMatched()) {
                         return;
                     }
 
-                    session.enqueue("field-input-check", "please-check", "i-heard", userTranscriptSpeech, "input-ok");
+                    session.enqueue("field-input-check",
+                            playbackLookup.pleaseCheck,
+                            playbackLookup.iHeard,
+                            userTranscriptSpeech,
+                            playbackLookup.inputOk);
                     state.setCorrectnessRecording(session.enqueue());
                 })
                 .eventually(() -> ariUtil.endMohAsync(session.getChannelId()));
@@ -149,7 +155,7 @@ public final class FieldHandler extends StateHandler {
 
         if (state.getCorrectnessRecording() == null) {
             logger.error("Tried to check field input correctness without recording");
-            session.enqueue("field-check-input-null", "error");
+            session.enqueue("field-check-input-null", playbackLookup.error);
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
@@ -177,14 +183,18 @@ public final class FieldHandler extends StateHandler {
 
         String transcript = session.getFieldHandlingState().getTranscript();
         if (transcript == null || transcript.isBlank()) {
-            session.enqueue("field-check-transcription-empty", "could-not-understand");
+            session.enqueue("field-check-transcription-empty", playbackLookup.couldNotUnderstand);
             return Uni.createFrom().voidItem();
         }
 
         return ariUtil.startMohAsync(session.getChannelId())
-                .chain(() -> speechGenerationService.generateSpeech(new CoquiRequest(session.getFieldHandlingState().getTranscript(), userTranscriptSpeech)))
+                .chain(() -> speechGenerationService.generateSpeech(
+                        new CoquiRequest(session.getFieldHandlingState().getTranscript(), userTranscriptSpeech)))
                 .invoke(() -> {
-                    session.enqueue("field-retry", "could-not-understand", "i-heard", userTranscriptSpeech);
+                    session.enqueue("field-retry",
+                            playbackLookup.couldNotUnderstand,
+                            playbackLookup.iHeard,
+                            userTranscriptSpeech);
                 }).eventually(() -> ariUtil.endMohAsync(session.getChannelId()));
     }
 
@@ -205,7 +215,7 @@ public final class FieldHandler extends StateHandler {
             logger.debug("Done with all fields");
 
             return Uni.createFrom().voidItem().invoke(() -> {
-                session.enqueue("fill-out-finished", "action-will-follow");
+                session.enqueue("fill-out-finished", playbackLookup.actionWillFollow);
             }).chain(() -> super.handleDoneAsync(session));
         }
     }

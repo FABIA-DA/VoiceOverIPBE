@@ -3,8 +3,10 @@ package at.htlleonding.fabia.callmgmt.handler;
 import at.htlleonding.fabia.callmgmt.util.BaseState;
 import at.htlleonding.fabia.callmgmt.CallSession;
 import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
+import at.htlleonding.fabia.callmgmt.util.PlaybackLookup;
 import at.htlleonding.fabia.client.whisperbe.TranscriptionService;
 import io.smallrye.mutiny.Uni;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,8 @@ import static at.htlleonding.fabia.callmgmt.util.BaseState.*;
 public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandler, FormHandler, GoodbyeHandler, GreetingHandler, GroupHandler, SingleChoiceFieldHandler {
     @RestClient
     TranscriptionService transcriptionService;
+    @Inject
+    PlaybackLookup playbackLookup;
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -30,10 +34,6 @@ public sealed abstract class StateHandler permits FieldGroupHandler, FieldHandle
      * @param session The call session to process
      */
     public Uni<Void> handleAsync(CallSession session) {
-        if (session.isHasHungUp()) {
-            return Uni.createFrom().voidItem();
-        }
-
         Uni<Void> uni = switch (session.getCurrentBaseState()) {
             case START -> Uni.createFrom().voidItem();
             case INFO -> handleInfoAsync(session);

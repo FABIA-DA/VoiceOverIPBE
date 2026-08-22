@@ -6,6 +6,8 @@ import at.htlleonding.fabia.callmgmt.util.AriUtil;
 import ch.loway.oss.ari4java.generated.AriWSHelper;
 import ch.loway.oss.ari4java.generated.models.*;
 import ch.loway.oss.ari4java.tools.AriConnectionEvent;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,25 +17,24 @@ import java.util.Objects;
 /**
  * Handles all necessary ari events to start and advance the call
  */
-@AllArgsConstructor
+@ApplicationScoped
 public class AriEventHandler extends AriWSHelper {
-    private SessionManager sessionManager;
-    private ActiveAudioRegistry activeAudioRegistry;
-    private CallProcessor callProcessor;
-    private AriUtil ariUtil;
+    @Inject
+    ActiveAudioRegistry activeAudioRegistry;
+    @Inject
+    SessionManager sessionManager;
+    @Inject
+    AriUtil ariUtil;
+    @Inject
+    CallProcessor callProcessor;
 
     private final Logger logger = LoggerFactory.getLogger(AriEventHandler.class);
-
-    @Override
-    public void onConnectionEvent(AriConnectionEvent event) {
-        super.onConnectionEvent(event);
-    }
+    private final String soundPrefix = "sound:custom/";
 
     @Override
     protected void onPlaybackStarted(PlaybackStarted message) {
         logger.debug("playback started");
-        String prefix = "sound:custom/";
-        String media = message.getPlayback().getMedia_uri().substring(prefix.length());
+        String media = message.getPlayback().getMedia_uri().substring(soundPrefix.length());
 
         String channelId = activeAudioRegistry.getPlayback(media).getChannelId();
 
@@ -112,8 +113,7 @@ public class AriEventHandler extends AriWSHelper {
 
     @Override
     protected void onPlaybackFinished(PlaybackFinished message) {
-        String prefix = "sound:custom/";
-        String media = message.getPlayback().getMedia_uri().substring(prefix.length());
+        String media = message.getPlayback().getMedia_uri().substring(soundPrefix.length());
 
         logger.debug("Playback finished: {}", media);
         String channelId = activeAudioRegistry.getPlayback(media).getChannelId();

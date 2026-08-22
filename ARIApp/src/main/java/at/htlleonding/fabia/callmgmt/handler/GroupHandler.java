@@ -37,7 +37,7 @@ public final class GroupHandler extends StateHandler {
                     List<GroupListDto> groups = groupList.getGroups();
 
                     if (groups.isEmpty()) {
-                        session.enqueue("empty-groups", "groups-empty");
+                        session.enqueue("empty-groups", playbackLookup.groupsEmpty);
                         session.goToGoodbye();
                         return Uni.createFrom().voidItem();
                     }
@@ -52,7 +52,9 @@ public final class GroupHandler extends StateHandler {
                         return;
                     }
 
-                    session.enqueue("group-intro", "form-group-preamble", groupSpeech);
+                    session.enqueue("group-intro",
+                            playbackLookup.formGroupPreamble,
+                            groupSpeech);
                 })
                 .eventually(() -> ariUtil.endMohAsync(session.getChannelId()));
     }
@@ -61,7 +63,7 @@ public final class GroupHandler extends StateHandler {
     protected Uni<Void> handleRequestInputAsync(CallSession session) {
         return Uni.createFrom().voidItem()
                 .invoke(() -> {
-                    session.enqueue("group-input-request", "group-input-request");
+                    session.enqueue("group-input-request", playbackLookup.groupInputRequest);
                     session.getGroupHandlingState().setRecording(session.enqueue());
                 });
     }
@@ -71,7 +73,7 @@ public final class GroupHandler extends StateHandler {
         RecordingItem recording = session.getGroupHandlingState().getRecording();
         if (recording == null) {
             logger.error("No recording happened before input processing");
-            session.enqueue("group-recording-null", "error");
+            session.enqueue("group-recording-null", playbackLookup.error);
             session.goToGoodbye();
             return Uni.createFrom().voidItem();
         }
@@ -122,7 +124,7 @@ public final class GroupHandler extends StateHandler {
 
         String transcript = session.getGroupHandlingState().getTranscript();
         if (transcript == null || transcript.isBlank()) {
-            session.enqueue("could-not-find-transcript", "could-not-understand");
+            session.enqueue("could-not-find-transcript", playbackLookup.couldNotUnderstand);
             return endMoh;
         }
 
@@ -133,7 +135,9 @@ public final class GroupHandler extends StateHandler {
                                 session.getGroupHandlingState().getTranscript(),
                                 userTranscriptSpeech))
                 .invoke(() -> {
-                    session.enqueue("group-check", "we-understood", userTranscriptSpeech);
+                    session.enqueue("group-check",
+                            playbackLookup.iHeard,
+                            userTranscriptSpeech);
                 })
                 .eventually(() -> endMoh);
     }

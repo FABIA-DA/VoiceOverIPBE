@@ -12,7 +12,10 @@ public final class GreetingHandler extends StateHandler {
     @Override
     protected Uni<Void> handleInfoAsync(CallSession session) {
         return Uni.createFrom().deferred(() -> {
-            session.enqueue("greeting", "greeting", "instructions-1", "instructions-2");
+            session.enqueue("greeting",
+                    playbackLookup.greeting,
+                    playbackLookup.instruction1,
+                    playbackLookup.instruction2);
             return Uni.createFrom().voidItem();
         });
     }
