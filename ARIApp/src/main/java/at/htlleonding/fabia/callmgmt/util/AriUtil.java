@@ -55,21 +55,28 @@ public final class AriUtil {
     /**
      * Asks asterisk to play  specific sound.
      *
-     * @param channelId
-     *The channel id of the caller to play the sound for
-     * @param sound   The name of the sound
+     * @param channelId The channel id of the caller to play the sound for
+     * @param sound     The name of the sound
      */
     public Uni<Void> playSoundAsync(String channelId, String name, String sound) {
         return Uni.createFrom().deferred(() -> {
-                    try {
-                        playSound(channelId, sound);
-                        return Uni.createFrom().voidItem();
-                    } catch (RestException e) {
-                        logger.error("Failed to start playback {} for channel {}", name, channelId, e);
-                        return Uni.createFrom().failure(e);
-                    }
-                })
-                .runSubscriptionOn(Infrastructure.getDefaultExecutor());
+            try {
+                playSound(channelId, sound);
+                return Uni.createFrom().voidItem();
+            } catch (RestException e) {
+                String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
+                if (msg.contains("404") || msg.contains("channel not found")) {
+                    logger.warn("Start playback: channel missing, ignoring {} for {}", name, channelId);
+                    return Uni.createFrom().voidItem();
+                }
+                logger.error("Failed to start playback {} for channel {}. ARI error: {}. Request: play(channel={}, media=sound:custom/{})",
+                        name, channelId, e.getMessage(), channelId, sound, e);
+                return Uni.createFrom().failure(e);
+            } catch (Throwable t) {
+                logger.error("Unexpected error when starting playback {} for channel {}: {}", name, channelId, t.toString(), t);
+                return Uni.createFrom().voidItem();
+            }
+        }).runSubscriptionOn(Infrastructure.getDefaultExecutor());
     }
 
     /**
@@ -78,13 +85,20 @@ public final class AriUtil {
      * @param channelId The id of the callers channel
      */
     public void hangup(String channelId) {
+        if (channelId == null) {
+            logger.warn("hangup called with null channelId");
+            return;
+        }
         try {
-            ariContext.getAri()
-                    .channels()
-                    .hangup(channelId)
-                    .execute();
+            if (ariContext == null || ariContext.getAri() == null) {
+                logger.warn("ARI client unavailable, cannot hangup {}", channelId);
+                return;
+            }
+            ariContext.getAri().channels().hangup(channelId).execute();
         } catch (RestException e) {
             logger.error("Failed to hangup call for channel {}", channelId, e);
+        } catch (Throwable t) {
+            logger.error("Unexpected error when hanging up channel {}: {}", channelId, t.toString(), t);
         }
     }
 
@@ -108,15 +122,22 @@ public final class AriUtil {
 
     public Uni<Void> startMohAsync(String channelId) {
         return Uni.createFrom().deferred(() -> {
-                    try {
-                        startMoh(channelId);
-                        return Uni.createFrom().voidItem();
-                    } catch (RestException e) {
-                        logger.error("Failed to start moh for channel {}", channelId, e);
-                        return Uni.createFrom().failure(e);
-                    }
-                })
-                .runSubscriptionOn(Infrastructure.getDefaultExecutor());
+            try {
+                startMoh(channelId);
+                return Uni.createFrom().voidItem();
+            } catch (RestException e) {
+                String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
+                if (msg.contains("404") || msg.contains("channel not found")) {
+                    logger.warn("Start MOH: channel missing, ignoring for {}", channelId);
+                    return Uni.createFrom().voidItem();
+                }
+                logger.error("Failed to start moh for channel {}", channelId, e);
+                return Uni.createFrom().failure(e);
+            } catch (Throwable t) {
+                logger.error("Unexpected error when starting moh for channel {}: {}", channelId, t.toString(), t);
+                return Uni.createFrom().voidItem();
+            }
+        }).runSubscriptionOn(Infrastructure.getDefaultExecutor());
     }
 
     private void endMoh(String channelId) throws RestException {
@@ -128,15 +149,34 @@ public final class AriUtil {
 
     public Uni<Void> endMohAsync(String channelId) {
         return Uni.createFrom().deferred(() -> {
-                    try {
-                        endMoh(channelId);
-                        return Uni.createFrom().voidItem();
-                    } catch (RestException e) {
-                        logger.error("Failed to stop moh for channel {}", channelId, e);
-                        return Uni.createFrom().failure(e);
-                    }
-                })
-                .runSubscriptionOn(Infrastructure.getDefaultExecutor());
+            try {
+                endMoh(channelId);
+                return Uni.createFrom().voidItem();
+            } catch (RestException e) {
+                String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
+                if (msg.contains("404") || msg.contains("channel not found")) {
+                    logger.warn("End MOH: channel missing, ignoring for {}", channelId);
+                    return Uni.createFrom().voidItem();
+                }
+                logger.error("Failed to stop moh for channel {}", channelId, e);
+                return Uni.createFrom().failure(e);
+            } catch (Throwable t) {
+                logger.error("Unexpected error when stopping moh for channel {}: {}", channelId, t.toString(), t);
+                return Uni.createFrom().voidItem();
+            }
+        }).runSubscriptionOn(Infrastructure.getDefaultExecutor());
+    }
+
+    public boolean channelExists(String channelId) {
+        try {
+            return ariContext != null && ariContext.getAri() != null
+                    && ariContext.getAri().channels().get(channelId).execute() != null;
+        } catch (RestException e) {
+            return false;
+        } catch (Throwable t) {
+            logger.debug("channelExists unexpected: {}", t.toString());
+            return false;
+        }
     }
 }
 

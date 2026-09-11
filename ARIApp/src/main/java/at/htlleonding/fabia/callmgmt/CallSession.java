@@ -426,9 +426,17 @@ public final class CallSession {
      *
      */
     public void endCall() {
+        logger.info("endCall() invoked for channel {} state={} baseState={}", this.channelId, this.state, this.currentBaseState);
+        Exception invoker = new Exception("endCall invocation stack");
+        logger.info("endCall stacktrace:", invoker);
+
         sessionManager.removeSession(this.channelId);
         audioQueue.clear();
-        ariUtil.hangup(this.channelId);
+        try {
+            ariUtil.hangup(this.channelId);
+        } catch (Throwable t) {
+            logger.warn("Suppressing error during hangup for channel {}: {}", this.channelId, t.toString());
+        }
     }
 
     /**

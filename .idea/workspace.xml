@@ -3,22 +3,34 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="auto" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="Add Frontend 2/2">
+      <change afterPath="$PROJECT_DIR$/CallContext/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CallContext/runtime/src/main/java/at/htlleonding/fabia/call/context/runtime/CallContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CallContext/runtime/src/main/java/at/htlleonding/fabia/call/context/runtime/CallScoped.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/handler/FieldGroupHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/handler/FieldGroupHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/handler/FieldHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/handler/FieldHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/handler/StateHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/handler/StateHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/client/BaseClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/client/BaseClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/client/whisperbe/TranscriptionClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/client/whisperbe/TranscriptionClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Asterisk/asterisk-config/pjsip.conf" beforeDir="false" afterPath="$PROJECT_DIR$/Asterisk/asterisk-config/pjsip.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FormFE/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/FormFE/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AriEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AriEventHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/CallSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/CallSession.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/util/AriUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/util/AriUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CallContext/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/vin55/Documents/htl/4BHIF/DA/asterisk/tmp/VoiceOverIPBE" value="3J60vBe7QZXD3F0sSkWnWkf1xC4" />
+    </persistenceIdMap>
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$/ARIApp">
@@ -74,37 +86,55 @@
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
+  <component name="ProjectSessionTemplates">
+    <option name="panelTemplate">
+      <template>
+        <option name="modeId" value="Ask" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_id" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="BACKGROUND" />
+        <option name="worktreeMode" value="WORKSPACE" />
+      </template>
+    </option>
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ARIApp [:at.htlleonding.fabia.Main.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build ARIApp.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feat/tts&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/vtea/Documents/htl/5BHIF/WMC/keycloak&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;discord-application&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "Application.Main.executor": "Run",
+    "Gradle.ARIApp [:at.htlleonding.fabia.Main.main()].executor": "Run",
+    "Gradle.Build ARIApp.executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "HTTP Request.FormBE | Delete field type.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "feat/tts",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/vin55/Documents/htl/4BHIF/DA/asterisk/tmp/VoiceOverIPBE",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "discord-application",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -112,7 +142,20 @@
       <recent name="C:\Users\vin55\Documents\htl\4BHIF\DA\asterisk\VoiceOverIPBE\WhisperBE" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunDashboard">
+    <option name="configurationStatuses">
+      <map>
+        <entry key="HttpClient.HttpRequestRunConfigurationType">
+          <value>
+            <map>
+              <entry key="FormBE | Delete field type" value="STOPPED" />
+            </map>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-24" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -122,6 +165,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="FormBE | Delete field type" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/FormBE/FormBE/FormBE.http" executionIdentifier="Delete field type" index="25" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="HTTP Request.FormBE | Delete field type" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -178,6 +229,11 @@
       <workItem from="1763011698869" duration="943000" />
       <workItem from="1763017268294" duration="361000" />
       <workItem from="1763589648204" duration="1713000" />
+      <workItem from="1788957491154" duration="5374000" />
+      <workItem from="1789044900913" duration="656000" />
+      <workItem from="1789053082092" duration="1350000" />
+      <workItem from="1789126879032" duration="1937000" />
+      <workItem from="1789130592711" duration="477000" />
     </task>
     <task id="LOCAL-00001" summary="Add Frontend">
       <option name="closed" value="true" />

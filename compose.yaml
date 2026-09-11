@@ -29,8 +29,8 @@ services:
 
   ari-app:
     build:
-      context: ./ARIApp
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ARIApp/Dockerfile
     depends_on:
       asterisk:
         condition: service_healthy

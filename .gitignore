@@ -2,7 +2,9 @@ Asterisk/asterisk-logs/*
 CoquiApp/.idea
 CoquiApp/out
 FormBE
+FormFE
 WhisperBE
+CallContext
 .env
 
 # Created by https://www.toptal.com/developers/gitignore/api/intellij+all
