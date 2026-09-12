@@ -8,15 +8,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd4bdf32-1712-4adb-bdf2-6f82d01001c3" name="Changes" comment="Add Frontend 2/2">
+      <change afterPath="$PROJECT_DIR$/CallContext/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CallContext/runtime/src/main/java/at/htlleonding/fabia/call/context/runtime/CallContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CallContext/runtime/src/main/java/at/htlleonding/fabia/call/context/runtime/CallScoped.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AriEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/AriEventHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/CallProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/CallProcessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/CallSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/CallSession.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/audiomgmt/AudioItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/audiomgmt/AudioItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/audiomgmt/PlaybackItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/audiomgmt/PlaybackItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/audiomgmt/RecordingItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/audiomgmt/RecordingItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/handler/FieldGroupHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/handler/FieldGroupHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/handler/StateHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/callmgmt/handler/StateHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/client/formbe/FieldResponseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ARIApp/src/main/java/at/htlleonding/fabia/client/formbe/FieldResponseService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Asterisk/asterisk-config/pjsip.conf" beforeDir="false" afterPath="$PROJECT_DIR$/Asterisk/asterisk-config/pjsip.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CallContext/README.md" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -232,6 +233,7 @@
       <workItem from="1789126879032" duration="1937000" />
       <workItem from="1789130592711" duration="762000" />
       <workItem from="1789138087308" duration="1027000" />
+      <workItem from="1789250644403" duration="508000" />
     </task>
     <task id="LOCAL-00001" summary="Add Frontend">
       <option name="closed" value="true" />

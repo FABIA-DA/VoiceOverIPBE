@@ -3,9 +3,7 @@ package at.htlleonding.fabia.callmgmt.handler;
 import at.htlleonding.fabia.callmgmt.*;
 import at.htlleonding.fabia.callmgmt.util.CallState;
 import at.htlleonding.fabia.callmgmt.util.HandledState;
-import at.htlleonding.fabia.callmgmt.util.PlaybackLookup;
 import io.smallrye.mutiny.Uni;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 @Singleton

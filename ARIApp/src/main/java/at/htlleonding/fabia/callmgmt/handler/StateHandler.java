@@ -1,6 +1,5 @@
 package at.htlleonding.fabia.callmgmt.handler;
 
-import at.htlleonding.fabia.callmgmt.util.BaseState;
 import at.htlleonding.fabia.callmgmt.CallSession;
 import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
 import at.htlleonding.fabia.callmgmt.util.PlaybackLookup;
@@ -10,12 +9,8 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 import java.nio.file.Path;
 import java.text.MessageFormat;
-
-import static at.htlleonding.fabia.callmgmt.util.BaseState.*;
 
 /**
  * Handler for a specific call state to handle all needed base states.
