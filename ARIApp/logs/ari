@@ -1,0 +1,214 @@
+﻿2026-09-12 23:01:33.561 | __  ____  __  _____   ___  __ ____  ______
+2026-09-12 23:01:33.561 |  --/ __ \/ / / / _ | / _ \/ //_/ / / / __/
+2026-09-12 23:01:33.561 |  -/ /_/ / /_/ / __ |/ , _/ ,< / /_/ /\ \
+2026-09-12 23:01:33.561 | --\___\_\____/_/ |_/_/|_/_/|_|\____/___/
+2026-09-12 23:01:33.561 | 2026-09-12 21:01:33,117 DEBUG [org.jbo.logging] (main) Logging Provider: org.jboss.logging.JBossLogManagerProvider
+2026-09-12 23:01:33.573 | 2026-09-12 21:01:33,129 DEBUG [io.sma.config] (main) SRCFG01006: Loaded ConfigSource BuildTime RunTime Fixed with ordinal 2147483647
+2026-09-12 23:01:33.573 | 2026-09-12 21:01:33,129 DEBUG [io.sma.config] (main) SRCFG01006: Loaded ConfigSource SysPropConfigSource with ordinal 400
+2026-09-12 23:01:33.573 | 2026-09-12 21:01:33,129 DEBUG [io.sma.config] (main) SRCFG01006: Loaded ConfigSource EnvConfigSource with ordinal 300
+2026-09-12 23:01:33.574 | 2026-09-12 21:01:33,129 DEBUG [io.sma.config] (main) SRCFG01006: Loaded ConfigSource PropertiesConfigSource[source=jar:file:///app/app.jar!/application.properties] with ordinal 250
+2026-09-12 23:01:33.574 | 2026-09-12 21:01:33,129 DEBUG [io.sma.config] (main) SRCFG01006: Loaded ConfigSource DefaultValuesConfigSource with ordinal -2147483648
+2026-09-12 23:01:33.575 | 2026-09-12 21:01:33,288 DEBUG [io.net.uti.int.log.InternalLoggerFactory] (main) Using SLF4J as the default logging framework
+2026-09-12 23:01:33.575 | 2026-09-12 21:01:33,289 DEBUG [io.net.uti.int.InternalThreadLocalMap] (main) -Dio.netty.threadLocalMap.stringBuilder.initialSize: 1024
+2026-09-12 23:01:33.575 | 2026-09-12 21:01:33,289 DEBUG [io.net.uti.int.InternalThreadLocalMap] (main) -Dio.netty.threadLocalMap.stringBuilder.maxSize: 4096
+2026-09-12 23:01:33.575 | 2026-09-12 21:01:33,312 DEBUG [io.qua.arc.impl] (main) ArC DI container initialized [beans=56, observers=2]
+2026-09-12 23:01:33.575 | 2026-09-12 21:01:33,329 DEBUG [io.qua.arc.impl] (main) Loaded 39 removed beans lazily
+2026-09-12 23:01:33.576 | 2026-09-12 21:01:33,330 DEBUG [io.qua.arc.run.BeanContainerImpl] (main) No matching bean found for type class io.quarkus.resteasy.reactive.jackson.runtime.serialisers.vertx.VertxJsonArrayBasicMessageBodyWriter and qualifiers []. The bean might have been marked as unused and removed during build.
+2026-09-12 23:01:33.576 | 2026-09-12 21:01:33,332 DEBUG [io.qua.arc.run.BeanContainerImpl] (main) No matching bean found for type class io.quarkus.resteasy.reactive.jackson.runtime.serialisers.vertx.VertxJsonObjectBasicMessageBodyWriter and qualifiers []. The bean might have been marked as unused and removed during build.
+2026-09-12 23:01:33.576 | 2026-09-12 21:01:33,334 DEBUG [io.qua.arc.run.BeanContainerImpl] (main) No matching bean found for type class io.quarkus.resteasy.reactive.jackson.runtime.serialisers.vertx.VertxJsonArrayBasicMessageBodyReader and qualifiers []. The bean might have been marked as unused and removed during build.
+2026-09-12 23:01:33.576 | 2026-09-12 21:01:33,335 DEBUG [io.qua.arc.run.BeanContainerImpl] (main) No matching bean found for type class io.quarkus.resteasy.reactive.jackson.runtime.serialisers.vertx.VertxJsonObjectBasicMessageBodyReader and qualifiers []. The bean might have been marked as unused and removed during build.
+2026-09-12 23:01:33.577 | 2026-09-12 21:01:33,405 DEBUG [io.sma.config] (main) SRCFG01006: Loaded ConfigSource BuildTime RunTime Fixed with ordinal 2147483647
+2026-09-12 23:01:33.577 | 2026-09-12 21:01:33,406 DEBUG [io.sma.config] (main) SRCFG01006: Loaded ConfigSource SysPropConfigSource with ordinal 400
+2026-09-12 23:01:33.577 | 2026-09-12 21:01:33,406 DEBUG [io.sma.config] (main) SRCFG01006: Loaded ConfigSource EnvConfigSource with ordinal 300
+2026-09-12 23:01:33.578 | 2026-09-12 21:01:33,406 DEBUG [io.sma.config] (main) SRCFG01006: Loaded ConfigSource PropertiesConfigSource[source=jar:file:///app/app.jar!/application.properties] with ordinal 250
+2026-09-12 23:01:33.578 | 2026-09-12 21:01:33,406 DEBUG [io.sma.config] (main) SRCFG01006: Loaded ConfigSource DefaultValuesConfigSource with ordinal -2147483648
+2026-09-12 23:01:33.578 | 2026-09-12 21:01:33,509 DEBUG [io.net.uti.int.PlatformDependent0] (Thread-1) -Dio.netty.noUnsafe: false
+2026-09-12 23:01:33.579 | 2026-09-12 21:01:33,509 DEBUG [io.net.uti.int.PlatformDependent0] (Thread-1) Java version: 23
+2026-09-12 23:01:33.579 | 2026-09-12 21:01:33,512 DEBUG [io.net.uti.int.PlatformDependent0] (Thread-1) java.nio.Buffer.address: available
+2026-09-12 23:01:33.579 | 2026-09-12 21:01:33,513 DEBUG [io.net.uti.int.PlatformDependent0] (Thread-1) java.nio.Bits.unaligned: available, true
+2026-09-12 23:01:33.580 | 2026-09-12 21:01:33,514 DEBUG [io.net.uti.int.PlatformDependent0] (Thread-1) java.nio.DirectByteBuffer.<init>(long, {int,long}): unavailable
+2026-09-12 23:01:33.580 | 2026-09-12 21:01:33,514 DEBUG [io.net.uti.int.PlatformDependent] (Thread-1) sun.misc.Unsafe: available
+2026-09-12 23:01:33.580 | 2026-09-12 21:01:33,514 DEBUG [io.net.uti.int.PlatformDependent] (Thread-1) -Dio.netty.tmpdir: /tmp (java.io.tmpdir)
+2026-09-12 23:01:33.580 | 2026-09-12 21:01:33,514 DEBUG [io.net.uti.int.PlatformDependent] (Thread-1) -Dio.netty.bitMode: 64 (sun.arch.data.model)
+2026-09-12 23:01:33.580 | 2026-09-12 21:01:33,516 DEBUG [io.net.uti.int.PlatformDependent] (Thread-1) -Dio.netty.maxDirectMemory: -1 bytes
+2026-09-12 23:01:33.581 | 2026-09-12 21:01:33,516 DEBUG [io.net.uti.int.PlatformDependent] (Thread-1) -Dio.netty.uninitializedArrayAllocationThreshold: -1
+2026-09-12 23:01:33.581 | 2026-09-12 21:01:33,526 DEBUG [io.net.uti.int.CleanerJava9] (Thread-1) java.nio.ByteBuffer.cleaner(): available
+2026-09-12 23:01:33.582 | 2026-09-12 21:01:33,526 DEBUG [io.net.uti.int.PlatformDependent] (Thread-1) -Dio.netty.noPreferDirect: false
+2026-09-12 23:01:33.583 | 2026-09-12 21:01:33,530 DEBUG [io.net.uti.int.PlatformDependent] (Thread-1) Error while reading content of /etc/os-release: java.io.IOException: Maximum number of bytes read: 8192
+2026-09-12 23:01:33.583 | 	at io.netty.util.internal.BoundedInputStream.checkMaxBytesRead(BoundedInputStream.java:79)
+2026-09-12 23:01:33.583 | 	at io.netty.util.internal.BoundedInputStream.read(BoundedInputStream.java:58)
+2026-09-12 23:01:33.583 | 	at java.base/sun.nio.cs.StreamDecoder.readBytes(StreamDecoder.java:350)
+2026-09-12 23:01:33.583 | 	at java.base/sun.nio.cs.StreamDecoder.implRead(StreamDecoder.java:393)
+2026-09-12 23:01:33.583 | 	at java.base/sun.nio.cs.StreamDecoder.lockedRead(StreamDecoder.java:217)
+2026-09-12 23:01:33.583 | 	at java.base/sun.nio.cs.StreamDecoder.read(StreamDecoder.java:171)
+2026-09-12 23:01:33.583 | 	at java.base/java.io.InputStreamReader.read(InputStreamReader.java:190)
+2026-09-12 23:01:33.583 | 	at java.base/java.io.BufferedReader.fill(BufferedReader.java:160)
+2026-09-12 23:01:33.583 | 	at java.base/java.io.BufferedReader.implReadLine(BufferedReader.java:370)
+2026-09-12 23:01:33.583 | 	at java.base/java.io.BufferedReader.readLine(BufferedReader.java:347)
+2026-09-12 23:01:33.583 | 	at java.base/java.io.BufferedReader.readLine(BufferedReader.java:436)
+2026-09-12 23:01:33.583 | 	at io.netty.util.internal.PlatformDependent$4.run(PlatformDependent.java:246)
+2026-09-12 23:01:33.583 | 	at io.netty.util.internal.PlatformDependent$4.run(PlatformDependent.java:235)
+2026-09-12 23:01:33.583 | 	at java.base/java.security.AccessController.doPrivileged(AccessController.java:319)
+2026-09-12 23:01:33.583 | 	at io.netty.util.internal.PlatformDependent.addFilesystemOsClassifiers(PlatformDependent.java:235)
+2026-09-12 23:01:33.583 | 	at io.netty.util.internal.PlatformDependent.<clinit>(PlatformDependent.java:226)
+2026-09-12 23:01:33.583 | 	at io.netty.channel.DefaultChannelId.defaultProcessId(DefaultChannelId.java:182)
+2026-09-12 23:01:33.583 | 	at io.netty.channel.DefaultChannelId.<clinit>(DefaultChannelId.java:82)
+2026-09-12 23:01:33.583 | 	at io.quarkus.netty.runtime.NettyRecorder$1.run(NettyRecorder.java:28)
+2026-09-12 23:01:33.583 | 	at java.base/java.lang.Thread.run(Thread.java:1575)
+2026-09-12 23:01:33.583 |
+2026-09-12 23:01:33.583 | 2026-09-12 21:01:33,533 DEBUG [io.net.cha.DefaultChannelId] (Thread-1) -Dio.netty.processId: 1 (auto-detected)
+2026-09-12 23:01:33.583 | 2026-09-12 21:01:33,535 DEBUG [io.net.cha.DefaultChannelId] (Thread-1) -Dio.netty.machineId: 62:1f:3a:4b:7e:05:0a:86 (user-set)
+2026-09-12 23:01:33.594 | 2026-09-12 21:01:33,593 DEBUG [io.ver.cor.log.LoggerFactory] (main) Using io.vertx.core.logging.SLF4JLogDelegateFactory
+2026-09-12 23:01:33.601 | 2026-09-12 21:01:33,600 DEBUG [io.qua.ver.cor.run.VertxCoreRecorder] (main) Vert.x Cache configured to: /tmp/vertx-cache/2113643052154243503
+2026-09-12 23:01:33.617 | 2026-09-12 21:01:33,616 DEBUG [io.net.uti.ResourceLeakDetector] (main) -Dio.netty.leakDetection.level: simple
+2026-09-12 23:01:33.617 | 2026-09-12 21:01:33,616 DEBUG [io.net.uti.ResourceLeakDetector] (main) -Dio.netty.leakDetection.targetRecords: 4
+2026-09-12 23:01:33.637 | 2026-09-12 21:01:33,636 DEBUG [io.net.cha.MultithreadEventLoopGroup] (main) -Dio.netty.eventLoopThreads: 32
+2026-09-12 23:01:33.644 | 2026-09-12 21:01:33,643 DEBUG [io.net.uti.con.GlobalEventExecutor] (main) -Dio.netty.globalEventExecutor.quietPeriodSeconds: 1
+2026-09-12 23:01:33.652 | 2026-09-12 21:01:33,651 DEBUG [io.net.cha.nio.NioEventLoop] (main) -Dio.netty.noKeySetOptimization: false
+2026-09-12 23:01:33.652 | 2026-09-12 21:01:33,651 DEBUG [io.net.cha.nio.NioEventLoop] (main) -Dio.netty.selectorAutoRebuildThreshold: 512
+2026-09-12 23:01:33.659 | 2026-09-12 21:01:33,659 DEBUG [io.net.uti.int.PlatformDependent] (main) org.jctools-core.MpscChunkedArrayQueue: available
+2026-09-12 23:01:33.677 | 2026-09-12 21:01:33,676 DEBUG [io.qua.ver.cor.run.VertxCoreRecorder] (main) Vertx has Native Transport Enabled: false
+2026-09-12 23:01:33.701 | 2026-09-12 21:01:33,700 INFO  [io.quarkus] (main) fabia 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.17.3) started in 0.904s.
+2026-09-12 23:01:33.701 | 2026-09-12 21:01:33,701 INFO  [io.quarkus] (main) Profile prod activated.
+2026-09-12 23:01:33.701 | 2026-09-12 21:01:33,701 INFO  [io.quarkus] (main) Installed features: [call-context, cdi, rest-client, rest-client-jackson, smallrye-context-propagation, vertx]
+2026-09-12 23:01:33.745 | 2026-09-12 21:01:33,744 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (main) initialize url: http://asterisk:8088/, user: ariuser
+2026-09-12 23:01:33.769 | 2026-09-12 21:01:33,768 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.numHeapArenas: 32
+2026-09-12 23:01:33.769 | 2026-09-12 21:01:33,769 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.numDirectArenas: 32
+2026-09-12 23:01:33.769 | 2026-09-12 21:01:33,769 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.pageSize: 8192
+2026-09-12 23:01:33.769 | 2026-09-12 21:01:33,769 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.maxOrder: 3
+2026-09-12 23:01:33.769 | 2026-09-12 21:01:33,769 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.chunkSize: 65536
+2026-09-12 23:01:33.770 | 2026-09-12 21:01:33,769 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.smallCacheSize: 256
+2026-09-12 23:01:33.770 | 2026-09-12 21:01:33,769 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.normalCacheSize: 64
+2026-09-12 23:01:33.770 | 2026-09-12 21:01:33,770 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.maxCachedBufferCapacity: 32768
+2026-09-12 23:01:33.770 | 2026-09-12 21:01:33,770 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.cacheTrimInterval: 8192
+2026-09-12 23:01:33.770 | 2026-09-12 21:01:33,770 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.cacheTrimIntervalMillis: 0
+2026-09-12 23:01:33.771 | 2026-09-12 21:01:33,770 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.useCacheForAllThreads: false
+2026-09-12 23:01:33.771 | 2026-09-12 21:01:33,771 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.maxCachedByteBuffersPerChunk: 1023
+2026-09-12 23:01:33.771 | 2026-09-12 21:01:33,771 DEBUG [io.net.buf.PooledByteBufAllocator] (main) -Dio.netty.allocator.disableCacheFinalizersForFastThreadLocalThreads: false
+2026-09-12 23:01:33.784 | 2026-09-12 21:01:33,783 DEBUG [io.net.buf.ByteBufUtil] (main) -Dio.netty.allocator.type: pooled
+2026-09-12 23:01:33.785 | 2026-09-12 21:01:33,784 DEBUG [io.net.buf.ByteBufUtil] (main) -Dio.netty.threadLocalDirectBufferSize: 0
+2026-09-12 23:01:33.785 | 2026-09-12 21:01:33,785 DEBUG [io.net.buf.ByteBufUtil] (main) -Dio.netty.maxThreadLocalCharBufferSize: 16384
+2026-09-12 23:01:33.791 | 2026-09-12 21:01:33,790 DEBUG [io.net.buf.AbstractByteBuf] (main) -Dio.netty.buffer.checkAccessible: true
+2026-09-12 23:01:33.791 | 2026-09-12 21:01:33,791 DEBUG [io.net.buf.AbstractByteBuf] (main) -Dio.netty.buffer.checkBounds: true
+2026-09-12 23:01:33.792 | 2026-09-12 21:01:33,791 DEBUG [io.net.uti.ResourceLeakDetectorFactory] (main) Loaded default ResourceLeakDetector: io.netty.util.ResourceLeakDetector@60cf80e7
+2026-09-12 23:01:33.801 | 2026-09-12 21:01:33,799 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (main) Bootstrap with
+2026-09-12 23:01:33.801 |  connection timeout: 10,
+2026-09-12 23:01:33.801 |  read timeout: 30,
+2026-09-12 23:01:33.801 |  aggregator max-length: 16777216
+2026-09-12 23:01:33.846 | 2026-09-12 21:01:33,844 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (main) Sync Action - GET to /ari/api-docs/resources.json
+2026-09-12 23:01:33.846 | 2026-09-12 21:01:33,846 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (main) HTTP Connect uri: http://asterisk:8088/
+2026-09-12 23:01:33.923 | 2026-09-12 21:01:33,923 DEBUG [io.net.boo.ChannelInitializerExtensions] (main) -Dio.netty.bootstrap.extensions: null
+2026-09-12 23:01:33.959 | 2026-09-12 21:01:33,958 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (nioEventLoopGroup-2-1) HTTP connected
+2026-09-12 23:01:33.961 | 2026-09-12 21:01:33,961 DEBUG [io.net.uti.Recycler] (main) -Dio.netty.recycler.maxCapacityPerThread: 4096
+2026-09-12 23:01:33.961 | 2026-09-12 21:01:33,961 DEBUG [io.net.uti.Recycler] (main) -Dio.netty.recycler.ratio: 8
+2026-09-12 23:01:33.962 | 2026-09-12 21:01:33,961 DEBUG [io.net.uti.Recycler] (main) -Dio.netty.recycler.chunkSize: 32
+2026-09-12 23:01:33.962 | 2026-09-12 21:01:33,961 DEBUG [io.net.uti.Recycler] (main) -Dio.netty.recycler.blocking: false
+2026-09-12 23:01:33.962 | 2026-09-12 21:01:33,961 DEBUG [io.net.uti.Recycler] (main) -Dio.netty.recycler.batchFastThreadLocalOnly: true
+2026-09-12 23:01:34.119 | 2026-09-12 21:01:34,118 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (main) WS Connect uri: ws://asterisk:8088/ari/events?app=my-ari-app
+2026-09-12 23:01:34.124 | 2026-09-12 21:01:34,124 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (nioEventLoopGroup-2-3) HTTP connected, waiting for WS Upgrade...
+2026-09-12 23:01:34.125 | 2026-09-12 21:01:34,125 DEBUG [io.net.han.cod.htt.web.WebSocketClientHandshaker13] (nioEventLoopGroup-2-3) WebSocket version 13 client handshake key: v3SHA1IhIE6kdKsniRNCTg==, expected response: u9m5EnpflaLVIkCvaQX4itM46NE=
+2026-09-12 23:01:34.127 | 2026-09-12 21:01:34,127 DEBUG [io.net.uti.NetUtil] (nioEventLoopGroup-2-3) -Djava.net.preferIPv4Stack: false
+2026-09-12 23:01:34.127 | 2026-09-12 21:01:34,127 DEBUG [io.net.uti.NetUtil] (nioEventLoopGroup-2-3) -Djava.net.preferIPv6Addresses: false
+2026-09-12 23:01:34.129 | 2026-09-12 21:01:34,128 DEBUG [io.net.uti.NetUtilInitializations] (nioEventLoopGroup-2-3) Loopback interface: lo (lo, 0:0:0:0:0:0:0:1%lo)
+2026-09-12 23:01:34.129 | 2026-09-12 21:01:34,129 DEBUG [io.net.uti.NetUtil] (nioEventLoopGroup-2-3) /proc/sys/net/core/somaxconn: 4096
+2026-09-12 23:01:34.136 | 2026-09-12 21:01:34,135 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - AggregatedFullHttpResponse
+2026-09-12 23:01:34.136 | 2026-09-12 21:01:34,135 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Finish WS Handshake...
+2026-09-12 23:01:34.139 | 2026-09-12 21:01:34,138 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (nioEventLoopGroup-2-3) WS connected...
+2026-09-12 23:01:34.143 | 2026-09-12 21:01:34,142 DEBUG [ch.low.oss.ari.gen.AriWSHelper] (nioEventLoopGroup-2-3) WS_CONNECTED
+2026-09-12 23:01:44.455 | 2026-09-12 21:01:44,455 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - TextWebSocketFrame
+2026-09-12 23:01:44.566 | 2026-09-12 21:01:44,566 DEBUG [at.htl.fab.AriEventHandler] (pool-6-thread-1) New call entered Stasis: channelId=1789246904.0, channelName=PJSIP/1000-00000000
+2026-09-12 23:01:44.570 | 2026-09-12 21:01:44,569 DEBUG [at.htl.fab.cal.CallSession] (pool-6-thread-1) Advance call state to GREETING
+2026-09-12 23:01:44.570 | 2026-09-12 21:01:44,570 DEBUG [at.htl.fab.cal.CallSession] (pool-6-thread-1) Advance base state to INFO
+2026-09-12 23:01:44.646 | 2026-09-12 21:01:44,645 INFO  [at.htl.fab.cal.CallProcessor] (pool-6-thread-1) Registered handler GroupHandler for state GROUP
+2026-09-12 23:01:44.646 | 2026-09-12 21:01:44,646 INFO  [at.htl.fab.cal.CallProcessor] (pool-6-thread-1) Registered handler FormHandler for state FORM
+2026-09-12 23:01:44.647 | 2026-09-12 21:01:44,646 INFO  [at.htl.fab.cal.CallProcessor] (pool-6-thread-1) Registered handler GreetingHandler for state GREETING
+2026-09-12 23:01:44.650 | 2026-09-12 21:01:44,649 INFO  [at.htl.fab.cal.CallProcessor] (pool-6-thread-1) Registered handler FieldHandler for state FIELD
+2026-09-12 23:01:44.650 | 2026-09-12 21:01:44,650 INFO  [at.htl.fab.cal.CallProcessor] (pool-6-thread-1) Registered handler FieldGroupHandler for state FIELD_GROUP
+2026-09-12 23:01:44.650 | 2026-09-12 21:01:44,650 INFO  [at.htl.fab.cal.CallProcessor] (pool-6-thread-1) Registered handler GoodbyeHandler for state GOODBYE
+2026-09-12 23:01:44.653 | 2026-09-12 21:01:44,653 INFO  [at.htl.fab.cal.CallProcessor] (pool-6-thread-1) Registered handler SingleChoiceFieldHandler for state SINGLE_CHOICE_FIELD
+2026-09-12 23:01:44.653 | 2026-09-12 21:01:44,653 DEBUG [at.htl.fab.cal.CallProcessor] (pool-6-thread-1) Processing session with channel id 1789246904.0 in state GREETING
+2026-09-12 23:01:44.663 | 2026-09-12 21:01:44,663 DEBUG [at.htl.fab.cal.CallSession] (pool-6-thread-1) Next audio item: 1789246904.0
+2026-09-12 23:01:44.664 | 2026-09-12 21:01:44,663 ERROR [at.htl.fab.cal.CallProcessor] (pool-6-thread-1) Error handling state GREETING for session 1789246904.0 - Handler: GreetingHandler: java.lang.NullPointerException: Cannot invoke "at.htlleonding.fabia.callmgmt.audiomgmt.ActiveAudioRegistry.registerPlayback(at.htlleonding.fabia.callmgmt.audiomgmt.PlaybackItem)" because "this.audioRegistry" is null
+2026-09-12 23:01:44.664 | 	at at.htlleonding.fabia.callmgmt.audiomgmt.PlaybackItem.startAsync(PlaybackItem.java:24)
+2026-09-12 23:01:44.664 | 	at at.htlleonding.fabia.callmgmt.CallSession.nextAudioOrStep(CallSession.java:474)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.groups.UniOnItem.lambda$invoke$0(UniOnItem.java:58)
+2026-09-12 23:01:44.664 | 	at io.smallrye.context.impl.wrappers.SlowContextualConsumer.accept(SlowContextualConsumer.java:21)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.operators.uni.UniOnItemConsume$UniOnItemComsumeProcessor.invokeEventHandler(UniOnItemConsume.java:77)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.operators.uni.UniOnItemConsume$UniOnItemComsumeProcessor.onItem(UniOnItemConsume.java:42)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.operators.uni.builders.UniCreateFromKnownItem$KnownItemSubscription.forward(UniCreateFromKnownItem.java:38)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.operators.uni.builders.UniCreateFromKnownItem.subscribe(UniCreateFromKnownItem.java:23)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.operators.AbstractUni.subscribe(AbstractUni.java:36)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.operators.uni.builders.UniCreateFromDeferredSupplier.subscribe(UniCreateFromDeferredSupplier.java:36)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.operators.AbstractUni.subscribe(AbstractUni.java:36)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.operators.uni.UniOnItemConsume.subscribe(UniOnItemConsume.java:30)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.operators.AbstractUni.subscribe(AbstractUni.java:36)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.groups.UniSubscribe.withSubscriber(UniSubscribe.java:51)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.groups.UniSubscribe.with(UniSubscribe.java:110)
+2026-09-12 23:01:44.664 | 	at io.smallrye.mutiny.groups.UniSubscribe.with(UniSubscribe.java:88)
+2026-09-12 23:01:44.664 | 	at at.htlleonding.fabia.callmgmt.CallProcessor.process(CallProcessor.java:65)
+2026-09-12 23:01:44.664 | 	at at.htlleonding.fabia.callmgmt.CallProcessor_ClientProxy.process(Unknown Source)
+2026-09-12 23:01:44.664 | 	at at.htlleonding.fabia.callmgmt.CallSession.nextAudioOrStep(CallSession.java:485)
+2026-09-12 23:01:44.664 | 	at at.htlleonding.fabia.callmgmt.CallSession_ClientProxy.nextAudioOrStep(Unknown Source)
+2026-09-12 23:01:44.664 | 	at at.htlleonding.fabia.AriEventHandler.lambda$onStasisStart$0(AriEventHandler.java:89)
+2026-09-12 23:01:44.664 | 	at at.htlleonding.fabia.call.context.runtime.CallContext.run(CallContext.java:159)
+2026-09-12 23:01:44.664 | 	at at.htlleonding.fabia.AriEventHandler.lambda$onStasisStart$1(AriEventHandler.java:75)
+2026-09-12 23:01:44.664 | 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+2026-09-12 23:01:44.664 | 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+2026-09-12 23:01:44.664 | 	at java.base/java.lang.Thread.run(Thread.java:1575)
+2026-09-12 23:01:44.664 |
+2026-09-12 23:01:49.160 | 2026-09-12 21:01:49,160 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - TextWebSocketFrame
+2026-09-12 23:01:49.165 | 2026-09-12 21:01:49,164 WARN  [ch.low.oss.ari.gen.AriWSHelper] (nioEventLoopGroup-2-3) Event ChannelVarset Unhandled
+2026-09-12 23:01:49.165 | 2026-09-12 21:01:49,165 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - TextWebSocketFrame
+2026-09-12 23:01:49.166 | 2026-09-12 21:01:49,166 WARN  [ch.low.oss.ari.gen.AriWSHelper] (nioEventLoopGroup-2-3) Event ChannelVarset Unhandled
+2026-09-12 23:01:49.166 | 2026-09-12 21:01:49,166 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - TextWebSocketFrame
+2026-09-12 23:01:49.167 | 2026-09-12 21:01:49,167 WARN  [ch.low.oss.ari.gen.AriWSHelper] (nioEventLoopGroup-2-3) Event ChannelVarset Unhandled
+2026-09-12 23:01:49.167 | 2026-09-12 21:01:49,167 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - TextWebSocketFrame
+2026-09-12 23:01:49.168 | 2026-09-12 21:01:49,167 WARN  [ch.low.oss.ari.gen.AriWSHelper] (nioEventLoopGroup-2-3) Event ChannelVarset Unhandled
+2026-09-12 23:01:49.168 | 2026-09-12 21:01:49,168 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - TextWebSocketFrame
+2026-09-12 23:01:49.169 | 2026-09-12 21:01:49,168 WARN  [ch.low.oss.ari.gen.AriWSHelper] (nioEventLoopGroup-2-3) Event ChannelVarset Unhandled
+2026-09-12 23:01:49.169 | 2026-09-12 21:01:49,169 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - TextWebSocketFrame
+2026-09-12 23:01:49.174 | 2026-09-12 21:01:49,174 WARN  [ch.low.oss.ari.gen.AriWSHelper] (nioEventLoopGroup-2-3) Event ChannelHangupRequest Unhandled
+2026-09-12 23:01:49.174 | 2026-09-12 21:01:49,174 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - TextWebSocketFrame
+2026-09-12 23:01:49.179 | 2026-09-12 21:01:49,178 INFO  [at.htl.fab.AriEventHandler] (pool-6-thread-2) StasisEnd event - channelId=1789246904.0, name=PJSIP/1000-00000000, state=Up
+2026-09-12 23:01:49.179 | 2026-09-12 21:01:49,179 INFO  [at.htl.fab.AriEventHandler] (pool-6-thread-2) Calling session.endCall() for channel 1789246904.0
+2026-09-12 23:01:49.179 | 2026-09-12 21:01:49,179 INFO  [at.htl.fab.cal.CallSession] (pool-6-thread-2) endCall() invoked for channel 1789246904.0 state=GREETING baseState=INFO
+2026-09-12 23:01:49.180 | 2026-09-12 21:01:49,179 INFO  [at.htl.fab.cal.CallSession] (pool-6-thread-2) endCall stacktrace:: java.lang.Exception: endCall invocation stack
+2026-09-12 23:01:49.180 | 	at at.htlleonding.fabia.callmgmt.CallSession.endCall(CallSession.java:443)
+2026-09-12 23:01:49.180 | 	at at.htlleonding.fabia.callmgmt.CallSession_ClientProxy.endCall(Unknown Source)
+2026-09-12 23:01:49.180 | 	at at.htlleonding.fabia.AriEventHandler.lambda$onStasisEnd$10(AriEventHandler.java:328)
+2026-09-12 23:01:49.180 | 	at at.htlleonding.fabia.call.context.runtime.CallContext.run(CallContext.java:159)
+2026-09-12 23:01:49.180 | 	at at.htlleonding.fabia.AriEventHandler.lambda$onStasisEnd$11(AriEventHandler.java:318)
+2026-09-12 23:01:49.180 | 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+2026-09-12 23:01:49.180 | 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+2026-09-12 23:01:49.180 | 	at java.base/java.lang.Thread.run(Thread.java:1575)
+2026-09-12 23:01:49.180 |
+2026-09-12 23:01:49.184 | 2026-09-12 21:01:49,183 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (pool-6-thread-2) Sync Action - DELETE to /ari/channels/1789246904.0
+2026-09-12 23:01:49.184 | 2026-09-12 21:01:49,184 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (pool-6-thread-2) HTTP Connect uri: http://asterisk:8088/
+2026-09-12 23:01:49.187 | 2026-09-12 21:01:49,187 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (nioEventLoopGroup-2-5) HTTP connected
+2026-09-12 23:01:49.191 | 2026-09-12 21:01:49,190 ERROR [at.htl.fab.cal.uti.AriUtil] (pool-6-thread-2) Failed to hangup call for channel 1789246904.0: ch.loway.oss.ari4java.tools.RestException: (HTTP 404 Error) Channel not found
+2026-09-12 23:01:49.191 | 	at ch.loway.oss.ari4java.tools.http.NettyHttpClient.makeException(NettyHttpClient.java:268)
+2026-09-12 23:01:49.191 | 	at ch.loway.oss.ari4java.tools.http.NettyHttpClient.httpActionSyncHandler(NettyHttpClient.java:319)
+2026-09-12 23:01:49.191 | 	at ch.loway.oss.ari4java.tools.http.NettyHttpClient.httpActionSyncHandler(NettyHttpClient.java:294)
+2026-09-12 23:01:49.191 | 	at ch.loway.oss.ari4java.tools.http.NettyHttpClient.httpActionSync(NettyHttpClient.java:280)
+2026-09-12 23:01:49.191 | 	at ch.loway.oss.ari4java.tools.BaseAriAction.httpActionSync(BaseAriAction.java:111)
+2026-09-12 23:01:49.191 | 	at ch.loway.oss.ari4java.generated.ari_8_0_0.actions.requests.ChannelsHangupDeleteRequest_impl_ari_8_0_0.execute(ChannelsHangupDeleteRequest_impl_ari_8_0_0.java:62)
+2026-09-12 23:01:49.191 | 	at at.htlleonding.fabia.callmgmt.util.AriUtil.hangup(AriUtil.java:97)
+2026-09-12 23:01:49.191 | 	at at.htlleonding.fabia.callmgmt.util.AriUtil_ClientProxy.hangup(Unknown Source)
+2026-09-12 23:01:49.191 | 	at at.htlleonding.fabia.callmgmt.CallSession.endCall(CallSession.java:449)
+2026-09-12 23:01:49.191 | 	at at.htlleonding.fabia.callmgmt.CallSession_ClientProxy.endCall(Unknown Source)
+2026-09-12 23:01:49.191 | 	at at.htlleonding.fabia.AriEventHandler.lambda$onStasisEnd$10(AriEventHandler.java:328)
+2026-09-12 23:01:49.191 | 	at at.htlleonding.fabia.call.context.runtime.CallContext.run(CallContext.java:159)
+2026-09-12 23:01:49.191 | 	at at.htlleonding.fabia.AriEventHandler.lambda$onStasisEnd$11(AriEventHandler.java:318)
+2026-09-12 23:01:49.191 | 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+2026-09-12 23:01:49.192 | 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+2026-09-12 23:01:49.192 | 	at java.base/java.lang.Thread.run(Thread.java:1575)
+2026-09-12 23:01:49.192 |
+2026-09-12 23:02:34.204 | 2026-09-12 21:02:34,204 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (nioEventLoopGroup-2-4) Send Ping at 1789246954204
+2026-09-12 23:02:34.206 | 2026-09-12 21:02:34,206 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - PongWebSocketFrame
+2026-09-12 23:02:35.205 | 2026-09-12 21:02:35,204 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (nioEventLoopGroup-2-4) Pong at 1789246954207
+2026-09-12 23:07:34.256 | 2026-09-12 21:07:34,255 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (nioEventLoopGroup-2-4) Send Ping at 1789247254255
+2026-09-12 23:07:34.257 | 2026-09-12 21:07:34,257 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - PongWebSocketFrame
+2026-09-12 23:07:35.257 | 2026-09-12 21:07:35,256 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (nioEventLoopGroup-2-4) Pong at 1789247254257
+2026-09-12 23:12:34.279 | 2026-09-12 21:12:34,279 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (nioEventLoopGroup-2-4) Send Ping at 1789247554278
+2026-09-12 23:12:34.280 | 2026-09-12 21:12:34,280 DEBUG [ch.low.oss.ari.too.htt.NettyWSClientHandler] (nioEventLoopGroup-2-3) Received Message - PongWebSocketFrame
+2026-09-12 23:12:35.280 | 2026-09-12 21:12:35,279 DEBUG [ch.low.oss.ari.too.htt.NettyHttpClient] (nioEventLoopGroup-2-4) Pong at 1789247554280

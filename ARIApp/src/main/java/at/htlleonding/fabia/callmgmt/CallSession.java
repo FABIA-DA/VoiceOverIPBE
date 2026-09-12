@@ -1,14 +1,17 @@
 package at.htlleonding.fabia.callmgmt;
 
+import at.htlleonding.fabia.call.context.runtime.CallScoped;
 import at.htlleonding.fabia.callmgmt.audiomgmt.ActiveAudioRegistry;
 import at.htlleonding.fabia.callmgmt.audiomgmt.AudioItem;
 import at.htlleonding.fabia.callmgmt.audiomgmt.PlaybackItem;
 import at.htlleonding.fabia.callmgmt.audiomgmt.RecordingItem;
 import at.htlleonding.fabia.callmgmt.util.*;
 import at.htlleonding.fabia.client.formbe.dtos.*;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.With;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,23 +24,35 @@ import static at.htlleonding.fabia.callmgmt.util.StateSequence.*;
 /**
  * Represents a session of a caller with everything needed to know their state in the call.
  */
+@CallScoped
+@NoArgsConstructor
 public final class CallSession {
-    private final SessionManager sessionManager;
-    private final CallProcessor callProcessor;
-    private final AriUtil ariUtil;
-    private final ActiveAudioRegistry audioRegistry;
+    @Inject
+    private CallProcessor callProcessor;
+
+    @Inject
+    private AriUtil ariUtil;
+
+    @Inject
+    private ActiveAudioRegistry audioRegistry;
+
+    @Inject
+    private Instance<PlaybackItem> playbackProvider;
+
+    @Inject
+    private Instance<RecordingItem> recordingProvider;
 
     private static final Logger logger = LoggerFactory.getLogger(CallSession.class);
     /**
      * The id of the callers channel from asterisk. The id is unique.
      */
     @Getter
-    private final String channelId;
+    private String channelId;
     /**
      * The name of the channel from asterisk, which contains callers sip username.
      */
     @Getter
-    private final String channelName;
+    private String channelName;
     /**
      * Represents the current call state the caller is in.
      */
@@ -132,13 +147,9 @@ public final class CallSession {
         resetBaseState();
     }
 
-    public CallSession(String channelId, String channelName, SessionManager sessionManager, CallProcessor callProcessor, AriUtil arUtil, ActiveAudioRegistry audioRegistry) {
+    public void initialize(String channelId, String channelName) {
         this.channelId = channelId;
         this.channelName = channelName;
-        this.sessionManager = sessionManager;
-        this.callProcessor = callProcessor;
-        this.ariUtil = arUtil;
-        this.audioRegistry = audioRegistry;
         setState(getFirstCallState());
     }
 
@@ -389,7 +400,8 @@ public final class CallSession {
      * @return The enqueued recording
      */
     public RecordingItem enqueue() {
-        RecordingItem recording = new RecordingItem(getChannelId(), this.ariUtil, this.audioRegistry);
+        RecordingItem recording = recordingProvider.get();
+        recording.initialize(getChannelId(), null);
         audioRegistry.registerRecording(recording);
         audioQueue.add(recording);
         return recording;
@@ -402,14 +414,14 @@ public final class CallSession {
      * @param mediaNames The names of the media to play sequentially, file names without extension
      */
     public void enqueue(String name, String... mediaNames) {
-        if (mediaNames == null
-                || mediaNames.length < 1) {
+        if (mediaNames == null || mediaNames.length < 1) {
             logger.info("Tried to enqueue playback with empty media names");
             return;
         }
 
         for (String mediaName : mediaNames) {
-            PlaybackItem playback = new PlaybackItem(name, getChannelId(), this.ariUtil, this.audioRegistry, mediaName);
+            PlaybackItem playback = playbackProvider.get();
+            playback.initialize(mediaName, getChannelId()); // name, channelId
             this.audioQueue.add(playback);
         }
     }
@@ -430,7 +442,6 @@ public final class CallSession {
         Exception invoker = new Exception("endCall invocation stack");
         logger.info("endCall stacktrace:", invoker);
 
-        sessionManager.removeSession(this.channelId);
         audioQueue.clear();
         try {
             ariUtil.hangup(this.channelId);

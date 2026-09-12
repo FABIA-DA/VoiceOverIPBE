@@ -1,15 +1,19 @@
 package at.htlleonding.fabia.callmgmt.audiomgmt;
 
-import at.htlleonding.fabia.callmgmt.util.AriUtil;
 import io.smallrye.mutiny.Uni;
-import lombok.Getter;
+import jakarta.enterprise.context.Dependent;
+import lombok.NoArgsConstructor;
 
 /**
  * This item is data to represent a sound, which is played by asterisk.
  */
+@Dependent
+@NoArgsConstructor
 public final class PlaybackItem extends AudioItem {
-    public PlaybackItem(String name, String channelId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry, String mediaName) {
-        super(mediaName, channelId, ariUtil, audioRegistry);
+
+    @Override
+    public void initialize(String name, String channelId) {
+        super.initialize(name, channelId);
     }
 
     @Override

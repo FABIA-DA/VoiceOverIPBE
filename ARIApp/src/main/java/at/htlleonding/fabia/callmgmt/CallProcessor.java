@@ -3,6 +3,7 @@ package at.htlleonding.fabia.callmgmt;
 import at.htlleonding.fabia.callmgmt.handler.StateHandler;
 import at.htlleonding.fabia.callmgmt.util.CallState;
 import at.htlleonding.fabia.callmgmt.util.HandledState;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-@Singleton
+@ApplicationScoped
 public final class CallProcessor {
     private final Logger logger = LoggerFactory.getLogger(CallProcessor.class);
     private final Map<CallState, StateHandler> handlerMap;

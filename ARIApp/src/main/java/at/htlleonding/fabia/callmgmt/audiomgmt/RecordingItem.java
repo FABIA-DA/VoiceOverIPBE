@@ -1,17 +1,21 @@
 package at.htlleonding.fabia.callmgmt.audiomgmt;
 
-import at.htlleonding.fabia.callmgmt.util.AriUtil;
 import io.smallrye.mutiny.Uni;
+import jakarta.enterprise.context.Dependent;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 /**
  * Represents data for a recording, which is created by asterisk
  */
+@Dependent
+@NoArgsConstructor
 public final class RecordingItem extends AudioItem {
 
-    public RecordingItem(String channelId, AriUtil ariUtil, ActiveAudioRegistry audioRegistry) {
-        super("rec-" + UUID.randomUUID(), channelId, ariUtil, audioRegistry);
+    @Override
+    public void initialize(String channelId, String mediaName){
+        super.initialize("rec-" + UUID.randomUUID(), channelId);
     }
 
     @Override
