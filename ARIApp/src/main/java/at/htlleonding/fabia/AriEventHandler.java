@@ -70,13 +70,6 @@ public class AriEventHandler extends AriWSHelper {
                     ariUtil.answer(channelId);
                 }
 
-                callSession.initialize(
-                        channelId,
-                        channelName
-                );
-
-                callSession.advanceCallState();
-
                 callSession.initialize(channelId, channelName);
                 callSession.advanceCallState();
 
